@@ -1,0 +1,86 @@
+slug: soundcloud-go
+name: SoundCloud Go
+legalName: SoundCloud Global Limited & Co. KG
+category: music_audio
+domains:
+  - soundcloud.com
+aliases:
+  - SoundCloud Go Plus
+  - SoundCloud Premium
+  - SoundCloud Next Pro
+  - SoundCloud Pro Unlimited
+descriptorPatterns:
+  - SOUNDCLOUD
+  - SOUNDCLOUD.COM
+  - SOUNDCLOUD GO
+  - SOUNDCLOUD LTD
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: year
+    count: 1
+notes: >-
+  Two unrelated subscriptions bill under the same SoundCloud descriptor. Go and Go+ are listener
+  plans; Next Pro is the creator plan for people who upload, and it is commonly bought annually.
+  A household can hold one of each on the same account, and cancelling one does not touch the
+  other, so the plan name on the account page matters before anything is cancelled.
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 2
+    cancelUrl: https://soundcloud.com/settings/subscriptions
+    steps:
+      - text: Sign in at soundcloud.com in a browser and open the profile menu at the top right, then Settings.
+        detail: The phone app has no cancel control; the subscription pages only exist on the web.
+      - text: Open the Subscriptions tab and read which plan is listed before acting.
+        detail: >-
+          Go, Go+ and Next Pro each appear as their own row with their own price. If a row names
+          Apple or Google as the biller, it cannot be cancelled here.
+      - text: Choose Cancel subscription on the row being ended, then confirm on the screen that follows.
+        warning: A discounted period is offered before the confirmation and keeps the plan running if accepted.
+      - text: Check the row now shows the date the plan ends and keep the confirmation email.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      SoundCloud does not prorate the unused part of a paid period; the plan features stay
+      available until the paid period ends and the account then reverts to the free tier.
+    gotchas:
+      - Cancelling a listener plan does not cancel a Next Pro creator plan on the same account, and the reverse is also true.
+      - Ending Next Pro can put an account back under the free upload limit, and tracks above that limit stop being publicly playable.
+      - Offline downloads made under Go+ stop playing when the paid period ends.
+    evidenceHint: Screenshot the Subscriptions tab showing the end date for the plan being cancelled.
+    sourceUrl: https://help.soundcloud.com/hc/en-us
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: apple
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://apps.apple.com/account/subscriptions
+    steps:
+      - text: On iPhone or iPad, open Settings and tap your name at the very top of the list.
+      - text: Tap Subscriptions, then tap SoundCloud.
+        detail: On a Mac, open App Store, click your name at the bottom left, then Account Settings, then Manage next to Subscriptions.
+      - text: Tap Cancel Subscription and confirm on the sheet that appears.
+      - text: Note the expiry date shown under the SoundCloud entry.
+    noticePeriodDays: 0
+    gotchas:
+      - soundcloud.com cannot cancel an Apple-billed plan; the Subscriptions tab there names Apple instead of offering a cancel control.
+      - The Apple price is usually higher than the price on the website for the same plan.
+    evidenceHint: Screenshot the Subscriptions screen showing SoundCloud expiring on a date.
+    sourceUrl: https://support.apple.com/en-us/118428
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: google
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://play.google.com/store/account/subscriptions
+    steps:
+      - text: Open the Google Play Store app, tap your profile picture, then Payments and subscriptions, then Subscriptions.
+      - text: Tap SoundCloud, then Cancel subscription, and pick a reason when prompted.
+      - text: Tap through to the end until the entry shows an expiry date instead of a renewal date.
+    noticePeriodDays: 0
+    gotchas:
+      - The plan belongs to the Google account that bought it, which may not be the profile signed in on the phone today.
+      - Uninstalling the app leaves the plan running.
+    evidenceHint: Screenshot the Play subscriptions entry showing the expiry date.
+    sourceUrl: https://support.google.com/googleplay/answer/7018481
+    lastVerifiedAt: "2026-07-25"

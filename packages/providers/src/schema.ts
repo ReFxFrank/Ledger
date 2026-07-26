@@ -102,8 +102,8 @@ const descriptorPatternSchema = z
 const httpsUrlSchema = z
   .string()
   .url()
-  .refine((value) => value.startsWith('https://'), 'must be an https URL')
-  .max(500);
+  .max(500)
+  .refine((value) => value.startsWith('https://'), 'must be an https URL');
 
 const isoDateSchema = z
   .string()
@@ -137,7 +137,11 @@ const typicalIntervalSchema = z
 /** core's `CancellationDifficulty` is 1..5; literals keep the parsed value in that union. */
 const difficultySchema = z.union(
   [z.literal(1), z.literal(2), z.literal(3), z.literal(4), z.literal(5)],
-  { errorMap: () => ({ message: 'must be a whole number from 1 (one click) to 5 (post/in person)' }) },
+  {
+    errorMap: () => ({
+      message: 'must be a whole number from 1 (one click) to 5 (post/in person)',
+    }),
+  },
 );
 
 // ── the channel rule (brief §3.1 step 1) ───────────────────────────────────────────────

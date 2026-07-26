@@ -1,0 +1,131 @@
+slug: siriusxm
+name: SiriusXM
+legalName: Sirius XM Radio Inc.
+category: music_audio
+domains:
+  - siriusxm.com
+aliases:
+  - Sirius XM
+  - SXM
+  - Sirius Satellite Radio
+  - XM Radio
+  - SiriusXM Streaming
+descriptorPatterns:
+  - SIRIUSXM
+  - SIRIUS XM
+  - SIRIUSXM.COM
+  - SIRIUSXM RADIO
+  - SIRIUS XM RADIO INC
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: month
+    count: 3
+  - unit: month
+    count: 6
+  - unit: year
+    count: 1
+notes: >-
+  SiriusXM sells prepaid terms of three, six and twelve months as well as monthly plans, so the
+  gap between charges is a poor guide to whether a subscription is live. Trials that arrive with
+  a new or used car are the most common entry point and convert to a paid term automatically at
+  the full rate. A satellite radio subscription and the standalone streaming app are separate
+  products with separate prices, and the app subscription is often bought through Apple.
+playbooks:
+  - channel: direct
+    method: phone
+    difficulty: 4
+    phone: "1-866-635-2349"
+    hours: Mon-Fri 8am-9pm ET, Sat-Sun 8am-8pm ET
+    steps:
+      - text: Find the radio ID or account number before calling; the call cannot proceed without it.
+        detail: >-
+          The radio ID is on the account page at siriusxm.com and can also be read on the radio
+          itself by tuning to channel 0 on most satellite receivers.
+      - text: Call 1-866-635-2349 and say cancel at the automated menu, then keep repeating it until an agent picks up.
+        detail: >-
+          The self-service menu has no cancellation option, so the word cancel is what routes the
+          call to a person.
+      - text: Tell the agent plainly that the subscription is to be cancelled and that no offer is wanted, then ask for the exact date service ends.
+        warning: >-
+          Retention agents work through several discounted offers before processing anything.
+          Accepting an offer starts a new prepaid term rather than ending the subscription.
+      - text: Ask for a cancellation confirmation number and for written confirmation by email before ending the call.
+      - text: Note the agent's name, the time of the call and the confirmation number, then check the next statement for a further charge.
+        detail: >-
+          The live chat on siriusxm.com reaches the same retention script and produces a
+          transcript that is easier to keep than a phone note, so it is a reasonable substitute
+          for the call.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      A prepaid term that is cancelled part-way through is normally run to the end of the term
+      rather than refunded, and the agent states on the call what happens to the remainder.
+    retentionOfferNotes: >-
+      Deeply discounted renewals, typically several months at a fraction of the standard rate,
+      are offered repeatedly before the agent processes a cancellation. Each one starts a fresh
+      term.
+    letterTemplate: |
+      {{fullName}}
+
+      {{date}}
+
+      SiriusXM Listener Care
+
+      Account or radio ID: {{accountReference}}
+
+      I am writing to confirm the cancellation of my SiriusXM subscription on this account.
+
+      Please treat this letter as my request to end the subscription and to stop all further
+      billing to the payment method held on file. Please do not start a new term or apply a
+      promotional offer to this account.
+
+      Please send me written confirmation of the cancellation and the date on which service
+      ends, to the address and email address held on this account.
+
+      {{fullName}}
+    gotchas:
+      - There is no cancel button in the account pages for most plans; the call or the live chat is the route, and the automated phone menu offers no cancellation option.
+      - Agents open with several discounted offers, and accepting one starts a new prepaid term instead of ending the subscription.
+      - A trial that came with a car converts to a paid term at the standard rate, which is several times the trial price.
+      - Cancelling the streaming app subscription does not cancel a satellite radio subscription on the same account, and the reverse is also true.
+      - Charges have been reported to continue after a call when no confirmation number was taken, so the next statement is worth checking.
+    evidenceHint: >-
+      Keep the confirmation number, the agent's name and the call time, or save the chat
+      transcript, plus any confirmation email.
+    sourceUrl: https://care.siriusxm.com/
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: apple
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://apps.apple.com/account/subscriptions
+    steps:
+      - text: On iPhone or iPad, open Settings and tap your name at the very top of the list.
+      - text: Tap Subscriptions, then tap SiriusXM.
+        detail: On a Mac, open App Store, click your name at the bottom left, then Account Settings, then Manage next to Subscriptions.
+      - text: Tap Cancel Subscription and confirm on the sheet that appears.
+      - text: Note the expiry date shown under the SiriusXM entry.
+    noticePeriodDays: 0
+    gotchas:
+      - This ends the streaming app subscription only; a satellite radio subscription on the same account keeps billing and still needs the phone call.
+      - No call to Listener Care is needed for an Apple-billed streaming subscription, and calling will not stop it either.
+      - Deleting the app does not stop the billing.
+    evidenceHint: Screenshot the Subscriptions screen showing SiriusXM expiring on a date.
+    sourceUrl: https://support.apple.com/en-us/118428
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: google
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://play.google.com/store/account/subscriptions
+    steps:
+      - text: Open the Google Play Store app, tap your profile picture, then Payments and subscriptions, then Subscriptions.
+      - text: Tap SiriusXM, then Cancel subscription, and pick a reason when prompted.
+      - text: Tap through to the end until the entry shows an expiry date instead of a renewal date.
+    noticePeriodDays: 0
+    gotchas:
+      - This ends the streaming app subscription only; a satellite radio subscription on the same account keeps billing.
+      - The subscription belongs to the Google account that bought it, which may not be the profile signed in on the phone today.
+    evidenceHint: Screenshot the Play subscriptions entry showing the expiry date.
+    sourceUrl: https://support.google.com/googleplay/answer/7018481
+    lastVerifiedAt: "2026-07-25"

@@ -1,0 +1,84 @@
+slug: xfinity
+name: Xfinity
+legalName: Comcast Cable Communications, LLC
+category: telecom
+domains:
+  - xfinity.com
+  - comcast.com
+aliases:
+  - Comcast
+  - Xfinity Mobile
+  - Comcast Xfinity
+descriptorPatterns:
+  - XFINITY
+  - COMCAST
+  - COMCAST CABLE COMM
+  - XFINITY MOBILE
+  - COMCAST CABLE
+  - XFINITY.COM
+typicalIntervals:
+  - unit: month
+    count: 1
+
+notes: >-
+  Xfinity internet/TV and Xfinity Mobile are separate products on one login. Cancelling the
+  internet does not close the mobile lines, and closing the internet while keeping mobile changes
+  the mobile pricing. Streaming add-ons bought through Xfinity (Netflix, Peacock, Max) are billed
+  on the Xfinity bill and are removed under Services, not by cancelling the account.
+
+playbooks:
+  - channel: direct
+    method: phone
+    difficulty: 4
+    phone: "1-800-934-6489"
+    hours: Mon-Sun 8am-9pm local time
+    steps:
+      - text: >-
+          Start at xfinity.com/cancel and pick the service you are ending. The page offers three
+          routes — call now, schedule a callback, or visit an Xfinity Store.
+        detail: >-
+          The online flow does not finish a cancellation by itself; every route ends with a
+          retention agent. Choosing the scheduled callback is usually the shortest queue.
+      - text: >-
+          If you call, dial 1-800-934-6489 and say "cancel service" at the voice prompt to skip
+          the sales menu.
+      - text: >-
+          Tell the agent the date you want service to end and repeat it until they read it back.
+          Ask for a cancellation confirmation number.
+      - text: >-
+          Remove any streaming add-ons separately under Account, then Services, then Manage — they
+          sit on the Xfinity bill and can survive the account change.
+      - text: >-
+          Return every leased device (gateway, TV boxes, remotes, xFi pods) to an Xfinity Store
+          or a UPS Store and keep the itemised receipt.
+        warning: >-
+          Unreturned equipment charges are large and keep arriving after the service is off.
+      - text: Check the following two bills for a zero balance.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      Xfinity bills a month ahead. Cancelling mid-month usually leaves a credit balance that is
+      refunded by cheque or card credit some weeks after the account closes.
+    retentionOfferNotes: >-
+      Retention agents offer a 12-month promotional rate, a free tier upgrade, or a gift card.
+      Accepting one commonly starts a new 12- or 24-month term agreement with its own exit fee.
+    gotchas:
+      - >-
+        There is no self-serve cancel button — the online cancel page routes to a retention agent
+        by phone, callback or store visit.
+      - >-
+        Leased equipment must be back within 10 days of disconnect or unreturned-equipment charges
+        are added; keep the itemised return receipt.
+      - >-
+        Cancelling inside a promotional term draws an early termination fee that shrinks month by
+        month.
+      - >-
+        Xfinity Mobile lines are a separate account and keep billing after internet or TV is
+        cancelled, usually at a higher price once the bundle ends.
+      - >-
+        Agents sometimes log the request as a "seasonal hold" or downgrade instead of a
+        disconnect; ask explicitly for a cancellation confirmation number.
+    evidenceHint: >-
+      Cancellation confirmation number, the agent's name and the disconnect date, plus the
+      itemised equipment return receipt.
+    sourceUrl: https://www.xfinity.com/support/articles/important-information-when-canceling-services
+    lastVerifiedAt: "2026-07-25"

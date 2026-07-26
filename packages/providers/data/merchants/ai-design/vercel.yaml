@@ -1,0 +1,48 @@
+slug: vercel
+name: Vercel
+legalName: Vercel Inc.
+category: software
+domains:
+  - vercel.com
+aliases:
+  - Vercel Pro
+  - Vercel Team
+descriptorPatterns:
+  - VERCEL
+  - VERCEL INC
+  - VERCEL.COM
+typicalIntervals:
+  - unit: month
+    count: 1
+notes: >-
+  The plan belongs to a team, not to a person, and a Vercel invoice is the seat price plus
+  metered usage — so the monthly amount moves with bandwidth, function execution and image
+  optimisation. A larger charge is usually usage rather than a price change. Domains bought
+  through Vercel renew annually as separate line items.
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 2
+    cancelUrl: https://vercel.com/dashboard
+    steps:
+      - text: Open the Vercel dashboard and switch to the team that holds the paid plan using the team selector at the top left.
+        detail: A personal Hobby account and a Pro team are different scopes; the charge belongs to the team.
+      - text: Go to Settings, then Billing, and open the plan section.
+      - text: Remove the other team members first — a Pro team with members will not accept the downgrade.
+      - text: Choose the downgrade to Hobby and confirm.
+        warning: The downgrade applies immediately, so Pro-only features, seats and higher limits stop at that moment rather than at the end of the cycle.
+      - text: If the dashboard refuses the change, open the Help page and send a cancellation request to Vercel support, then keep the ticket reference.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      Vercel bills the usage already run up in the current period on the final invoice. Time
+      remaining on the seat price is not refunded, and Vercel's terms treat a cancellation as
+      effective from the start of the next renewal period.
+    gotchas:
+      - The subscription is attached to a team; deleting a project or a personal account leaves the team plan charging.
+      - Downgrading to Hobby takes effect immediately and removes team members, so coordinate before clicking it.
+      - Usage charged on top of the plan for the part of the month already used still appears on the final invoice.
+      - Vercel's terms route termination of an active paid plan through a support request when the dashboard will not do it, so keep the ticket.
+      - Domains registered through Vercel renew separately and are not stopped by the plan downgrade.
+    evidenceHint: Screenshot the team billing page showing the Hobby plan, plus the final invoice email.
+    sourceUrl: https://vercel.com/docs/plans/pro-plan
+    lastVerifiedAt: "2026-07-25"

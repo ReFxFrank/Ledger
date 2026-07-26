@@ -1,0 +1,77 @@
+slug: amazon-prime-video
+name: Amazon Prime Video
+legalName: Amazon.com Services LLC
+category: streaming_video
+domains:
+  - primevideo.com
+aliases:
+  - Prime Video
+  - Amazon Video
+  - Prime Video Standalone
+descriptorPatterns:
+  - PRIME VIDEO
+  - AMAZON PRIME VIDEO
+  - PRIMEVIDEO.COM
+  - AMZN PRIME VIDEO
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: year
+    count: 1
+notes: >-
+  Three different things bill under a Prime Video name. A full Prime membership includes video
+  and is billed monthly or yearly; a video-only plan bills monthly at a lower price; and Prime
+  Video Channels are separate per-channel charges that survive the end of Prime itself. Each
+  Channel belongs to the merchant that sells it, so those are recorded on that merchant's own
+  entry under the amazon channel rather than here.
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 2
+    cancelUrl: https://www.amazon.com/gp/primecentral
+    steps:
+      - text: Sign in at amazon.com and open Account and Lists, then Prime Membership, or go straight to amazon.com/gp/primecentral.
+      - text: Choose Manage membership, then End membership.
+        detail: >-
+          For a video-only plan the same page is at Account and Lists, then Memberships and
+          Subscriptions, then Prime Video, and the control reads Cancel subscription.
+      - text: Work through the three reminder screens and choose End membership on the last one.
+        warning: >-
+          Amazon shows benefits lost, then an offer to remind you later, then a final
+          confirmation. Stopping at the reminder screen leaves the membership running.
+      - text: Check Prime Central now shows the date the membership ends and keep the confirmation email.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      Amazon may prorate an annual Prime membership that has gone largely unused, and it charges
+      for benefits already taken; the amount offered is calculated on the confirmation screen.
+    retentionOfferNotes: >-
+      The flow offers a paused membership and a remind-me-later option, both placed ahead of the
+      final End membership button.
+    gotchas:
+      - Ending Prime does not end Prime Video Channels; those keep billing on their own until each one is cancelled separately.
+      - A household member added to Prime keeps ordering rights until the membership actually ends, so the charge stopping and access stopping are different dates.
+      - Prime bought through a mobile operator or as a student plan can only be ended where it was bought.
+    evidenceHint: Screenshot the Prime Central page showing the membership end date, and keep the confirmation email.
+    sourceUrl: https://www.amazon.com/yourmembershipsandsubscriptions
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: amazon
+    method: account_settings
+    difficulty: 2
+    cancelUrl: https://www.amazon.com/gp/video/settings
+    steps:
+      - text: Sign in at amazon.com and open Account and Lists, then Memberships and Subscriptions.
+      - text: Read every row before cancelling anything.
+        detail: >-
+          Prime, a video-only plan and each Prime Video Channel appear as separate rows with
+          separate prices and separate renewal dates. The row named in the bank statement is the
+          one to act on.
+      - text: Choose Cancel subscription on the row being ended and confirm on the screen that follows.
+      - text: Check the row now shows an end date rather than a renewal date.
+    noticePeriodDays: 0
+    gotchas:
+      - Cancelling a channel here does not cancel Prime, and cancelling Prime does not cancel the channels.
+      - The Prime Video app keeps showing purchased and rented titles after the subscription ends, which looks like the cancellation failed.
+    evidenceHint: Screenshot the Memberships and Subscriptions row showing the end date.
+    sourceUrl: https://www.amazon.com/yourmembershipsandsubscriptions
+    lastVerifiedAt: "2026-07-25"

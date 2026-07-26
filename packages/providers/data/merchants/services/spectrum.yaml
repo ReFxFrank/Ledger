@@ -1,0 +1,79 @@
+slug: spectrum
+name: Spectrum
+legalName: Charter Communications, Inc.
+category: telecom
+domains:
+  - spectrum.net
+  - spectrum.com
+aliases:
+  - Charter Spectrum
+  - Charter Communications
+  - Spectrum Mobile
+descriptorPatterns:
+  - SPECTRUM
+  - SPECTRUM MOBILE
+  - CHARTER COMM
+  - CHARTER COMMUNICATIONS
+  - SPECTRUM CABLE
+  - SPECTRUM 855-707-7328
+typicalIntervals:
+  - unit: month
+    count: 1
+
+notes: >-
+  Spectrum bills a month in advance and stops service on the day you ask, not at the end of the
+  period you already paid for, so cancelling early in a cycle throws away the rest of that month.
+  The last-day-of-cycle disconnect is the one that wastes nothing.
+
+playbooks:
+  - channel: direct
+    method: phone
+    difficulty: 4
+    phone: "1-833-267-6094"
+    hours: Mon-Sun 8am-10pm ET
+    steps:
+      - text: >-
+          Find your billing cycle end date first under My Account, then Billing — Spectrum does
+          not refund the unused part of a month.
+      - text: >-
+          Call 1-833-267-6094 (or 855-707-7328) and say "cancel service"; the menu routes to
+          retention rather than general support.
+        detail: >-
+          The spectrum.net account pages let you change a plan but do not close an account. Chat
+          agents will normally hand a disconnect to the phone team.
+      - text: >-
+          Give the disconnect date you want. Ask the agent to confirm it is a disconnect and not a
+          downgrade or a seasonal hold.
+      - text: Ask for a cancellation confirmation number before the call ends.
+      - text: >-
+          Return leased equipment — modem, routers, TV boxes, Spectrum Voice adapters — to a
+          Spectrum store or a UPS Store, and keep the itemised receipt.
+      - text: Check the next statement for a zero balance and no equipment charge.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      Service ends on the disconnect date and the remainder of the prepaid month is not credited
+      back, so the disconnect date is worth choosing carefully.
+    retentionOfferNotes: >-
+      Retention leads with a promotional rate for 12 months or a free speed upgrade. The
+      promotional rate expires quietly and the price steps back up at renewal.
+    gotchas:
+      - >-
+        Spectrum bills in advance and does not prorate a partial month — cancelling on day 3 of a
+        cycle forfeits the other 27 days.
+      - >-
+        There is no online disconnect; a phone call to retention (or an in-store visit) is the
+        only route that closes the account.
+      - >-
+        Spectrum Mobile lines survive an internet or TV disconnect and reprice once the bundle
+        ends.
+      - >-
+        Leased modems, routers and TV boxes must be returned; unreturned-equipment charges keep
+        the account open and go to collections.
+      - >-
+        Agents sometimes book a "seasonal hold" instead of a disconnect — a hold still bills a
+        reduced monthly fee.
+    evidenceHint: >-
+      Cancellation confirmation number, agent name, disconnect date, and the itemised equipment
+      return receipt from the store or UPS.
+    sourceUrl: https://www.spectrum.net/support/manage-account/change-or-cancel-service
+    lastVerifiedAt: "2026-07-25"

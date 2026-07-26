@@ -1,0 +1,53 @@
+slug: gousto
+name: Gousto
+legalName: Gousto Limited
+category: food_delivery
+domains:
+  - gousto.co.uk
+aliases:
+  - Gousto Box
+  - Gousto Recipe Box
+  - Gousto Subscription
+descriptorPatterns:
+  - GOUSTO
+  - GOUSTO LTD
+  - GOUSTO LIMITED
+  - GOUSTO.CO.UK
+  - WWW.GOUSTO.CO.UK
+typicalIntervals:
+  - unit: week
+    count: 1
+notes: >-
+  Gousto separates the subscription from the individual boxes. Cancelling the subscription stops
+  future boxes being scheduled but leaves any box whose recipes have already been chosen in the
+  queue, and that box is still charged and delivered. Both have to be dealt with.
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 2
+    steps:
+      - text: Sign in at gousto.co.uk or in the app and open Profile, then Manage Subscription.
+      - text: Scroll past the pause and skip options to the bottom of the page and choose Cancel Subscription.
+        warning: >-
+          Pause and Skip are placed above the cancel link; both leave the subscription in place
+          and restart it automatically.
+      - text: Confirm through the reason screens to the end.
+      - text: Go back to Upcoming Boxes and cancel any box that already has recipes chosen, one at a time.
+        detail: >-
+          Cancelling the subscription does not remove those boxes. Each one has its own cut-off,
+          shown on the box.
+      - text: Check that Upcoming Boxes is empty and keep the confirmation email.
+    noticePeriodDays: 3
+    refundPolicy: >-
+      Gousto charges no cancellation fee, but a box past its cut-off is charged and delivered as
+      scheduled.
+    retentionOfferNotes: >-
+      Offers discounts on the next boxes and a pause of several weeks inside the cancellation
+      flow.
+    gotchas:
+      - The cut-off is noon three days before the delivery day; after it, that box cannot be removed.
+      - Cancelling the subscription does not cancel boxes that already have recipes chosen — those have to be cancelled individually.
+      - A cancelled subscription can be reactivated by a promotional link in an email, which restarts weekly billing immediately.
+    evidenceHint: Screenshot the Manage Subscription page showing the cancelled state and the empty Upcoming Boxes list, plus the confirmation email.
+    sourceUrl: https://www.gousto.co.uk/help-centre/article/how-do-i-cancel-my-subscription/4419983461009
+    lastVerifiedAt: "2026-07-25"

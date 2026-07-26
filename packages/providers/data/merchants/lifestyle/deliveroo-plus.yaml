@@ -1,0 +1,54 @@
+slug: deliveroo-plus
+name: Deliveroo Plus
+legalName: Roofoods Limited
+category: food_delivery
+domains:
+  - deliveroo.co.uk
+  - deliveroo.com
+aliases:
+  - Deliveroo Plus Silver
+  - Deliveroo Plus Gold
+  - Roofoods
+descriptorPatterns:
+  - DELIVEROO PLUS
+  - DELIVEROO SUBSCRIPTION
+  - DELIVEROO PLUS SILVER
+  - DELIVEROO PLUS GOLD
+  - ROOFOODS DELIVEROO PLUS
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: year
+    count: 1
+notes: >-
+  In the UK, Deliveroo Plus has been bundled with Amazon Prime. A Plus membership that came in
+  through Prime is administered inside the Amazon account, and it can start charging on its own
+  once the Prime link ends — a monthly Deliveroo line appearing out of nowhere is usually that.
+  Deliveroo bills Plus to the card on the Deliveroo account, not through an app store.
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 2
+    cancelUrl: https://deliveroo.co.uk/account
+    steps:
+      - text: Sign in on deliveroo.co.uk or in the app and open Account, then Deliveroo Plus.
+      - text: Open My Subscription to see the next payment date, then choose to cancel the subscription.
+        detail: >-
+          The next payment date on this screen is the deadline that matters — the cancellation
+          has to be in before the current cycle ends.
+      - text: Confirm through the offer screens to the final step.
+      - text: If the cancel option is missing or fails, contact the Deliveroo customer care team through the Help section and ask for written confirmation of the cancellation.
+      - text: Check the account page again and confirm no further payment date is shown.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      Deliveroo describes a full refund available within the first 14 days of a paid period, and
+      no refund for a change of mind after that. Benefits run to the end of the cycle already
+      paid for.
+    retentionOfferNotes: Offers a discounted month or a free month before completing the cancellation.
+    gotchas:
+      - Cancelling after the cycle has renewed leaves the payment in place and ends the membership at the end of that cycle.
+      - A Plus membership linked to Amazon Prime is managed in the Amazon account; cancelling on Deliveroo may not stop it reinstating.
+      - Deleting the Deliveroo app leaves the membership running.
+    evidenceHint: Screenshot the Deliveroo Plus account page showing no upcoming payment date, and keep the confirmation email.
+    sourceUrl: https://deliveroo.co.uk/faq
+    lastVerifiedAt: "2026-07-25"

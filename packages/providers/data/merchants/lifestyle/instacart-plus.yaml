@@ -1,0 +1,70 @@
+slug: instacart-plus
+name: Instacart+
+legalName: Maplebear Inc.
+category: food_delivery
+domains:
+  - instacart.com
+aliases:
+  - Instacart Plus
+  - Instacart Express
+  - Instacart Membership
+descriptorPatterns:
+  - INSTACART SUBSCRIPTION
+  - INSTACART MEMBERSHIP
+  - INSTACART PLUS
+  - INSTACART EXPRESS
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: year
+    count: 1
+notes: >-
+  Instacart+ replaced Instacart Express, and long-standing members still see the older
+  descriptor. The membership charge is separate from grocery orders, so a monthly Instacart line
+  on a statement with no basket attached is usually this. Instacart+ obtained through Chase or
+  through a Peacock or Costco partnership is administered by that partner.
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 2
+    cancelUrl: https://www.instacart.com/store/account
+    steps:
+      - text: Open instacart.com and click the three horizontal lines at the top left, or tap the Account icon at the top right in the app.
+      - text: Choose "Your Instacart+ membership".
+      - text: Under "Manage your membership", select Cancel membership and confirm on the following screen.
+        warning: >-
+          The page offers a switch to the cheaper monthly plan and a pause before it offers
+          cancellation.
+      - text: Check that the membership page now shows an end date rather than a renewal date, and keep the confirmation email.
+    noticePeriodDays: 1
+    refundPolicy: >-
+      Instacart describes a refund of an annual membership fee if the membership is cancelled
+      within the first five calendar days of the paid term and no orders were placed with it.
+      Monthly fees are not refunded, and benefits run to the end of the paid term.
+    retentionOfferNotes: >-
+      Offers a downgrade to monthly and a discounted renewal inside the cancellation flow.
+    gotchas:
+      - A free trial converts to a paid year at the end of the trial, so cancelling on the conversion day can still be charged.
+      - Benefits stop at the end of the paid period, and any remaining credits attached to the membership go with it.
+      - Instacart+ received through a card, Peacock or Costco partnership is managed by that partner, and cancelling on instacart.com may not stop the enrolment renewing.
+    evidenceHint: Screenshot the Instacart+ membership page showing the end date, plus the cancellation email.
+    sourceUrl: https://www.instacart.com/help/section/107169420/423178048
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: apple
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://apps.apple.com/account/subscriptions
+    steps:
+      - text: On iPhone or iPad, open Settings, tap your name, then Subscriptions, and look for Instacart.
+        detail: >-
+          Most Instacart+ memberships are billed by Instacart. Use this playbook only when
+          Instacart appears in this list.
+      - text: Tap Instacart, then Cancel Subscription, and confirm.
+    noticePeriodDays: 1
+    gotchas:
+      - Cancelling on instacart.com does not stop a membership that Apple bills.
+      - Deleting the Instacart app leaves an App Store subscription running.
+    evidenceHint: Screenshot the App Store Subscriptions screen showing the expiry date.
+    sourceUrl: https://support.apple.com/en-us/118428
+    lastVerifiedAt: "2026-07-25"

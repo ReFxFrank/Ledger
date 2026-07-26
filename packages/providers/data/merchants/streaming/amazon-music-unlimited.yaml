@@ -1,0 +1,90 @@
+slug: amazon-music-unlimited
+name: Amazon Music Unlimited
+legalName: Amazon.com Services LLC
+category: music_audio
+domains:
+  - music.amazon.com
+aliases:
+  - Amazon Music
+  - Amazon Music HD
+  - Music Unlimited
+  - Amazon Music Single Device
+descriptorPatterns:
+  - AMAZON MUSIC
+  - AMAZON MUSIC UNLIMITED
+  - AMZN MUSIC
+  - AMAZONMUSIC
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: year
+    count: 1
+notes: >-
+  Amazon Music Prime is included with a Prime membership and costs nothing extra; Music
+  Unlimited is the paid upgrade and bills separately. The cheap Single Device plan is tied to
+  one Echo and is easy to forget entirely because it never appears on a phone. Annual Music
+  Unlimited plans are sold at a discount, so a yearly Amazon Music charge is a live plan.
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 2
+    cancelUrl: https://www.amazon.com/music/settings
+    steps:
+      - text: Sign in at amazon.com and open Account and Lists, then Memberships and Subscriptions, or go straight to amazon.com/music/settings.
+      - text: Find the Amazon Music Unlimited row and choose Cancel subscription.
+        detail: >-
+          The Single Device plan is a separate row naming the Echo it belongs to, and a Family
+          plan is another row again. Read which row is being cancelled before confirming.
+      - text: Choose Confirm cancellation on the screen that follows.
+        warning: >-
+          The screen before it offers a discounted period or a downgrade to the Single Device
+          plan, and both keep a charge running.
+      - text: Check the row now shows the date access ends and keep the confirmation email.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      Amazon does not prorate the unused part of a paid month or year; the Unlimited catalogue
+      stays available until the paid period ends and the account then falls back to the smaller
+      Prime catalogue or to ad-supported listening.
+    retentionOfferNotes: A discounted period or a cheaper single-device plan is offered before the confirmation step.
+    gotchas:
+      - Cancelling Music Unlimited leaves Amazon Music Prime working, so the app still opens and the cancellation looks as though it failed.
+      - Songs added to the library from the Unlimited catalogue stop playing when the plan ends; purchased tracks stay.
+      - An annual plan cancelled mid-term keeps running, and stays paid for, until the anniversary date.
+      - A Single Device plan attached to an Echo bills on its own and is not covered by cancelling the main plan.
+    evidenceHint: Screenshot the Memberships and Subscriptions row showing the end date, and keep the confirmation email.
+    sourceUrl: https://www.amazon.com/yourmembershipsandsubscriptions
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: apple
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://apps.apple.com/account/subscriptions
+    steps:
+      - text: On iPhone or iPad, open Settings and tap your name at the very top of the list.
+      - text: Tap Subscriptions, then tap Amazon Music.
+        detail: On a Mac, open App Store, click your name at the bottom left, then Account Settings, then Manage next to Subscriptions.
+      - text: Tap Cancel Subscription and confirm on the sheet that appears.
+      - text: Note the expiry date shown under the Amazon Music entry.
+    noticePeriodDays: 0
+    gotchas:
+      - An Apple-billed plan does not appear in the Amazon Memberships and Subscriptions page, so it is easy to conclude the plan is already gone.
+      - Deleting the app does not stop the billing.
+    evidenceHint: Screenshot the Subscriptions screen showing Amazon Music expiring on a date.
+    sourceUrl: https://support.apple.com/en-us/118428
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: google
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://play.google.com/store/account/subscriptions
+    steps:
+      - text: Open the Google Play Store app, tap your profile picture, then Payments and subscriptions, then Subscriptions.
+      - text: Tap Amazon Music, then Cancel subscription, and pick a reason when prompted.
+      - text: Tap through to the end until the entry shows an expiry date instead of a renewal date.
+    noticePeriodDays: 0
+    gotchas:
+      - The subscription belongs to the Google account that bought it, which may not be the profile signed in on the phone today.
+      - Uninstalling the app leaves the subscription running.
+    evidenceHint: Screenshot the Play subscriptions entry showing the expiry date.
+    sourceUrl: https://support.google.com/googleplay/answer/7018481
+    lastVerifiedAt: "2026-07-25"

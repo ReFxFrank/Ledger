@@ -1,0 +1,83 @@
+slug: headspace
+name: Headspace
+legalName: Headspace Inc.
+category: health
+domains:
+  - headspace.com
+aliases:
+  - Headspace Meditation
+  - Headspace Plus
+  - Headspace Care
+descriptorPatterns:
+  - HEADSPACE
+  - HEADSPACE.COM
+  - HEADSPACE INC
+  - HEADSPACE APP
+  - HEADSPACE LTD
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: year
+    count: 1
+notes: >-
+  Headspace has been bundled with Spotify and with several employer and insurer plans. A bundled
+  membership is cancelled where the bundle was bought, not on headspace.com, and a Headspace
+  coaching or therapy subscription is a separate charge from the meditation subscription.
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 2
+    cancelUrl: https://www.headspace.com/subscription/manage
+    steps:
+      - text: Sign in at headspace.com and open headspace.com/subscription/manage.
+      - text: Select Cancel Membership near the bottom of the plan panel.
+        detail: >-
+          If the page shows no Cancel Membership link, the subscription was bought somewhere else
+          — an app store, Spotify, or an employer plan — and has to be ended there.
+      - text: Work through the reason and offer screens until the page confirms the plan will not renew.
+      - text: If the link is genuinely missing and no store subscription exists, email help@headspace.com from the address on the account and ask for the renewal to be stopped in writing.
+    noticePeriodDays: 1
+    refundPolicy: >-
+      Headspace describes subscriptions bought on headspace.com as non-refundable and asks users
+      with unusual circumstances to write to help@headspace.com.
+    retentionOfferNotes: Offers a discounted plan and a pause before the final confirmation screen.
+    gotchas:
+      - An annual plan cancelled after the renewal has processed runs for another full year — the charge lands on the anniversary, not in January.
+      - A Headspace membership that came with Spotify is cancelled inside the Spotify account, and cancelling on headspace.com does not touch it.
+      - Coaching and therapy subscriptions are billed separately and survive the cancellation of the meditation membership.
+    evidenceHint: Screenshot the Manage Subscription page showing the plan will not renew, plus the cancellation email.
+    sourceUrl: https://help.headspace.com/hc/en-us/articles/115008364988-How-do-I-cancel-my-subscription
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: apple
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://apps.apple.com/account/subscriptions
+    steps:
+      - text: On iPhone or iPad, open Settings and tap your name at the top of the screen.
+      - text: Tap Subscriptions, then tap Headspace.
+      - text: Tap Cancel Subscription and confirm.
+        warning: If no Cancel button appears, the subscription is already set to expire on the date shown.
+    noticePeriodDays: 1
+    gotchas:
+      - Deleting the Headspace app leaves the App Store subscription running.
+      - Headspace support cannot stop or refund a charge that Apple collects.
+    evidenceHint: Screenshot the App Store Subscriptions screen showing the expiry date.
+    sourceUrl: https://help.headspace.com/hc/en-us/articles/115014780447-How-do-I-cancel-my-subscription-if-I-subscribed-on-Apple-App-Store-or-Google-Play
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: google
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://play.google.com/store/account/subscriptions
+    steps:
+      - text: Open the Google Play Store app and tap your profile icon at the top right.
+      - text: Tap Payments & subscriptions, then Subscriptions, then Headspace.
+      - text: Tap Cancel subscription and confirm.
+    noticePeriodDays: 1
+    gotchas:
+      - Uninstalling the app leaves the Google Play subscription running.
+      - Check every Google account on the phone — the subscription is only visible from the one that bought it.
+    evidenceHint: Screenshot the Play subscription page showing the expiry date.
+    sourceUrl: https://help.headspace.com/hc/en-us/articles/115014780447-How-do-I-cancel-my-subscription-if-I-subscribed-on-Apple-App-Store-or-Google-Play
+    lastVerifiedAt: "2026-07-25"

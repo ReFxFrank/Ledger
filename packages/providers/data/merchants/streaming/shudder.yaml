@@ -1,0 +1,121 @@
+slug: shudder
+name: Shudder
+legalName: AMC Networks Inc.
+category: streaming_video
+domains:
+  - shudder.com
+aliases:
+  - Shudder AMC
+  - AMC Shudder
+  - Shudder TV
+descriptorPatterns:
+  - SHUDDER
+  - SHUDDER.COM
+  - SHUDDER AMC
+  - AMC NETWORKS SHUDDER
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: year
+    count: 1
+notes: >-
+  AMC Networks runs Shudder, Sundance Now, ALLBLK and AMC+ on one billing platform, and an AMC+
+  subscription already includes the Shudder catalogue. People frequently pay for both without
+  noticing, because the Shudder app keeps working while AMC+ is active.
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 2
+    cancelUrl: https://www.shudder.com/account
+    steps:
+      - text: Sign in at shudder.com in a browser and open My Account from the menu at the top right.
+        detail: The TV and phone apps have no billing screen; this only works in a browser.
+      - text: Open the Subscription section and read the line naming who bills the plan.
+        warning: If it names Apple, Google, Amazon or Roku, the charge cannot be stopped on shudder.com.
+      - text: Choose Cancel Subscription, then confirm on the screen that follows.
+      - text: Check the Subscription section now shows the date access ends and keep the confirmation email.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      AMC Networks does not prorate the remainder of a paid month or year; streaming continues
+      until the paid period ends.
+    retentionOfferNotes: >-
+      A free extra month or a discounted period is usually offered on the screen before the
+      confirmation.
+    gotchas:
+      - An annual plan cancelled mid-term keeps running, and stays paid for, until the anniversary date.
+      - AMC+ includes the Shudder catalogue, so a separate Shudder subscription can be duplicate spend.
+      - The Shudder app keeps signing in after cancellation if the same account also has AMC+, which makes the cancellation look like it failed.
+    evidenceHint: Screenshot the Subscription section showing the end date, and keep the confirmation email.
+    sourceUrl: https://support.shudder.com/hc/en-us
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: apple
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://apps.apple.com/account/subscriptions
+    steps:
+      - text: On iPhone or iPad, open Settings and tap your name at the very top of the list.
+      - text: Tap Subscriptions, then tap Shudder.
+        detail: On a Mac, open App Store, click your name at the bottom left, then Account Settings, then Manage next to Subscriptions.
+      - text: Tap Cancel Subscription and confirm on the sheet that appears.
+      - text: Note the expiry date shown under the Shudder entry.
+    noticePeriodDays: 0
+    gotchas:
+      - shudder.com cannot cancel an Apple-billed subscription.
+      - Deleting the app does not stop the billing.
+    evidenceHint: Screenshot the Subscriptions screen showing Shudder expiring on a date.
+    sourceUrl: https://support.apple.com/en-us/118428
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: google
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://play.google.com/store/account/subscriptions
+    steps:
+      - text: Open the Google Play Store app, tap your profile picture, then Payments and subscriptions, then Subscriptions.
+      - text: Tap Shudder, then Cancel subscription, and pick a reason when prompted.
+      - text: Tap through to the end until the entry shows an expiry date instead of a renewal date.
+    noticePeriodDays: 0
+    gotchas:
+      - The subscription belongs to the Google account that bought it, which may not be the profile signed in on the phone today.
+      - Uninstalling the app leaves the subscription running.
+    evidenceHint: Screenshot the Play subscriptions entry showing the expiry date.
+    sourceUrl: https://support.google.com/googleplay/answer/7018481
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: amazon
+    method: app_store
+    difficulty: 2
+    cancelUrl: https://www.amazon.com/gp/video/settings
+    steps:
+      - text: Sign in at amazon.com and open Account and Lists, then Memberships and Subscriptions.
+      - text: Open Prime Video Channels and find the Shudder row.
+        detail: The same list appears in the Prime Video web player under the gear icon, then Channels.
+      - text: Choose Cancel Channel and confirm on the End Subscription screen.
+      - text: Check the row now shows the date the channel stops rather than a renewal date.
+    noticePeriodDays: 0
+    gotchas:
+      - Shudder sells heavily through Prime Video Channels, and shudder.com cannot cancel a channel subscription.
+      - An AMC+ channel and a Shudder channel are separate Amazon rows even though their catalogues overlap.
+    evidenceHint: Screenshot the Channels page showing Shudder ending on a date.
+    sourceUrl: https://www.amazon.com/yourmembershipsandsubscriptions
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: roku
+    method: app_store
+    difficulty: 2
+    cancelUrl: https://my.roku.com/account
+    steps:
+      - text: Sign in at my.roku.com and open Manage your subscriptions.
+      - text: Find Shudder in the list and choose Unsubscribe, then confirm.
+        detail: >-
+          On the device, highlight the Shudder tile on the Roku home screen, press the star
+          (Options) button, choose Manage subscription, then Cancel subscription.
+      - text: Check the entry now shows the date the subscription ends.
+    noticePeriodDays: 0
+    gotchas:
+      - Removing the channel from the Roku home screen does not cancel the billing.
+      - shudder.com cannot cancel a Roku-billed subscription.
+    evidenceHint: Screenshot the Roku subscriptions page showing Shudder ending on a date.
+    sourceUrl: https://support.roku.com/article/208756478
+    lastVerifiedAt: "2026-07-25"

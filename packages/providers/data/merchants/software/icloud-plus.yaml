@@ -1,0 +1,54 @@
+slug: icloud-plus
+name: iCloud+
+legalName: Apple Inc.
+category: cloud_storage
+domains:
+  - icloud.com
+aliases:
+  - iCloud
+  - iCloud Storage
+  - Apple iCloud
+  - iCloud Drive Storage
+descriptorPatterns:
+  - ICLOUD
+  - APPLE ICLOUD
+  - ICLOUD STORAGE
+  - ICLOUD PLUS
+typicalIntervals:
+  - unit: month
+    count: 1
+notes: >-
+  Apple bills iCloud+ through the Apple Account, so most statements read APPLE.COM/BILL with no
+  product name — the same descriptor Apple uses for App Store subscriptions, apps and music. A
+  charge like that cannot be attributed to iCloud+ from the descriptor alone; the amount (the
+  storage tiers are distinctive) and the user's own confirmation are the only reliable signals.
+  There is deliberately no direct playbook: the provider and the biller are the same company, and
+  the cancel path is the Apple Account, not a website login.
+playbooks:
+  - channel: apple
+    method: app_store
+    difficulty: 2
+    cancelUrl: https://apps.apple.com/account/subscriptions
+    steps:
+      - text: On iPhone or iPad, open Settings and tap your name at the top, then tap Subscriptions.
+      - text: Tap iCloud+ under Active, then Cancel Subscription, and confirm.
+        detail: >-
+          On a Mac, open the Apple menu, then System Settings, click your name, click iCloud, then
+          Manage Plan under iCloud+ Features.
+      - text: To keep some paid storage instead of dropping to the free 5 GB, tap See All Plans and pick a smaller tier rather than cancelling.
+        detail: >-
+          On older iOS versions the same control lives at Settings, your name, iCloud, Manage
+          Account Storage, Downgrade Options — and asks for the Apple Account password.
+      - text: Check the Subscriptions screen again and note the date the plan ends.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      The change takes effect after the current billing period ends. Apple handles refund requests
+      through its own billing support rather than in the Settings flow.
+    gotchas:
+      - Turning off iCloud Backup or signing out of iCloud on a device does not stop the charge — the plan is attached to the Apple Account, not the device.
+      - When the plan ends, anything above the free 5 GB stops syncing and new backups fail, so free up space before the end date rather than after it.
+      - iCloud+ features bought as part of an Apple One bundle are not cancelled here; the bundle is a separate subscription entry.
+      - Family Sharing shares the storage — cancelling affects every member of the family group at once.
+    evidenceHint: Screenshot the Subscriptions screen showing iCloud+ ending on a date, and note the storage tier and price before cancelling.
+    sourceUrl: https://support.apple.com/en-us/108318
+    lastVerifiedAt: "2026-07-25"

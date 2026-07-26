@@ -1,0 +1,83 @@
+slug: myfitnesspal
+name: MyFitnessPal
+legalName: MyFitnessPal, Inc.
+category: fitness
+domains:
+  - myfitnesspal.com
+aliases:
+  - MyFitnessPal Premium
+  - MFP Premium
+  - My Fitness Pal
+descriptorPatterns:
+  - MYFITNESSPAL
+  - MYFITNESSPAL.COM
+  - MYFITNESSPAL PREMIUM
+  - MYFITNESSPAL INC
+  - MFP MYFITNESSPAL
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: year
+    count: 1
+notes: >-
+  Most MyFitnessPal Premium subscriptions are bought inside the phone app, so the App Store or
+  Play is the usual owner of the billing even though the account is used on the web. The web
+  flow turns auto-renewal off rather than ending the subscription immediately, which is why the
+  plan keeps showing as Premium afterwards.
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 2
+    steps:
+      - text: Sign in at myfitnesspal.com in a browser.
+      - text: Open My Home, then Premium, then Subscription Settings at the top right of the Premium detail page.
+      - text: Switch Auto-Renewal from On to Off and confirm.
+        detail: >-
+          Premium features stay available until the end of the paid period; the account will show
+          Premium until then, which is expected rather than a failed cancellation.
+      - text: Reload the page and check that it now shows the date Premium ends.
+    noticePeriodDays: 1
+    refundPolicy: >-
+      Premium features remain available to the end of the current paid period whenever the
+      renewal is switched off; MyFitnessPal does not prorate the remainder.
+    retentionOfferNotes: Offers a discounted renewal or a downgrade before the toggle takes effect.
+    gotchas:
+      - MyFitnessPal states the renewal must be turned off more than 24 hours before the renewal date, so same-day action can still be charged.
+      - Cancellation has to happen on the platform that took the payment — a subscription bought in the iOS or Android app cannot be stopped on the website.
+      - Deleting the MyFitnessPal account does not by itself stop a store-billed subscription.
+    evidenceHint: Screenshot Subscription Settings with Auto-Renewal off and the end date visible.
+    sourceUrl: https://support.myfitnesspal.com/hc/en-us/articles/360032625371-How-do-I-cancel-my-Premium-subscription-renewal
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: apple
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://apps.apple.com/account/subscriptions
+    steps:
+      - text: On iPhone or iPad, open Settings and tap your name at the top of the screen.
+      - text: Tap Subscriptions, then tap MyFitnessPal.
+      - text: Tap Cancel Subscription and confirm.
+        warning: If no Cancel button is shown, the subscription is already set to expire.
+    noticePeriodDays: 1
+    gotchas:
+      - Deleting the app leaves the App Store subscription running.
+      - Turning off Auto-Renewal on myfitnesspal.com has no effect on a subscription that Apple bills.
+    evidenceHint: Screenshot the App Store Subscriptions screen showing the expiry date.
+    sourceUrl: https://support.apple.com/en-us/118428
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: google
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://play.google.com/store/account/subscriptions
+    steps:
+      - text: Open the Google Play Store app and tap your profile icon at the top right.
+      - text: Tap Payments & subscriptions, then Subscriptions, then MyFitnessPal.
+      - text: Tap Cancel subscription and confirm.
+    noticePeriodDays: 1
+    gotchas:
+      - Uninstalling the app leaves the Google Play subscription running.
+      - The subscription lives on the Google account that paid, which may differ from the MyFitnessPal login.
+    evidenceHint: Screenshot the Play subscription page showing the expiry date.
+    sourceUrl: https://support.google.com/googleplay/answer/7018481
+    lastVerifiedAt: "2026-07-25"

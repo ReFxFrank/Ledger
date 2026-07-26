@@ -1,0 +1,71 @@
+slug: box
+name: Box
+legalName: Box, Inc.
+category: cloud_storage
+domains:
+  - box.com
+aliases:
+  - Box Personal Pro
+  - Box Individual
+  - Box Business
+descriptorPatterns:
+  - BOX.COM
+  - BOX INC
+  - BOX PERSONAL PRO
+  - BOX INDIVIDUAL
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: year
+    count: 1
+notes: >-
+  Two warnings for whoever maintains this entry. First, the brand is a single common word, so an
+  unrelated descriptor containing the token BOX can be pulled in by name matching — treat a Box
+  match with more suspicion than most. Second, Box's self-serve cancellation is bound up with
+  account closure rather than a plain downgrade, which is why the difficulty here is higher than
+  for other storage providers.
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 3
+    cancelUrl: https://app.box.com/account
+    steps:
+      - text: Sign in at app.box.com, click your account avatar in the top right, then Account Settings.
+      - text: Scroll to the Account Details section and choose Cancel Account.
+        detail: >-
+          On an individual paid plan this is the control that ends the billing. Business and
+          Enterprise accounts do not show it — those are contracted and go through the account
+          manager or Box support instead.
+      - text: Complete the short survey, click Continue, then click Permanently Cancel My Account to finish.
+        warning: >-
+          This ends the account itself, not only the payment. Download anything worth keeping
+          before the final confirmation.
+      - text: If no cancellation control appears, email cancel@box.com from the address on the account and ask for the subscription to be closed.
+        detail: Send the template below, then keep the reply — support-side cancellations leave no trace in the account UI.
+      - text: Watch the next statement date and check that no further Box charge appears.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      Box bills the term up front and does not prorate the unused part of a paid term; anything
+      beyond that is decided by support on the account.
+    gotchas:
+      - The self-serve control is account deletion, so cancelling the plan and keeping the files is not one action here.
+      - Business and Enterprise plans have no cancel button at all and renew on the contract terms until support acts on a written request.
+      - Support-driven cancellations can take several working days, so start well before the renewal date rather than on it.
+      - Removing the card on file does not end the plan; it produces an unpaid invoice and the account stays open.
+    letterTemplate: |
+      To: cancel@box.com
+      Subject: Cancellation request - Box account {{accountReference}}
+
+      Hello,
+
+      My name is {{fullName}} and I am writing on {{date}} to end the paid Box subscription on the
+      account registered as {{accountReference}}.
+
+      Please stop any further billing on this account and reply in writing with the date the paid
+      plan ends and the date of the final charge.
+
+      Thank you,
+      {{fullName}}
+    evidenceHint: Keep the confirmation email, or the reply from cancel@box.com naming the end date, plus a screenshot of the account page afterwards.
+    sourceUrl: https://support.box.com/hc/en-us/articles/360043694874-How-To-Cancel-Your-Box-Account-Subscription
+    lastVerifiedAt: "2026-07-25"

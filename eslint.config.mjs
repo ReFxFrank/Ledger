@@ -175,6 +175,16 @@ export default tseslint.config(
       ],
       '@typescript-eslint/no-non-null-assertion': 'off',
       '@typescript-eslint/no-unsafe-assignment': 'off',
+
+      /**
+       * `no-console` exists to keep secrets and noise out of shipped code. Tests are not
+       * shipped, and the rule was actively costing us something real: the detection golden test
+       * measures recall and false-positive rate and could only surface those numbers by failing.
+       * A quality gate that reports nothing when it passes tells you the threshold held, not how
+       * close it came — and the distance to the threshold is the part that predicts the next
+       * regression.
+       */
+      'no-console': 'off',
     },
   },
 

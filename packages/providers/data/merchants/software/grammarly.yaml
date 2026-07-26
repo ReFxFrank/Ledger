@@ -1,0 +1,88 @@
+slug: grammarly
+name: Grammarly
+legalName: Grammarly, Inc.
+category: software
+domains:
+  - grammarly.com
+aliases:
+  - Grammarly Premium
+  - Grammarly Pro
+  - Grammarly Business
+descriptorPatterns:
+  - GRAMMARLY
+  - GRAMMARLY.COM
+  - GRAMMARLY PREMIUM
+  - GRAMMARLY INC
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: month
+    count: 3
+  - unit: year
+    count: 1
+notes: >-
+  Grammarly sells monthly, quarterly and annual terms at once, and the quarterly term is the one
+  that trips people up — a charge every three months looks irregular next to the usual monthly
+  cadence. The annual plan is billed as one payment up front rather than monthly instalments,
+  so the yearly charge is several times the advertised monthly price.
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 2
+    cancelUrl: https://account.grammarly.com
+    steps:
+      - text: Sign in at account.grammarly.com and click the Account tab in the left sidebar.
+      - text: Choose Your account, then Subscription.
+      - text: Click Cancel Subscription at the bottom of the page, then Continue in the window that appears.
+        warning: >-
+          Update plan sits above the cancel link and switches the term instead of ending it. The
+          cancel link is deliberately the smaller of the two controls.
+      - text: Choose a reason and click Cancel Subscription again to finish.
+      - text: Reload the Subscription page and check it shows the plan ending on a date rather than renewing.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      Cancelling stops the automatic renewal and leaves the paid features available for the rest
+      of the term already paid for; refund requests outside that go through Grammarly support.
+    retentionOfferNotes: >-
+      The exit flow offers a discount or a switch to a cheaper term before the final confirmation,
+      and accepting either one restarts the subscription instead of ending it.
+    gotchas:
+      - An annual plan is charged as one payment, so cancelling shortly after the renewal date still leaves a full year paid for.
+      - Uninstalling the browser extension, the keyboard or the desktop app does not stop the billing.
+      - The web account can show the plan as active for the rest of the term after cancelling, which reads like the cancellation failed.
+      - A subscription bought inside the iOS or Android keyboard app is billed by the store and cannot be ended on this page.
+    evidenceHint: Screenshot the Subscription page showing the end date, and keep the cancellation email from Grammarly.
+    sourceUrl: https://support.grammarly.com/hc/en-us/articles/115000090172-How-do-I-cancel-my-subscription
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: apple
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://apps.apple.com/account/subscriptions
+    steps:
+      - text: On iPhone or iPad, open Settings and tap your name at the top.
+      - text: Tap Subscriptions, then tap Grammarly.
+      - text: Tap Cancel Subscription and confirm.
+    noticePeriodDays: 0
+    gotchas:
+      - A subscription started in the Grammarly Keyboard app is billed by Apple, and account.grammarly.com has no cancel control for it.
+      - Deleting the keyboard app leaves the billing running.
+    evidenceHint: Screenshot the Subscriptions screen showing Grammarly expiring on a date.
+    sourceUrl: https://support.apple.com/en-us/118428
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: google
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://play.google.com/store/account/subscriptions
+    steps:
+      - text: Open the Google Play Store app, tap your profile icon, then Payments & subscriptions, then Subscriptions.
+      - text: Tap Grammarly, then Cancel subscription, and pick a reason.
+      - text: Confirm and check the entry shows an expiry date.
+    noticePeriodDays: 0
+    gotchas:
+      - A Play-billed subscription cannot be cancelled from the Grammarly website.
+      - Uninstalling the app does not stop the billing.
+    evidenceHint: Screenshot the Play subscriptions entry showing the expiry date.
+    sourceUrl: https://support.google.com/googleplay/answer/7018481
+    lastVerifiedAt: "2026-07-25"

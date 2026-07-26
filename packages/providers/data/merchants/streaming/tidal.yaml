@@ -1,0 +1,83 @@
+slug: tidal
+name: TIDAL
+legalName: Aspiro AB
+category: music_audio
+domains:
+  - tidal.com
+aliases:
+  - Tidal HiFi
+  - Tidal HiFi Plus
+  - Tidal Music
+  - Tidal Family
+descriptorPatterns:
+  - TIDAL
+  - TIDAL.COM
+  - TIDAL MUSIC
+  - TIDAL HIFI
+  - ASPIRO TIDAL
+typicalIntervals:
+  - unit: month
+    count: 1
+notes: >-
+  TIDAL sells monthly plans only, and the tier structure has changed twice, so an old HiFi Plus
+  subscription may still bill at a legacy price that no longer appears on the pricing page.
+  Family and DJ plans are separate products rather than add-ons.
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 2
+    cancelUrl: https://account.tidal.com/subscription
+    steps:
+      - text: Sign in at tidal.com in a browser and open My Account from the menu under your name.
+        detail: The desktop and phone apps have no cancel control; the account pages only exist on the web.
+      - text: Open Manage subscription and read who the plan is billed by before going further.
+        warning: If it names Apple, Google or a mobile operator, nothing on tidal.com will stop the charge.
+      - text: Choose Cancel subscription, pick a reason, then confirm on the final screen.
+        warning: The reason screen offers a discounted period, and its button is the prominent one.
+      - text: Check Manage subscription now shows the date access ends and keep the confirmation email.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      TIDAL does not prorate the unused part of a paid month; streaming and offline downloads
+      continue until the paid period ends.
+    retentionOfferNotes: A discounted month or a downgrade to the cheaper tier is offered inside the cancel flow.
+    gotchas:
+      - Only the plan owner can cancel a Family plan; a member can leave it, which does not stop the charge.
+      - Offline downloads stop playing when the paid period ends, including on a device kept offline.
+      - A subscription bought as part of a hardware or operator promotion renews at the standard price once the promotion ends.
+    evidenceHint: Screenshot Manage subscription showing the end date, and keep the confirmation email.
+    sourceUrl: https://support.tidal.com/hc/en-us
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: apple
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://apps.apple.com/account/subscriptions
+    steps:
+      - text: On iPhone or iPad, open Settings and tap your name at the very top of the list.
+      - text: Tap Subscriptions, then tap TIDAL.
+        detail: On a Mac, open App Store, click your name at the bottom left, then Account Settings, then Manage next to Subscriptions.
+      - text: Tap Cancel Subscription and confirm on the sheet that appears.
+      - text: Note the expiry date shown under the TIDAL entry.
+    noticePeriodDays: 0
+    gotchas:
+      - tidal.com cannot cancel an Apple-billed subscription; Manage subscription there names Apple instead of offering a cancel control.
+      - Deleting the app does not stop the billing.
+    evidenceHint: Screenshot the Subscriptions screen showing TIDAL expiring on a date.
+    sourceUrl: https://support.apple.com/en-us/118428
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: google
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://play.google.com/store/account/subscriptions
+    steps:
+      - text: Open the Google Play Store app, tap your profile picture, then Payments and subscriptions, then Subscriptions.
+      - text: Tap TIDAL, then Cancel subscription, and pick a reason when prompted.
+      - text: Tap through to the end until the entry shows an expiry date instead of a renewal date.
+    noticePeriodDays: 0
+    gotchas:
+      - The subscription belongs to the Google account that bought it, which may not be the profile signed in on the phone today.
+      - Uninstalling the app leaves the subscription running.
+    evidenceHint: Screenshot the Play subscriptions entry showing the expiry date.
+    sourceUrl: https://support.google.com/googleplay/answer/7018481
+    lastVerifiedAt: "2026-07-25"

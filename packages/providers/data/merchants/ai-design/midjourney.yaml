@@ -1,0 +1,48 @@
+slug: midjourney
+name: Midjourney
+legalName: Midjourney, Inc.
+category: ai
+domains:
+  - midjourney.com
+aliases:
+  - Midjourney AI
+  - Mid Journey
+descriptorPatterns:
+  - MIDJOURNEY
+  - MIDJOURNEY INC
+  - MIDJOURNEY.COM
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: year
+    count: 1
+notes: >-
+  Web-only billing. Midjourney has no mobile app that sells its plans, so there is no App Store
+  or Play subscription to route to — a Midjourney charge is always the direct one.
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 2
+    cancelUrl: https://www.midjourney.com/account
+    steps:
+      - text: Sign in at midjourney.com and open the account menu, then Manage Subscription.
+      - text: If a plan change is already scheduled, click Cancel Change first.
+        warning: A pending upgrade or downgrade survives the cancellation and starts the new plan anyway.
+      - text: Click Cancel Plan and confirm on the following screen.
+        detail: >-
+          Where the account qualifies for a refund, the request option is offered inside this same
+          confirmation step rather than afterwards.
+      - text: Re-open the account page and check the plan shows as ending on the renewal date.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      Midjourney documents a refund only where the account has used fewer than 20 GPU minutes over
+      its whole lifetime, counting Fast, Turbo and Relax time. Otherwise the plan runs to the end
+      of the paid period with nothing returned.
+    gotchas:
+      - A scheduled plan change takes precedence over the cancellation — clear it with Cancel Change first.
+      - Turning off automatic renewal and cancelling the plan are separate controls; the first leaves the current plan running.
+      - Fast hours and generation access continue to the end of the paid period; nothing is prorated.
+      - Cancelling does not delete generated images or account history, so the gallery is not evidence that billing stopped.
+    evidenceHint: Screenshot the Manage Subscription page showing the plan as cancelled with its end date.
+    sourceUrl: https://docs.midjourney.com/hc/en-us/articles/25384024738573-Canceling-Your-Subscription
+    lastVerifiedAt: "2026-07-25"

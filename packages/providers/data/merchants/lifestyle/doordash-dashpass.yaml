@@ -1,0 +1,88 @@
+slug: doordash-dashpass
+name: DashPass
+legalName: DoorDash, Inc.
+category: food_delivery
+domains:
+  - doordash.com
+aliases:
+  - DoorDash DashPass
+  - Dash Pass
+  - DashPass Membership
+descriptorPatterns:
+  - DASHPASS
+  - DOORDASH DASHPASS
+  - DD DASHPASS
+  - DOORDASH DASHPASS MONTHLY
+  - DOORDASH DASHPASS ANNUAL
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: year
+    count: 1
+notes: >-
+  DashPass arrives through several routes and each one owns the billing. Bought in the app on
+  iOS it can be an App Store charge; taken through a Chase or RBC card benefit it is managed by
+  the card issuer and does not appear as a charge at all; bought from doordash.com it is billed
+  by DoorDash. The DashPass page in the account states which one applies.
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 2
+    cancelUrl: https://www.doordash.com/account
+    steps:
+      - text: Open the DoorDash app or doordash.com and go to Account, then Manage DashPass.
+      - text: Choose End Subscription, then confirm on the next screen.
+        warning: >-
+          Pause Membership sits directly above End Subscription. A paused membership resumes
+          billing on its own at the end of the pause.
+      - text: Read the line on the page that says how DashPass is billed before assuming this worked.
+        detail: >-
+          If it names the App Store, Google Play or a card partner, the charge is not DoorDash's
+          to stop and has to be ended there instead.
+      - text: Wait for the cancellation email from DoorDash and check the benefits end date it gives.
+    noticePeriodDays: 1
+    refundPolicy: >-
+      Benefits continue to the end of the paid period. Cancelling during a free period ends the
+      benefits immediately rather than at the end of the trial.
+    retentionOfferNotes: >-
+      Offers a pause and, frequently, a discounted month or a credit before the End Subscription
+      button becomes available.
+    gotchas:
+      - DoorDash asks for the cancellation at least 24 hours before the next scheduled payment; later than that and the next period is charged.
+      - Cancelling during a free trial ends the benefits at once rather than at the end of the trial, so the remaining trial days are lost.
+      - A DashPass that came with a credit card benefit is enrolled through the card issuer and re-enrols itself unless it is switched off there.
+    evidenceHint: Keep the DoorDash cancellation email and screenshot the Manage DashPass page showing the end date.
+    sourceUrl: https://help.doordash.com/en-us/consumers/article/how-do-i-cancel-my-dashpass-subscription
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: apple
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://apps.apple.com/account/subscriptions
+    steps:
+      - text: On iPhone or iPad, open Settings, tap your name, then Subscriptions.
+      - text: Tap DashPass, then Cancel Subscription, and confirm.
+        detail: The entry may be listed under DoorDash rather than DashPass.
+    noticePeriodDays: 1
+    gotchas:
+      - Ending the subscription in the DoorDash app does not stop a DashPass that Apple bills; the app can show it as cancelled while Apple keeps charging.
+      - Deleting the DoorDash app leaves the App Store subscription running.
+    evidenceHint: Screenshot the App Store Subscriptions screen showing the expiry date.
+    sourceUrl: https://support.apple.com/en-us/118428
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: google
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://play.google.com/store/account/subscriptions
+    steps:
+      - text: Open the Google Play Store app and tap your profile icon at the top right.
+      - text: Tap Payments & subscriptions, then Subscriptions, then DashPass.
+      - text: Tap Cancel subscription and confirm.
+    noticePeriodDays: 1
+    gotchas:
+      - Uninstalling the DoorDash app leaves the Google Play subscription running.
+      - The subscription belongs to the Google account that paid, not to the DoorDash login.
+    evidenceHint: Screenshot the Play subscription page showing the expiry date.
+    sourceUrl: https://support.google.com/googleplay/answer/7018481
+    lastVerifiedAt: "2026-07-25"

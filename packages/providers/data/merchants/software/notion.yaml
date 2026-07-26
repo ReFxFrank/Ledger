@@ -1,0 +1,56 @@
+slug: notion
+name: Notion
+legalName: Notion Labs, Inc.
+category: software
+domains:
+  - notion.so
+  - notion.com
+aliases:
+  - Notion Labs
+  - Notion Plus
+  - Notion Business
+  - Notion AI
+descriptorPatterns:
+  - NOTION LABS
+  - NOTION.SO
+  - NOTION
+  - NOTION AI
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: year
+    count: 1
+notes: >-
+  Notion bills per workspace, not per person, so one login can be paying for several
+  subscriptions and cancelling one leaves the others running. Billing lives on the web app only —
+  the mobile apps show plan information but no way to change it. Notion AI is charged as a
+  separate line on the same invoice and has to be removed separately from the plan itself.
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 2
+    steps:
+      - text: Open notion.so in a desktop browser and sign in as the workspace owner.
+        detail: >-
+          Only a workspace owner sees billing. A member who opens Settings finds no Billing
+          section at all, which reads like the subscription is missing rather than like a
+          permission problem.
+      - text: Click Settings in the left-hand sidebar, then Billing, then Change plan.
+      - text: Select the Free plan, click Continue, answer the feedback prompt, then click Downgrade.
+        warning: The downgrade is not applied until the button on the final feedback screen is used.
+      - text: If Notion AI is billed as an add-on, remove it on the same Billing page — dropping the plan does not always drop the add-on.
+      - text: Reload Billing and check it shows the plan ending on a specific date.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      Notion states a full, non-prorated refund when a downgrade happens within three days of
+      starting monthly billing or within 30 days of starting annual billing; outside those windows
+      access simply continues to the end of the paid term.
+    retentionOfferNotes: The plan picker puts the cheaper paid tier next to Free, and the flow asks for a reason before it will complete.
+    gotchas:
+      - The workspace switcher matters — check the workspace name at the top of Settings before cancelling, because each paid workspace is billed separately.
+      - Paid features stay available until the end of the billing cycle, so nothing visibly changes on the day of cancellation.
+      - On the Free plan, guests and some integrations stop working, and file uploads are capped again.
+      - Notion AI is a separate charge and can keep renewing after the plan is downgraded.
+    evidenceHint: Screenshot the Billing page showing the plan end date, plus the confirmation email from Notion.
+    sourceUrl: https://www.notion.com/help/upgrade-or-downgrade-your-plan
+    lastVerifiedAt: "2026-07-25"

@@ -1,0 +1,62 @@
+slug: geforce-now
+name: GeForce NOW
+legalName: NVIDIA Corporation
+category: gaming
+domains:
+  - nvidia.com
+  - geforcenow.com
+
+aliases:
+  - GFN
+  - GeForce Now Ultimate
+  - GeForce Now Performance
+  - GeForce Now Priority
+  - NVIDIA GeForce Now
+
+descriptorPatterns:
+  - GEFORCE NOW
+  - NVIDIA GEFORCE
+  - NVIDIA
+  - NVIDIA CORPORATION
+  - NVIDIA.COM
+
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: month
+    count: 6
+  - unit: year
+    count: 1
+
+notes: >-
+  Day Passes use the same descriptor as the membership but never renew, so a single isolated charge
+  here is usually a pass rather than a subscription. Six-month terms are the ones NVIDIA promotes,
+  which puts a large charge on the statement twice a year.
+
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 2
+    cancelUrl: https://account.nvidia.com/
+    steps:
+      - text: Sign in at account.nvidia.com with the NVIDIA account that pays, then open the membership or subscription section.
+        detail: >-
+          The GeForce NOW app reaches the same page - open Settings, then Account, then Manage
+          Membership, which hands off to the browser. Signing in with a linked Google or Apple
+          identity that was not the buyer shows no membership.
+      - text: Select the GeForce NOW membership and choose to cancel it.
+      - text: Confirm on the following screen, then check the membership shows an end date instead of a renewal date.
+        warning: A discounted renewal is offered before the final step; accepting it keeps the membership and starts a new term.
+      - text: Keep the confirmation email from NVIDIA, which states the date streaming access stops.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      NVIDIA does not credit the unused part of a term that has started; streaming access continues
+      to the end of the paid period.
+    gotchas:
+      - Day Passes are one-off purchases that never renew, so there is nothing to cancel for them even though the descriptor matches.
+      - A membership bundled with a graphics card, a laptop or a broadband package is billed by that partner and is stopped with them, not with NVIDIA.
+      - Games streamed through the service are owned on Steam, Epic or Ubisoft Connect, so saves and libraries survive the cancellation untouched.
+      - A cancelled membership drops back to the free tier rather than closing the account, and the free tier keeps sending offers to restart.
+    evidenceHint: Screenshot the membership page showing the end date, and keep NVIDIA's cancellation email.
+    sourceUrl: https://www.nvidia.com/en-us/geforce-now/faq/
+    lastVerifiedAt: "2026-07-25"

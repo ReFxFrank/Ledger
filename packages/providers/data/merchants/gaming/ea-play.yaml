@@ -1,0 +1,99 @@
+slug: ea-play
+name: EA Play
+legalName: Electronic Arts Inc.
+category: gaming
+domains:
+  - ea.com
+  - origin.com
+
+aliases:
+  - EA Access
+  - Origin Access
+  - EA Play Pro
+  - Origin Access Premier
+  - EA Play Membership
+
+descriptorPatterns:
+  - EA PLAY
+  - ELECTRONIC ARTS
+  - EA.COM
+  - ORIGIN.COM
+  - EA PLAY PRO
+  - EA DIGITAL ILLUSIONS
+
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: year
+    count: 1
+
+notes: >-
+  EA sells the same membership through five different tills - the EA app, Steam, the Microsoft
+  Store, the PlayStation Store and the Epic Games Store - and only the first one appears on
+  ea.com. The channel on the transaction decides the playbook here more than usual.
+
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 2
+    cancelUrl: https://myaccount.ea.com/
+    steps:
+      - text: Sign in at myaccount.ea.com with the EA Account that owns the membership.
+      - text: Open Subscriptions from the account menu, then select EA Play or EA Play Pro.
+        detail: >-
+          The Subscriptions page lists the store that bills the membership. If it names Steam,
+          PlayStation, Xbox or Epic, EA cannot stop the payment and the page will show no cancel
+          control - go to that store instead.
+      - text: Choose Cancel Membership, then confirm on the following screen.
+        warning: The first screen offers a switch to the cheaper tier; taking it keeps the membership and starts a new billing period.
+      - text: Check the Subscriptions page shows the membership ending on a date, and keep the confirmation email from EA.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      EA does not credit the unused part of a monthly or annual term once it has started; play
+      continues to the end of the paid period.
+    retentionOfferNotes: A downgrade from EA Play Pro to standard EA Play is offered in place of cancelling.
+    gotchas:
+      - EA Play bought from the PlayStation Store is billed by Sony and is cancelled in PlayStation account settings, not on ea.com.
+      - Games from the Play List stop launching when the membership ends, while games bought outright and all saves stay.
+      - The 10-hour early access trials that come with the membership do not extend it and cannot be paused.
+      - An annual membership stops on its anniversary date rather than at the end of the month it was cancelled in.
+    evidenceHint: Screenshot the EA Subscriptions page showing the membership end date.
+    sourceUrl: https://help.ea.com/en/help/ea-play/ea-play/
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: steam
+    method: account_settings
+    difficulty: 2
+    cancelUrl: https://store.steampowered.com/account/
+    steps:
+      - text: Sign in at help.steampowered.com and choose Games, Software, etc.
+        detail: >-
+          Use View complete gaming and software library if EA Play is not in the short list of
+          recent purchases. Steam files the membership as a game entry, not under payment settings.
+      - text: Select EA Play, then the option to manage or cancel the subscription.
+      - text: Confirm the cancellation, then open store.steampowered.com/account and check the subscription line shows the date it ends.
+    noticePeriodDays: 0
+    gotchas:
+      - Cancelling on ea.com is not possible for a Steam-billed membership; the EA page shows the subscription but no cancel control.
+      - Steam charges the whole term up front and does not credit the unused part when the subscription is stopped part-way through.
+      - The membership disappears from the Steam library at the end of the paid period, and Play List games stop launching then.
+    evidenceHint: Screenshot the Steam account page showing the subscription end date, plus Steam's confirmation email.
+    sourceUrl: https://help.steampowered.com/en/
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: microsoft
+    method: app_store
+    difficulty: 2
+    cancelUrl: https://account.microsoft.com/services
+    steps:
+      - text: Sign in at account.microsoft.com/services with the Microsoft account used on the console.
+      - text: Find EA Play under Subscriptions and choose Manage, then Cancel subscription.
+      - text: Confirm, then check the entry reads Expires on with a date rather than Renews on.
+    noticePeriodDays: 0
+    gotchas:
+      - EA Play is included with Xbox Game Pass Ultimate; when it arrives that way there is no separate EA Play charge and cancelling Ultimate is what ends it.
+      - Cancelling on ea.com does not stop a payment that Microsoft is taking.
+      - Access runs to the end of the period Microsoft has already charged for.
+    evidenceHint: Screenshot the Microsoft Subscriptions page showing the expiry date.
+    sourceUrl: https://support.xbox.com/en-US/help/subscriptions-billing/manage-subscriptions/cancel-xbox-subscription
+    lastVerifiedAt: "2026-07-25"

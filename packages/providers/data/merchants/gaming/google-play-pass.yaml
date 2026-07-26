@@ -1,0 +1,58 @@
+slug: google-play-pass
+name: Google Play Pass
+legalName: Google LLC
+category: gaming
+domains:
+  - play.google.com
+
+aliases:
+  - Play Pass
+  - Google Play Pass Annual
+
+# Google itemises its own services after the "GOOGLE *" prefix, so the service name survives
+# normalization. The bare GOOGLE PLAY fragment is deliberately not claimed - it covers every app
+# and in-app purchase on the account and would swallow unrelated charges.
+descriptorPatterns:
+  - GOOGLE PLAY PASS
+  - GOOGLE PLAYPASS
+  - PLAY PASS
+
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: year
+    count: 1
+
+notes: >-
+  Play Pass is sold only through Google Play, so there is no direct playbook. The annual plan is
+  priced at roughly ten monthly payments, which makes a single yearly charge common on this
+  descriptor.
+
+playbooks:
+  - channel: google
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://play.google.com/store/account/subscriptions
+    steps:
+      - text: Open the Google Play Store app, tap the profile icon, then Payments and subscriptions, then Subscriptions.
+        detail: >-
+          From a browser, play.google.com/store/account/subscriptions shows the same list. Check the
+          account switcher first - the subscription is billed to whichever Google account bought it,
+          which on a shared tablet is often not the one in use.
+      - text: Select Google Play Pass, then Cancel subscription.
+      - text: Choose a reason, then tap Cancel subscription again on the screen that follows.
+        warning: The reason screen is not the confirmation; the list has to read Expires on afterwards for the cancellation to have taken.
+      - text: Re-open the Subscriptions list and check Play Pass shows an expiry date.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      Google does not prorate a cancelled term; access continues to the end of the period already
+      paid for. Refund requests go through the Play Store order history and are decided case by case.
+    gotchas:
+      - Uninstalling the apps does not stop the billing.
+      - On a family plan the family manager pays, so cancelling from a member's device shows nothing to cancel.
+      - Apps unlocked through Play Pass revert to their paid or ad-supported form when access ends, and progress in them is not lost but may be locked behind a purchase.
+      - In-app items bought while covered by Play Pass are not refunded when the subscription stops.
+      - An annual plan bought at a promotional price renews at the standard annual price.
+    evidenceHint: Screenshot the Play Subscriptions screen showing Expires on with the date, and keep Google's cancellation email.
+    sourceUrl: https://support.google.com/googleplay/answer/7018481
+    lastVerifiedAt: "2026-07-25"

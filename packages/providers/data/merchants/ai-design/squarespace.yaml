@@ -1,0 +1,55 @@
+slug: squarespace
+name: Squarespace
+legalName: Squarespace, Inc.
+category: software
+domains:
+  - squarespace.com
+aliases:
+  - Squarespace Website
+  - Squarespace Domains
+  - SQSP
+descriptorPatterns:
+  - SQUARESPACE
+  - SQUARESPACE INC
+  - SQUARESPACE.COM
+  - SQUARESPACE DOMAINS
+  - SQSP
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: year
+    count: 1
+notes: >-
+  A Squarespace account usually holds several subscriptions — the website plan, each domain,
+  Google Workspace mailboxes and Acuity Scheduling — all billed separately from the same
+  descriptor. A small annual Squarespace charge is normally a domain renewal, not the site plan.
+  Mobile Start plans bought in the iOS app last 30 days and do not auto-renew, so there is no
+  recurring Apple subscription for those.
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 2
+    cancelUrl: https://account.squarespace.com
+    steps:
+      - text: Sign in at squarespace.com, open the site, then go to Settings and open the Billing panel.
+      - text: Select the website subscription and click Cancel subscription.
+      - text: Choose Retain Access to keep the site to the end of the cycle, or Get Refund Immediately if the purchase is still inside the refund window.
+        detail: >-
+          Get Refund Immediately ends service to the site at once. Retain Access leaves the site
+          up until the paid period runs out and no refund is issued.
+      - text: Click Continue, choose a reason, then click Cancel subscription to confirm.
+      - text: Go back to Billing and cancel the domain, Google Workspace and Acuity subscriptions separately if they are not wanted.
+        warning: Cancelling the website plan leaves those subscriptions active and still being charged.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      Squarespace states that an annual website subscription cancelled within 14 days of purchase
+      is refunded in full, and that other refunds are requested through its refund request form.
+      Domains are handled under a separate policy.
+    gotchas:
+      - The domain is a separate subscription and keeps renewing after the website plan is cancelled.
+      - Google Workspace mailboxes and Acuity Scheduling bought through Squarespace each have their own cancel control.
+      - A trial site that is not cancelled converts to a paid plan when the trial ends.
+      - After cancellation the site goes offline, and the contributors, forms and commerce data go with it once the account lapses.
+    evidenceHint: Screenshot the Billing panel after cancelling, showing every subscription and which of them are still active.
+    sourceUrl: https://support.squarespace.com/hc/en-us/articles/205810508-Cancel-your-website-subscription
+    lastVerifiedAt: "2026-07-25"

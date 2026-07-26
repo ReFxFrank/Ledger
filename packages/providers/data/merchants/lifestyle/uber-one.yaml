@@ -1,0 +1,63 @@
+slug: uber-one
+name: Uber One
+legalName: Uber Technologies, Inc.
+category: food_delivery
+domains:
+  - uber.com
+  - ubereats.com
+aliases:
+  - UberOne
+  - Uber One Membership
+  - Eats Pass
+  - Uber Pass
+descriptorPatterns:
+  - UBER ONE
+  - UBERONE
+  - UBER ONE MEMBERSHIP
+  - UBER ONE HELP.UBER.COM
+  - UBER EATS PASS
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: year
+    count: 1
+notes: >-
+  Uber One is charged to the payment method held in the Uber account rather than through an app
+  store, which is why it does not appear in App Store or Play subscription lists — people look
+  there first and conclude they are not subscribed. It also carries over from the older Eats Pass
+  and Uber Pass, so an old descriptor can still be the same membership.
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 2
+    steps:
+      - text: Open the Uber or Uber Eats app and tap Account, then Uber One.
+        detail: >-
+          The same membership is reachable from either app and from ubereats.com — it is one
+          membership, not two.
+      - text: Tap Manage Membership, then End Membership.
+        warning: >-
+          Pause Membership appears first on that screen and only suspends the billing for a set
+          number of weeks.
+      - text: Continue past the offer screens and confirm; the membership is only ended on the last screen.
+      - text: Check that the Uber One page now shows the date the benefits end.
+      - text: Within 48 hours of the renewal date, contact Uber support through the Help section and ask them to cancel the membership.
+        detail: >-
+          Uber states the self-service cancellation has to happen more than 48 hours before the
+          renewal for that renewal to be avoided.
+    noticePeriodDays: 2
+    refundPolicy: >-
+      Uber describes a refund of the membership fee where the membership is cancelled within 30
+      days and none of the Uber One benefits have been used. Otherwise benefits run to the end of
+      the paid period.
+    retentionOfferNotes: >-
+      Offers a pause, a discounted month, and a credit toward the next order before the End
+      Membership option is reached.
+    gotchas:
+      - Cancelling less than 48 hours before the renewal usually still bills; Uber directs those cases to support rather than to the app.
+      - A membership on a free trial or already paused ends immediately when cancelled, losing the remaining days.
+      - Uber One is not an App Store or Play subscription, so it will not appear in the phone's subscription list even though it was started in the app.
+      - Deleting the Uber Eats app leaves the membership running on the Uber account.
+    evidenceHint: Screenshot the Uber One page showing the benefits end date and keep the cancellation email or in-app message.
+    sourceUrl: https://help.uber.com/en/riders/article/how-do-i-cancel-my-uber-one-membership?nodeId=2748c138-d8b9-49a7-b6ee-3e2bb07bae28
+    lastVerifiedAt: "2026-07-25"

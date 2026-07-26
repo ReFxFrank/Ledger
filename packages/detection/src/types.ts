@@ -10,7 +10,13 @@
  * field is cheap; changing the meaning of one is not.
  */
 
-import type { BillingChannel, Category, PlainDate, RecurrenceInterval } from '@ledger/core';
+import type {
+  BillingChannel,
+  Category,
+  PlainDate,
+  RecurrenceInterval,
+  SubscriptionStatus,
+} from '@ledger/core';
 
 // ── input ──────────────────────────────────────────────────────────────────────────────
 
@@ -177,6 +183,21 @@ export interface SubscriptionCandidate {
   readonly nextExpectedAt: PlainDate | null;
   /** 0..1. */
   readonly confidence: number;
+  /**
+   * Lifecycle at `DetectionOptions.today`, inferred from the charges alone.
+   *
+   * `paused` and `lapsed` are what silence means — brief §4.4 is explicit that a series that
+   * stops is demoted and never discarded, and that demotion needs somewhere to live. `trialing`
+   * means `trialEndsAt` is still in the future.
+   */
+  readonly status: SubscriptionStatus;
+  /**
+   * Every account these charges posted to, sorted.
+   *
+   * Usually one. Two means either a replaced card (the charges are sequential, so they stayed
+   * one candidate) or a genuine duplicate, which the duplicate pass reads this field to find.
+   */
+  readonly accountIds: readonly string[];
   /** Metered or usage-based billing: the amount moves every cycle but the cadence holds. */
   readonly variableAmount: boolean;
   readonly isTrial: boolean;

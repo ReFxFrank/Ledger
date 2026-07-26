@@ -1,0 +1,59 @@
+slug: whoop
+name: WHOOP
+legalName: WHOOP, Inc.
+category: fitness
+domains:
+  - whoop.com
+aliases:
+  - Whoop Membership
+  - Whoop Strap
+  - Whoop 4.0
+descriptorPatterns:
+  - WHOOP
+  - WHOOP INC
+  - WHOOP.COM
+  - WHOOP MEMBERSHIP
+  - WHOOP UK
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: year
+    count: 1
+  - unit: year
+    count: 2
+notes: >-
+  WHOOP sells a membership with a fixed commitment length (commonly 12 or 24 months) and lends
+  the hardware against it, so a mid-term cancellation is a scheduling exercise rather than a
+  switch — the membership normally ends at the end of the commitment already signed for. The
+  membership is billed by WHOOP directly and is not sold as an in-app purchase, so an App Store
+  or Play subscription list will not show it.
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 3
+    cancelUrl: https://app.whoop.com/membership
+    steps:
+      - text: Sign in at app.whoop.com in a browser — the phone app does not expose the membership controls.
+      - text: Open Membership from the menu and scroll to the very bottom of the page.
+        detail: >-
+          The Cancel your Membership link sits below the payment history and the upgrade offers,
+          in body text rather than as a button.
+      - text: Choose whether to pay the remaining months in one payment or keep paying on the current schedule until the commitment ends.
+        detail: >-
+          Both options end the membership at the same point; only the timing of the money differs.
+      - text: Confirm, then check that the Membership page shows a scheduled end date.
+      - text: If no Membership tab is shown on the account, contact WHOOP Membership Services and ask them to record the cancellation and reply in writing.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      WHOOP describes a 30-day window from receipt of the hardware in which a membership can be
+      returned for a refund, started at app.whoop.com/membership/returns.
+    retentionOfferNotes: >-
+      The flow offers a membership pause and a discounted extension before it reaches the
+      cancellation options.
+    gotchas:
+      - Cancelling normally stops the renewal at the end of the commitment period rather than at the next monthly charge, so payments can continue for months after the request.
+      - The strap and any accessories on loan may need to be returned; keep the return tracking number with the cancellation record.
+      - Deleting the WHOOP app or removing the strap from the phone changes nothing about the billing.
+    evidenceHint: Screenshot the Membership page showing the scheduled end date, and keep the confirmation email and any return tracking number.
+    sourceUrl: https://support.whoop.com/s/article/Canceling-Your-Membership
+    lastVerifiedAt: "2026-07-25"

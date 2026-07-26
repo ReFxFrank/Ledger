@@ -1,0 +1,53 @@
+slug: asana
+name: Asana
+legalName: Asana, Inc.
+category: software
+domains:
+  - asana.com
+aliases:
+  - Asana Premium
+  - Asana Starter
+  - Asana Advanced
+descriptorPatterns:
+  - ASANA
+  - ASANA.COM
+  - ASANA INC
+  - ASANA PREMIUM
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: year
+    count: 1
+notes: >-
+  Asana charges per seat and bills the whole team to one card, so the amount tracks the number of
+  people invited rather than any plan change. Only the billing owner can cancel — a single named
+  person on the account, not every admin — which is the usual reason a team cannot stop the
+  charges.
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 2
+    steps:
+      - text: Sign in at app.asana.com as the billing owner, click your profile photo at the top right, then Admin Console.
+        detail: >-
+          If Admin Console is missing from that menu, the account signed in is not the billing
+          owner. The Billing tab names who is, and only that person can end the plan.
+      - text: Open the Billing tab in the Admin Console.
+      - text: Select Cancel Plan, then work through the confirmation screens.
+        warning: >-
+          Edit Plan next to it changes seats or billing period instead of cancelling, and is easy
+          to click by mistake.
+      - text: Check the Billing tab now shows the plan ending on a date, and keep the confirmation email.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      Cancellations take effect at the end of the current billing cycle rather than immediately,
+      and the paid period already invoiced is not prorated back.
+    retentionOfferNotes: The flow offers a smaller seat count or a cheaper tier before completing the cancellation.
+    gotchas:
+      - Removing everyone from the team or deleting projects does not stop the billing; the plan stays on the organisation until it is cancelled.
+      - An annual plan cancelled a day after renewal runs the full extra year — the renewal charge lands before any reminder does.
+      - Data is kept when the plan drops to the free tier, but features such as timelines, rules and reporting stop working.
+      - Accounts sold through an Asana sales contract are not cancellable from the Admin Console at all.
+    evidenceHint: Screenshot the Admin Console Billing tab showing the plan end date, plus the cancellation email.
+    sourceUrl: https://asana.com/guide/help/premium/cancellation
+    lastVerifiedAt: "2026-07-25"

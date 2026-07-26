@@ -98,7 +98,11 @@ function readOne(filePath: string, dir: string): MerchantFileResult {
   try {
     raw = parseYaml(readFileSync(filePath, 'utf8'));
   } catch (error) {
-    return { ...base, merchant: null, errors: [`unreadable YAML: ${describeError(error).message}`] };
+    return {
+      ...base,
+      merchant: null,
+      errors: [`unreadable YAML: ${describeError(error).message}`],
+    };
   }
 
   if (raw === null || raw === undefined) {
@@ -132,7 +136,9 @@ function findCrossFileErrors(entries: readonly RegisteredMerchant[]): string[] {
   for (const entry of entries) {
     const existing = bySlug.get(entry.merchant.slug);
     if (existing !== undefined) {
-      errors.push(`duplicate slug "${entry.merchant.slug}": ${describe(existing)} and ${describe(entry)}`);
+      errors.push(
+        `duplicate slug "${entry.merchant.slug}": ${describe(existing)} and ${describe(entry)}`,
+      );
       continue;
     }
     bySlug.set(entry.merchant.slug, entry);
@@ -155,7 +161,9 @@ function findCrossFileErrors(entries: readonly RegisteredMerchant[]): string[] {
     for (const alias of aliasKeysOf(entry.merchant)) {
       const owner = byAlias.get(alias);
       if (owner !== undefined && owner.merchant.slug !== entry.merchant.slug) {
-        errors.push(`alias "${alias}" is claimed by both ${describe(owner)} and ${describe(entry)}`);
+        errors.push(
+          `alias "${alias}" is claimed by both ${describe(owner)} and ${describe(entry)}`,
+        );
         continue;
       }
       byAlias.set(alias, entry);
@@ -163,7 +171,9 @@ function findCrossFileErrors(entries: readonly RegisteredMerchant[]): string[] {
 
     const supersededBy = entry.merchant.supersededBy;
     if (supersededBy !== undefined && !entries.some((e) => e.merchant.slug === supersededBy)) {
-      errors.push(`${describe(entry)} is supersededBy "${supersededBy}", which is not in the dataset`);
+      errors.push(
+        `${describe(entry)} is supersededBy "${supersededBy}", which is not in the dataset`,
+      );
     }
   }
 

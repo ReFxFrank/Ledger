@@ -1,0 +1,49 @@
+slug: linear
+name: Linear
+legalName: Linear Orbit, Inc.
+category: software
+domains:
+  - linear.app
+aliases:
+  - Linear App
+  - Linear Orbit
+descriptorPatterns:
+  - LINEAR
+  - LINEAR.APP
+  - LINEAR ORBIT
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: year
+    count: 1
+notes: >-
+  Linear bills per active workspace member, so the amount changes whenever someone joins or is
+  deactivated — a rising Linear charge is usually headcount, not a price rise. Deactivating a
+  member is what removes the seat; removing them from a team inside the workspace does not.
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 2
+    cancelUrl: https://linear.app/settings/billing
+    steps:
+      - text: Open Linear and go to Settings, then Administration, then Billing.
+        detail: Only a workspace admin sees this section; members have no billing entry in Settings at all.
+      - text: Deactivate the members whose seats are no longer needed before changing the plan, since the seat count drives the invoice.
+      - text: In the plan section choose to cancel the subscription or downgrade the workspace to Free, then confirm.
+      - text: Check the billing page shows the plan ending, and keep the invoice email that follows.
+        detail: >-
+          Linear's terms also accept a cancellation notice sent to its billing address by email,
+          which is the fallback when the workspace admin has left the company.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      Linear states that subscription changes take effect at the end of the current subscription
+      period and that it does not refund a cancellation made mid-period.
+    gotchas:
+      - Only a workspace admin can reach Billing, so a team whose admin has left has to contact Linear's billing address instead.
+      - The change lands at the end of the current period; a monthly plan still runs to the end of the billing month.
+      - Dropping to Free makes every remaining member an admin of the workspace.
+      - On the Free plan a workspace over the free issue limit can still be read but no new issues can be created.
+      - Adding a member mid-cycle adds a prorated seat charge that appears on the final invoice.
+    evidenceHint: Screenshot Settings, Administration, Billing showing the plan as ending with its date, plus the final invoice email.
+    sourceUrl: https://linear.app/docs/billing-and-plans
+    lastVerifiedAt: "2026-07-25"

@@ -1,0 +1,136 @@
+slug: hbo-max
+name: HBO Max
+legalName: WarnerMedia Direct, LLC
+category: streaming_video
+domains:
+  - max.com
+  - hbomax.com
+aliases:
+  - Max
+  - HBO
+  - HBO Now
+  - HBO Go
+  - HBO Max Ad-Free
+descriptorPatterns:
+  - HBO MAX
+  - HBOMAX.COM
+  - MAX.COM
+  - HBOMAX
+  - WARNERMEDIA DIRECT
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: year
+    count: 1
+notes: >-
+  The service was called HBO Now, then HBO Max, then Max, then HBO Max again, and old bank
+  descriptors survive every rename, so both HBO and MAX fragments still appear on statements.
+  It is also one of the most heavily resold services in the dataset: cable operators, Apple,
+  Google, Amazon Channels, Roku and Hulu all bill it, and max.com refuses to cancel any of them.
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 2
+    cancelUrl: https://www.max.com/account/subscription
+    steps:
+      - text: Sign in at max.com in a browser and open the profile icon at the top right, then Subscription.
+        detail: >-
+          The TV and console apps have no billing screen. On the phone app the same page is under
+          Profile, then Manage Subscription.
+      - text: Read the Billed by line at the top of the Subscription page before doing anything else.
+        warning: >-
+          If it names Apple, Google, Amazon, Roku, Hulu or a cable operator, nothing on max.com
+          will cancel the charge and the site will only show that provider's name.
+      - text: Choose Manage Subscription, then Cancel Subscription.
+      - text: Work through the offer screen and press the final Cancel Subscription button to finish.
+        warning: The offer screen's primary button keeps the subscription; the cancel option is the plain text link beneath it.
+      - text: Check the Subscription page now shows the date access ends and keep the confirmation email.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      The unused part of a paid period is not prorated, including an annual plan ended early;
+      streaming continues until the paid period runs out.
+    retentionOfferNotes: >-
+      A discounted month or a move to the ad-supported tier is offered before the final
+      confirmation, and taking either keeps the subscription running.
+    gotchas:
+      - Annual plans keep billing until the anniversary date and are not refunded when cancelled mid-term.
+      - Downloads on a phone stop playing the moment the paid period ends.
+      - A subscription that arrived with a cable or broadband package is cancelled with that operator, not on max.com.
+    evidenceHint: Screenshot the Subscription page showing the end date, and keep the cancellation email.
+    sourceUrl: https://help.hbomax.com/us/Answer/Detail/000001246
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: apple
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://apps.apple.com/account/subscriptions
+    steps:
+      - text: On iPhone or iPad, open Settings and tap your name at the very top of the list.
+      - text: Tap Subscriptions, then tap HBO Max.
+        detail: >-
+          The entry may still be listed as Max or HBO Max depending on when it was bought. On a
+          Mac, open App Store, click your name at the bottom left, then Account Settings, then
+          Manage next to Subscriptions.
+      - text: Tap Cancel Subscription and confirm on the sheet that appears.
+      - text: Note the expiry date shown under the entry.
+    noticePeriodDays: 0
+    gotchas:
+      - max.com cannot cancel an Apple-billed subscription; its Subscription page shows Apple as the biller and hides the cancel control.
+      - Deleting the app does not stop the billing.
+    evidenceHint: Screenshot the Subscriptions screen showing HBO Max expiring on a date.
+    sourceUrl: https://support.apple.com/en-us/118428
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: google
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://play.google.com/store/account/subscriptions
+    steps:
+      - text: Open the Google Play Store app, tap your profile picture, then Payments and subscriptions, then Subscriptions.
+      - text: Tap HBO Max, then Cancel subscription, and pick a reason when prompted.
+      - text: Tap through to the end until the entry shows an expiry date instead of a renewal date.
+    noticePeriodDays: 0
+    gotchas:
+      - The subscription belongs to the Google account that bought it, which may not be the profile signed in on the phone today.
+      - Uninstalling the app leaves the subscription running.
+    evidenceHint: Screenshot the Play subscriptions entry showing the expiry date.
+    sourceUrl: https://support.google.com/googleplay/answer/7018481
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: amazon
+    method: app_store
+    difficulty: 2
+    cancelUrl: https://www.amazon.com/gp/video/settings
+    steps:
+      - text: Sign in at amazon.com and open Account and Lists, then Memberships and Subscriptions.
+      - text: Open Prime Video Channels and find the HBO Max row.
+        detail: The same list appears in the Prime Video web player under the gear icon, then Channels.
+      - text: Choose Cancel Channel and confirm on the End Subscription screen.
+      - text: Check the row now shows the date the channel stops rather than a renewal date.
+    noticePeriodDays: 0
+    gotchas:
+      - A Prime Video Channels subscription is billed by Amazon, so max.com cannot cancel it and the HBO Max app will not show it either.
+      - HBO Max titles stay watchable inside Prime Video until the date shown, then disappear from the library.
+      - Cancelling the channel does not touch a separate subscription bought directly from HBO Max with the same email address.
+    evidenceHint: Screenshot the Channels page showing HBO Max ending on a date.
+    sourceUrl: https://www.amazon.com/yourmembershipsandsubscriptions
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: roku
+    method: app_store
+    difficulty: 2
+    cancelUrl: https://my.roku.com/account
+    steps:
+      - text: Sign in at my.roku.com and open Manage your subscriptions.
+      - text: Find HBO Max in the list and choose Unsubscribe, then confirm.
+        detail: >-
+          On the device, highlight the HBO Max tile on the Roku home screen, press the star
+          (Options) button, choose Manage subscription, then Cancel subscription.
+      - text: Check the entry now shows the date the subscription ends.
+    noticePeriodDays: 0
+    gotchas:
+      - Removing the channel from the Roku home screen does not cancel the billing.
+      - max.com cannot cancel a Roku-billed subscription.
+    evidenceHint: Screenshot the Roku subscriptions page showing HBO Max ending on a date.
+    sourceUrl: https://support.roku.com/article/208756478
+    lastVerifiedAt: "2026-07-25"

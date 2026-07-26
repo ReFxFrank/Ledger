@@ -1,0 +1,75 @@
+slug: xbox-game-pass
+name: Xbox Game Pass
+legalName: Microsoft Corporation
+category: gaming
+domains:
+  - xbox.com
+  - microsoft.com
+
+aliases:
+  - Game Pass
+  - Xbox Game Pass Ultimate
+  - PC Game Pass
+  - Game Pass Core
+  - Xbox Live Gold
+  - Game Pass Standard
+
+# Microsoft prints the service name after the "MICROSOFT*" processor prefix, so the brand half is
+# the part worth claiming. The bare "MICROSOFT" fragment is deliberately not claimed here - it
+# cannot tell Game Pass apart from Microsoft 365 or a one-off store purchase.
+descriptorPatterns:
+  - XBOX GAME PASS
+  - XBOX GAMEPASS
+  - XBOX GAME PASS ULTIMATE
+  - XBOX GAME PASS PC
+  - MICROSOFT XBOX GAME PASS
+  - XBOX LIVE GOLD
+
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: month
+    count: 3
+  - unit: year
+    count: 1
+
+notes: >-
+  Ultimate, Premium, Essential and PC are separate plans on one Microsoft account, so a household
+  can carry two charges that look identical on a statement. Time bought as a prepaid code sits on
+  the account as a balance, and the recurring payment only starts once that balance runs out -
+  which is why a first charge can appear a year after the plan was set up.
+
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 2
+    cancelUrl: https://account.microsoft.com/services
+    steps:
+      - text: Sign in at account.microsoft.com/services with the Microsoft account that owns the gamertag.
+        detail: >-
+          Game Pass follows the Microsoft account, not the console. Signing in with a work or school
+          account, or with a second account used on the same console, shows an empty subscription
+          list even though the charge is still running.
+      - text: Find the Game Pass plan under Subscriptions and choose Manage, then Cancel subscription.
+        detail: >-
+          On some plans the control reads Turn off recurring billing instead of Cancel subscription.
+          Both stop the next charge; only the wording differs by plan and region.
+      - text: Choose Turn off recurring billing to keep playing until the paid period ends, or Cancel now if the flow offers money back for the unused part.
+        warning: Closing the tab before the confirmation banner appears leaves recurring billing switched on.
+      - text: From a console instead, press the Xbox button, then Profile and system, Settings, Account, Subscriptions, and select the plan.
+      - text: Re-open the Subscriptions list and check the entry reads Expires on with a date, not Renews on.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      The cancel flow sometimes offers money back for the unused part of the current period when the
+      plan was paid by card and barely used. Time added by redeeming a prepaid code is not returned.
+    retentionOfferNotes: >-
+      Microsoft offers a cheaper plan or a shorter term before the final confirmation screen.
+      Accepting one keeps the subscription alive and starts a fresh billing period.
+    gotchas:
+      - Converting Xbox Live Gold or Game Pass Core time into Ultimate is one-way, and the converted months cannot be turned back into Gold.
+      - Prepaid time from a redeemed code keeps the plan running until it is used up; turning off recurring billing does not end it early.
+      - Games installed from the catalogue stop launching the moment the period ends, although saves and add-ons bought separately stay.
+      - A plan bought inside a phone app is billed by that app store instead and never appears on account.microsoft.com.
+    evidenceHint: Screenshot the Subscriptions page showing Expires on with the date, and keep the confirmation email from Microsoft.
+    sourceUrl: https://support.xbox.com/en-US/help/subscriptions-billing/manage-subscriptions/cancel-xbox-subscription
+    lastVerifiedAt: "2026-07-25"

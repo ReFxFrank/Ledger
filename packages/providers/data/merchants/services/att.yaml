@@ -1,0 +1,85 @@
+slug: att
+name: AT&T
+legalName: AT&T Inc.
+category: telecom
+domains:
+  - att.com
+  - directv.com
+aliases:
+  - AT&T Wireless
+  - AT&T Fiber
+  - ATT
+  - AT&T U-verse
+descriptorPatterns:
+  - ATT*BILL PAYMENT
+  - ATT BILL PAYMENT
+  - AT&T
+  - ATT*WIRELESS
+  - ATT UVERSE
+  - ATT*ATT PAYMENT
+typicalIntervals:
+  - unit: month
+    count: 1
+
+notes: >-
+  Wireless, Internet/Fiber and U-verse TV sit on different support tracks even when they land on
+  one bill, and each has its own cancellation article. Cancelling one line of a multi-line
+  wireless account is "remove a line", not "cancel service"; the bill drops but the account stays
+  open.
+
+playbooks:
+  - channel: direct
+    method: phone
+    difficulty: 4
+    phone: "800-331-0500"
+    hours: Mon-Fri 8am-9pm ET, Sat-Sun 8am-8pm ET
+    steps:
+      - text: >-
+          Decide first whether you are removing one line or closing the account — AT&T treats them
+          as different requests and the agent will ask.
+      - text: >-
+          For wireless, open att.com/support and choose Chat when it is offered, or call
+          800-331-0500 and say "cancel service" at the prompt.
+        detail: >-
+          Illinois, Massachusetts and New York wireless accounts ordered online can sometimes be
+          cancelled at att.com/attaccount without a call. Everywhere else the request goes through
+          an agent.
+      - text: >-
+          For Internet, Fiber or U-verse TV, start at att.com/support/how-to/cancel and follow the
+          cancel flow, which ends with a scheduled callback or a chat agent.
+      - text: Ask the agent to state the disconnect date and give you a confirmation or order number.
+      - text: >-
+          Return leased equipment (gateway, receivers) to a UPS Store or FedEx Office; keep the
+          drop-off receipt with the AT&T tracking barcode.
+        warning: >-
+          Handing equipment to a retail AT&T store is not always logged as a return — the shipper
+          receipt is the record that stands up.
+      - text: Watch the next two bills for a zero balance and for any equipment charge.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      Cancelling mid-cycle makes you responsible for the whole bill period; wireless service is
+      not prorated to the cancel date.
+    retentionOfferNotes: >-
+      Expect an offer of a lower-tier plan, a bill credit, or a gift card for staying. Accepting a
+      device promotion normally restarts a 36-month installment commitment.
+    gotchas:
+      - >-
+        The final wireless period is billed in full — cancelling on the first day of a cycle costs
+        the same as cancelling on the last.
+      - >-
+        Any unpaid device installment balance becomes due immediately on the final bill when the
+        line it is attached to is cancelled.
+      - >-
+        Cancelling wireless can remove a bundle discount from the remaining Internet or TV
+        service, so the other bill goes up.
+      - >-
+        Leased gateways and receivers not returned inside the return window turn into equipment
+        charges that keep the account open.
+      - >-
+        DIRECTV bought through AT&T is now billed separately and is not closed by cancelling AT&T
+        wireless or internet.
+    evidenceHint: >-
+      Screenshot the chat transcript or note the confirmation number and disconnect date, and keep
+      the equipment drop-off receipt.
+    sourceUrl: https://www.att.com/support/article/wireless/KM1008472/
+    lastVerifiedAt: "2026-07-25"

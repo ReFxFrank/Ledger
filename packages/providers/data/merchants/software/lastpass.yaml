@@ -1,0 +1,50 @@
+slug: lastpass
+name: LastPass
+legalName: LastPass US LP
+category: security_vpn
+domains:
+  - lastpass.com
+aliases:
+  - LastPass Premium
+  - LastPass Families
+  - LogMeIn LastPass
+descriptorPatterns:
+  - LASTPASS
+  - LASTPASS.COM
+  - LASTPASS PREMIUM
+  - LOGMEIN LASTPASS
+typicalIntervals:
+  - unit: year
+    count: 1
+notes: >-
+  LastPass Premium and Families are sold as annual subscriptions, so a single charge twelve months
+  apart is the normal shape here rather than a sign of anything unusual — and it is exactly the
+  pattern a user forgets about between charges. Older statement lines still carry the LogMeIn name
+  from before the company was separated.
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 2
+    steps:
+      - text: Sign in to the LastPass web vault at lastpass.com with your email address and master password.
+      - text: Open Account Settings from the left-hand navigation.
+      - text: Under Account Information, in the Links section, click My Account.
+      - text: Click View Receipt for the current subscription, then click Cancel and confirm.
+        detail: >-
+          The cancel control lives inside the receipt view rather than on the account page itself,
+          which is why it is so often reported as missing.
+      - text: Check the account page shows the subscription expiring on a date, and keep the confirmation email.
+      - text: For a Families subscription, do this as the family owner — cancelling moves every member down to the free plan.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      The subscription is prepaid, so LastPass keeps the service running until the paid period
+      ends and does not return the unused part.
+    retentionOfferNotes: The flow offers a discounted renewal before it will complete the cancellation.
+    gotchas:
+      - Cancelling turns off the automatic renewal; the paid features stay available until the end of the year already paid for, so nothing changes on the day.
+      - The cancel control is buried inside View Receipt, not on the main account screen.
+      - Uninstalling the browser extension or deleting the vault does not stop the renewal.
+      - On the free plan the vault stays readable, but the account is limited to one device type, so a phone and a laptop cannot both be used without paying again.
+    evidenceHint: Screenshot the account page showing the subscription expiring on a date, and keep the cancellation email.
+    sourceUrl: https://support.lastpass.com/help/how-do-i-cancel-automatic-renewal-for-lastpass-premium-lp010116
+    lastVerifiedAt: "2026-07-25"

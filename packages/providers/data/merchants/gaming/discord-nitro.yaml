@@ -1,0 +1,103 @@
+slug: discord-nitro
+name: Discord Nitro
+legalName: Discord Inc.
+category: software
+domains:
+  - discord.com
+  - discord.gg
+
+aliases:
+  - Nitro
+  - Nitro Basic
+  - Nitro Classic
+  - Discord Server Boost
+  - Discord Subscription
+
+descriptorPatterns:
+  - DISCORD
+  - DISCORD.COM
+  - DISCORD NITRO
+  - DISCORD INC
+
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: year
+    count: 1
+
+notes: >-
+  Server Boosts bill on the same descriptor as Nitro and renew independently, so one account can
+  carry three or four Discord charges of different sizes each month. Gift Nitro and promotional
+  Nitro from a Game Pass or Xbox offer are credit rather than a subscription, and the card is only
+  charged once the credit runs out - which is when an unexpected first charge appears.
+
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 2
+    steps:
+      - text: Open Discord in the desktop app or at discord.com, then click the gear icon beside your name to open User Settings.
+        detail: >-
+          The billing pages exist only inside the app or the web client; there is no separate account
+          site to sign in to. The gear icon sits at the bottom left, next to the microphone controls.
+      - text: In the left-hand list open Subscriptions, then select Nitro.
+        detail: >-
+          Older builds label the same page Billing. Both show every recurring Discord payment on the
+          account, including Server Boosts bought outright.
+      - text: Choose Cancel Nitro, then confirm on the dialog that follows.
+        warning: The dialog leads with a Keep Nitro button and puts the confirming control in smaller text beneath it.
+      - text: Check the Subscriptions page shows Nitro ending on a date, then cancel any Server Boosts listed separately on the same page.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      Discord does not credit the unused part of a month or a year that has started; the perks run to
+      the end of the paid period.
+    retentionOfferNotes: A downgrade to Nitro Basic is offered in place of cancelling, and taking it keeps a smaller charge running.
+    gotchas:
+      - Server Boosts bought outright are separate subscriptions that keep renewing after Nitro is cancelled, and each one has to be stopped on its own line.
+      - The two boosts included with Nitro are withdrawn when Nitro ends, and any server relying on them drops a boost level.
+      - Nitro credit from a gift or a promotion is used before the card is charged, so the first real charge can arrive months after signing up.
+      - Custom emoji, larger uploads and the profile styling stop at the end of the period, and messages already sent with Nitro-only emoji stay but display as plain text for others.
+      - Nitro bought in the iPhone or Android app is billed by that store and shows no cancel control in the desktop client.
+    evidenceHint: Screenshot the Subscriptions page showing Nitro ending on the date, and keep Discord's cancellation email.
+    sourceUrl: https://support.discord.com/hc/en-us/search?query=cancel%20nitro
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: apple
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://apps.apple.com/account/subscriptions
+    steps:
+      - text: On an iPhone or iPad, open Settings and tap your name at the very top of the list.
+        detail: >-
+          From a Mac, open the App Store, click your name at the bottom of the sidebar, then Account
+          Settings, then Manage beside Subscriptions.
+      - text: Tap Subscriptions, then Discord, then Cancel Subscription and confirm.
+        warning: When no Cancel button is shown, the subscription is already set to expire on the date printed above it.
+      - text: Check the Subscriptions screen now shows an expiry date for Discord.
+    noticePeriodDays: 0
+    gotchas:
+      - Deleting the Discord app does not stop the billing.
+      - The desktop client shows Nitro as active with no cancel control while Apple is the one billing it.
+      - Perks run to the end of the period already paid for, and Apple does not prorate.
+    evidenceHint: Screenshot the Subscriptions screen showing the expiry date.
+    sourceUrl: https://support.apple.com/en-us/118428
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: google
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://play.google.com/store/account/subscriptions
+    steps:
+      - text: Open the Google Play Store app, tap the profile icon, then Payments and subscriptions, then Subscriptions.
+        detail: From a browser, play.google.com/store/account/subscriptions shows the same list.
+      - text: Select Discord, tap Cancel subscription, choose a reason, then tap Cancel subscription again.
+        warning: The reason screen is not the confirmation; the list has to read Expires on afterwards.
+      - text: Check the account switcher if Discord is not listed - it is billed to whichever Google account bought it.
+    noticePeriodDays: 0
+    gotchas:
+      - Uninstalling the app does not stop the billing.
+      - The desktop client cannot cancel a Google-billed Nitro subscription.
+      - Perks run to the end of the period already paid for.
+    evidenceHint: Screenshot the Play Subscriptions screen showing Expires on with the date.
+    sourceUrl: https://support.google.com/googleplay/answer/7018481
+    lastVerifiedAt: "2026-07-25"

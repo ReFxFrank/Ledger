@@ -1,0 +1,55 @@
+slug: blue-apron
+name: Blue Apron
+legalName: Blue Apron, LLC
+category: food_delivery
+domains:
+  - blueapron.com
+aliases:
+  - BlueApron
+  - Blue Apron Meal Kit
+  - Blue Apron Wine
+descriptorPatterns:
+  - BLUE APRON
+  - BLUEAPRON
+  - BLUEAPRON.COM
+  - BLUE APRON LLC
+  - BLUE APRON WINE
+typicalIntervals:
+  - unit: week
+    count: 1
+notes: >-
+  Every account has a per-delivery "Changeable Before" date that governs everything; it is shown
+  on the Upcoming page and it moves with the delivery slot. Cancelling after that date leaves the
+  next box locked in. The wine membership is a separate subscription with its own cancellation
+  page.
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 3
+    cancelUrl: https://www.blueapron.com/account
+    steps:
+      - text: Sign in at blueapron.com and open Account Settings, then the Plan Settings page.
+      - text: Choose Edit, then Pause/Cancel Subscription.
+        warning: >-
+          The page leads with pausing. Cancelling is the small "click here" link at the bottom of
+          that panel, below the pause options.
+      - text: Follow the exit survey to the end — the subscription is only cancelled once the survey is submitted.
+      - text: Check the Upcoming page for any order marked Order Processed or Shipped.
+        detail: >-
+          Those boxes are past their Changeable Before date, will still arrive, and will still be
+          charged. Anything earlier than that can be skipped individually.
+      - text: If the cancel link cannot be reached, contact Blue Apron support before the Changeable Before date and ask for written confirmation.
+    noticePeriodDays: 6
+    refundPolicy: >-
+      Blue Apron treats orders already processed or shipped as final; access to the account
+      remains but no further boxes are scheduled after the cancellation.
+    retentionOfferNotes: >-
+      Offers a pause of up to several weeks and discounted boxes in the exit survey before the
+      cancellation completes.
+    gotchas:
+      - The deadline is the "Changeable Before" date and time on the Upcoming page, not a fixed number of days, and it differs per delivery.
+      - Cancelling the meal plan does not cancel a Blue Apron Wine membership.
+      - The exit survey has to be completed; closing the tab partway leaves the subscription active.
+    evidenceHint: Screenshot the Plan Settings page showing the cancelled status and the Upcoming page with no scheduled deliveries, plus the confirmation email.
+    sourceUrl: https://support.blueapron.com/hc/en-us/articles/203146687-How-do-I-cancel-my-account
+    lastVerifiedAt: "2026-07-25"

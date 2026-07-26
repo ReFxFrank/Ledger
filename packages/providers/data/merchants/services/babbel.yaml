@@ -1,0 +1,126 @@
+slug: babbel
+name: Babbel
+legalName: Lesson Nine GmbH
+category: education
+domains:
+  - babbel.com
+aliases:
+  - Babbel Live
+  - Lesson Nine
+  - Babbel Language Learning
+descriptorPatterns:
+  - BABBEL
+  - BABBEL.COM
+  - LESSON NINE GMBH
+  - LESSON NINE
+  - BABBEL GMBH
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: month
+    count: 3
+  - unit: month
+    count: 6
+  - unit: year
+    count: 1
+
+notes: >-
+  Babbel's charge often prints as LESSON NINE GMBH, the German operating company, which is why
+  people fail to recognise it. Subscriptions renew for the same length as the term originally
+  bought — a six-month plan renews as another six months, not as a month — so the gap between
+  charges can be long enough that the renewal looks like a fresh purchase. Babbel Live (live
+  classes) is a separate subscription from the self-study app.
+
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 2
+    steps:
+      - text: >-
+          Sign in at babbel.com in a browser. A subscription bought on the website cannot be
+          cancelled from inside the app.
+      - text: >-
+          Click the profile icon in the top right, choose Profile and settings, then Account
+          information in the left-hand list.
+      - text: >-
+          Find the subscription under Your subscriptions and choose the cancellation link, then
+          confirm on the following screen.
+        detail: >-
+          If the entry says the subscription is handled by the App Store or Google Play, it was
+          bought in the app and only the store can stop it.
+      - text: >-
+          Cancel before the next payment date shown on that page — the renewal is taken on that
+          date for the full length of the next term.
+        warning: >-
+          A six- or twelve-month plan renews as another six or twelve months in a single payment.
+      - text: >-
+          Check that the page shows the subscription ending on a date, and keep the confirmation
+          email from Babbel.
+      - text: >-
+          Cancel Babbel Live separately if it is on the account; it is listed as its own
+          subscription.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      Access to the courses continues to the end of the term already paid for. Cancelling stops
+      the next renewal rather than releasing the current term.
+    retentionOfferNotes: >-
+      The cancel flow offers a discounted renewal or a shorter, cheaper plan before the final
+      confirmation.
+    gotchas:
+      - >-
+        Deleting the Babbel app or the Babbel account does not cancel the subscription — the
+        billing carries on.
+      - >-
+        Subscriptions renew for the same length as the term first bought, so a "yearly" charge and
+        a "six-monthly" charge can both be normal for this merchant.
+      - >-
+        The statement often reads LESSON NINE GMBH rather than Babbel, which is why the charge
+        goes unrecognised.
+      - >-
+        Babbel Live is billed separately from the main subscription and survives cancelling the
+        app subscription.
+      - >-
+        A subscription bought in the app is billed by the store and will not appear under Account
+        information on the website.
+    evidenceHint: >-
+      Screenshot the Account information page showing the subscription as ending, with the date,
+      plus the cancellation confirmation email.
+    sourceUrl: https://support.babbel.com/hc/en-us/articles/205600298-Canceling-a-subscription
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: apple
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://apps.apple.com/account/subscriptions
+    steps:
+      - text: On iPhone or iPad, open Settings and tap your name at the top of the screen.
+      - text: Tap Subscriptions, then tap Babbel in the list.
+      - text: Tap Cancel Subscription and confirm.
+        detail: >-
+          If Babbel is not listed, the subscription was bought on babbel.com and is cancelled
+          under Account information there.
+    noticePeriodDays: 0
+    gotchas:
+      - Deleting the Babbel app does not stop an App Store subscription.
+      - >-
+        Babbel cannot cancel an Apple-billed subscription from its own account pages; the App
+        Store is the only place it can be stopped.
+    evidenceHint: Screenshot the App Store Subscriptions screen showing the expiry date.
+    sourceUrl: https://support.apple.com/en-us/118428
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: google
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://play.google.com/store/account/subscriptions
+    steps:
+      - text: Open the Google Play Store app and tap your profile icon in the top right.
+      - text: Tap Payments & subscriptions, then Subscriptions, and select Babbel.
+      - text: Tap Cancel subscription, choose a reason, and confirm on the final screen.
+    noticePeriodDays: 0
+    gotchas:
+      - Uninstalling the app leaves the Google Play subscription running.
+      - A Play-billed subscription does not appear under Account information on babbel.com.
+    evidenceHint: Screenshot the Play Subscriptions screen showing the cancellation and end date.
+    sourceUrl: https://support.google.com/googleplay/answer/7018481
+    lastVerifiedAt: "2026-07-25"

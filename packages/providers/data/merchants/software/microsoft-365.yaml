@@ -1,0 +1,120 @@
+slug: microsoft-365
+name: Microsoft 365
+legalName: Microsoft Corporation
+category: software
+domains:
+  - microsoft.com
+  - office.com
+  - microsoft365.com
+aliases:
+  - Office 365
+  - Microsoft Office
+  - MS Office
+  - M365
+  - Microsoft 365 Personal
+  - Microsoft 365 Family
+
+descriptorPatterns:
+  - MICROSOFT 365
+  - MICROSOFT 365 PERSONAL
+  - MICROSOFT 365 FAMILY
+  - MICROSOFT 365 BASIC
+  - OFFICE 365
+  - MICROSOFT OFFICE 365
+
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: year
+    count: 1
+
+notes: >-
+  Microsoft prints MSBILL.INFO or MICROSOFT * in front of almost everything it sells — Xbox,
+  Copilot, OneDrive, 365 — so the marker identifies the biller, never the product. Only the plan
+  name after the marker distinguishes a 365 charge. A prepaid product key bought from a retailer
+  does not appear at account.microsoft.com at all and does not auto-renew.
+
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 2
+    cancelUrl: https://account.microsoft.com/services
+    steps:
+      - text: Sign in at account.microsoft.com/services with the personal Microsoft account that bought the plan.
+        detail: >-
+          A work or school account signs in successfully but shows no Microsoft 365 entry — that
+          subscription is managed by the organisation's admin centre instead.
+      - text: Find Microsoft 365 under Services & subscriptions and select Manage.
+      - text: Select Cancel subscription, then confirm on the page that follows.
+        detail: >-
+          The link sits below the renewal date. If the page offers "Turn on recurring billing"
+          instead, the plan is already set to expire and no further action is needed.
+        warning: The page shows any refund amount only after the cancellation has been started.
+      - text: Check that the entry now reads "Expires on" with a date, and keep the confirmation email.
+    noticePeriodDays: 2
+    refundPolicy: >-
+      Microsoft calculates a prorated amount once the cancellation is under way and returns it to
+      the original payment method; the amount depends on how much of the term is left.
+    retentionOfferNotes: >-
+      The flow offers a downgrade to a cheaper Microsoft 365 plan before the final confirmation,
+      which keeps the subscription alive rather than ending it.
+    gotchas:
+      - Microsoft asks for the cancellation more than two days before the billing date — closer than that and the next charge can still go through.
+      - Turning off recurring billing is not cancelling. The plan runs to the end of the paid term and no refund is assessed.
+      - OneDrive storage drops back to 5 GB when the plan ends, and anything over that limit becomes read-only.
+      - A subscription bought from Amazon, Best Buy or a similar retailer is managed by that retailer, not on this page.
+    evidenceHint: Screenshot the Services & subscriptions entry showing "Expires on" and the date, and keep the cancellation email.
+    sourceUrl: https://support.microsoft.com/en-us/accounts-billing/subscriptions/cancel-a-microsoft-365-subscription
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: microsoft
+    method: app_store
+    difficulty: 2
+    cancelUrl: https://account.microsoft.com/services
+    steps:
+      - text: A charge reading MSBILL.INFO or MICROSOFT * is billed by Microsoft, so it is cancelled in the Microsoft account, not in any app.
+      - text: Go to account.microsoft.com/services and sign in with the account that made the purchase.
+        detail: >-
+          A subscription started on an Xbox or in the Microsoft Store on Windows lands in the same
+          Services & subscriptions list as one bought on the web.
+      - text: Select Manage next to the Microsoft 365 entry, then Cancel subscription, and confirm.
+    noticePeriodDays: 2
+    gotchas:
+      - If the account signed in shows no subscriptions, the purchase was made with a different Microsoft account — check which address the receipt was sent to.
+      - Removing a payment method does not end the subscription; it produces a failed-payment notice and the plan stays open.
+    evidenceHint: Screenshot the Services & subscriptions page after cancelling, showing the expiry date.
+    sourceUrl: https://support.microsoft.com/en-us/accounts-billing/subscriptions/cancel-your-microsoft-subscription
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: apple
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://apps.apple.com/account/subscriptions
+    steps:
+      - text: On iPhone or iPad, open Settings and tap your name at the top.
+      - text: Tap Subscriptions, then tap the Microsoft 365 entry.
+      - text: Tap Cancel Subscription and confirm.
+        detail: If there is no Cancel button, the subscription is already set to expire at the end of the paid period.
+    noticePeriodDays: 0
+    gotchas:
+      - A subscription bought inside the iOS app cannot be ended at account.microsoft.com — the page shows it as managed elsewhere.
+      - Deleting the Office or Microsoft 365 app leaves the billing running.
+    evidenceHint: Screenshot the Subscriptions screen showing the expiry date.
+    sourceUrl: https://support.apple.com/en-us/118428
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: google
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://play.google.com/store/account/subscriptions
+    steps:
+      - text: Open the Google Play Store app, tap your profile icon, then Payments & subscriptions, then Subscriptions.
+      - text: Tap the Microsoft 365 entry, then Cancel subscription.
+      - text: Pick a reason when prompted and confirm — Play does not cancel until the reason screen is completed.
+    noticePeriodDays: 0
+    gotchas:
+      - Cancelling on Google Play does not remove the subscription from the Microsoft account page until the paid term ends.
+      - Uninstalling the app does not stop the billing.
+    evidenceHint: Screenshot the Play Subscriptions screen showing "Expires on" and the date.
+    sourceUrl: https://support.google.com/googleplay/answer/7018481
+    lastVerifiedAt: "2026-07-25"

@@ -1,0 +1,76 @@
+slug: public-storage
+name: Public Storage
+legalName: Public Storage Operating Company
+category: storage_unit
+domains:
+  - publicstorage.com
+aliases:
+  - Public Storage Self Storage
+  - PS Storage
+descriptorPatterns:
+  - PUBLIC STORAGE
+  - PUBLICSTORAGE.COM
+  - PUBLIC STORAGE INC
+  - PUBLIC STORAGE AUTOPAY
+typicalIntervals:
+  - unit: month
+    count: 1
+
+notes: >-
+  Storage rent is month-to-month and charged on a fixed due date, so the move-out date matters
+  more than the notice itself. Moving out on or after the due date means the whole new month is
+  charged even if the unit is emptied the same day. Rent increases arrive by letter or email a few
+  weeks ahead and are the usual reason a long-running charge suddenly jumps.
+
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 2
+    cancelUrl: https://www.publicstorage.com/account
+    steps:
+      - text: >-
+          Check your rent due date first under Storage Units in the account — schedule the
+          move-out for on or before the day before it, never after.
+      - text: Sign in at publicstorage.com or in the Public Storage app with your email and password.
+      - text: >-
+          Open Storage Units, tap the unit you are leaving, and choose Schedule Move-Out under the
+          unit details.
+        detail: >-
+          Move-out can be scheduled up to 60 days ahead, and at least 7 days' notice is expected.
+          If the button is missing, the account may be past due — clear the balance first.
+      - text: Pick the date you will be completely out and confirm.
+      - text: >-
+          Empty the unit and take your own lock off by that date. Sweep it out and leave the door
+          open or unlatched.
+        warning: >-
+          A lock still on the door on the move-out date is treated as the unit still being
+          occupied, and rent keeps running.
+      - text: >-
+          If you cannot use the app, call 1-866-444-4747 or go to the property office and ask them
+          to log the move-out.
+      - text: Check the account shows the unit as vacated and that autopay has stopped.
+    noticePeriodDays: 7
+    refundPolicy: >-
+      Rent is charged for whole months. Moving out on or after the rent due date means that month
+      is charged in full, and partial months are not credited back.
+    retentionOfferNotes: >-
+      Property managers often offer a smaller unit or a discounted rate to keep the rental open.
+      A transfer to another unit is a new rental agreement, not a continuation of the old one.
+    gotchas:
+      - >-
+        Leaving your lock on the unit after the move-out date keeps the rental running and rent
+        keeps accruing.
+      - >-
+        Scheduling a move-out does not stop autopay if the unit is not actually vacated by that
+        date.
+      - >-
+        Tenant insurance or protection plans added at signup bill alongside rent and stop only
+        when the unit is properly closed out.
+      - >-
+        Moving out on or after the rent due date is charged as a full month, however few days you
+        use.
+    evidenceHint: >-
+      Screenshot the scheduled move-out confirmation and the account page showing the unit as
+      vacated, plus a dated photo of the empty unit with your lock removed.
+    sourceUrl: "https://help.publicstorage.com/rent-a-unit/rental-faqs/zzz-Vacating_Your_Storage_Unit_(Moving_Out)"
+    lastVerifiedAt: "2026-07-25"

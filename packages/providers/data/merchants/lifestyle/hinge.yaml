@@ -1,0 +1,86 @@
+slug: hinge
+name: Hinge
+legalName: Hinge, Inc.
+category: dating
+domains:
+  - hinge.co
+aliases:
+  - Hinge Plus
+  - HingeX
+  - Hinge Preferred
+descriptorPatterns:
+  - HINGE
+  - HINGE.CO
+  - HINGE INC
+  - HINGE APP
+  - MTCH HINGE
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: month
+    count: 3
+  - unit: month
+    count: 6
+notes: >-
+  Hinge sells 1, 3 and 6 month terms for Hinge+ and HingeX, so the charge on a statement is
+  frequently three or six times the monthly price. Purchases made outside the app stores are
+  processed through Stripe on Hinge's behalf, which is why the cancellation route differs by
+  member. Roses and Boosts are one-off purchases, not subscriptions.
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 2
+    steps:
+      - text: Open Hinge, tap the profile icon, then the gear icon for Settings.
+      - text: Open Subscription, then Manage or Cancel Subscription.
+        detail: >-
+          For a subscription paid by card rather than through a store, Hinge hands over to its
+          billing partner Stripe, which opens a page showing the plan and a cancel option.
+      - text: Choose the cancellation option there and confirm; the page should then show the date the plan ends.
+      - text: If Settings shows the subscription as managed by Apple or Google, stop and use the store playbook instead.
+    noticePeriodDays: 1
+    refundPolicy: >-
+      Hinge states that benefits continue to the end of the subscription period and then expire;
+      refunds for store purchases are decided by Apple or Google rather than by Hinge.
+    retentionOfferNotes: Offers a cheaper tier or a discounted renewal before the cancellation is completed.
+    gotchas:
+      - Hinge asks for the cancellation at least 24 hours before the renewal date; later than that and the next term is charged.
+      - Deleting the Hinge account does not cancel the subscription.
+      - A 3 or 6 month term renews as a single charge on its anniversary, not monthly.
+    evidenceHint: Screenshot the subscription screen showing the end date, and keep the billing partner's confirmation email.
+    sourceUrl: https://help.hinge.co/hc/en-us/articles/36311108859411-Adjusting-or-Canceling-Your-Subscription
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: apple
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://apps.apple.com/account/subscriptions
+    steps:
+      - text: On iPhone or iPad, open Settings and tap your name at the top of the screen.
+      - text: Tap Subscriptions, then tap Hinge.
+      - text: Tap Cancel Subscription and confirm.
+        warning: If no Cancel button is shown, the subscription is already set to expire.
+    noticePeriodDays: 1
+    refundPolicy: Apple handles refunds for App Store purchases; Hinge states it cannot issue them.
+    gotchas:
+      - Deleting the Hinge app or account leaves the App Store subscription running.
+      - Cancelling inside the Hinge app does not stop a subscription that Apple bills.
+    evidenceHint: Screenshot the App Store Subscriptions screen showing the expiry date.
+    sourceUrl: https://help.hinge.co/hc/en-us/articles/36311108859411-Adjusting-or-Canceling-Your-Subscription
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: google
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://play.google.com/store/account/subscriptions
+    steps:
+      - text: Open the Google Play Store app and tap your profile icon at the top right.
+      - text: Tap Payments & subscriptions, then Subscriptions, then Hinge.
+      - text: Tap Cancel subscription and confirm.
+    noticePeriodDays: 1
+    gotchas:
+      - Google decides refunds for Play purchases; Hinge directs those requests to Google.
+      - Uninstalling the app leaves the Google Play subscription running.
+    evidenceHint: Screenshot the Play subscription page showing the expiry date.
+    sourceUrl: https://support.google.com/googleplay/answer/7018481
+    lastVerifiedAt: "2026-07-25"

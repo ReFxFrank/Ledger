@@ -1,0 +1,100 @@
+slug: mubi
+name: MUBI
+legalName: MUBI, Inc.
+category: streaming_video
+domains:
+  - mubi.com
+aliases:
+  - Mubi Go
+  - Mubi Annual
+descriptorPatterns:
+  - MUBI
+  - MUBI.COM
+  - MUBI LTD
+  - MUBI SUBSCRIPTION
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: year
+    count: 1
+notes: >-
+  MUBI GO, the tier that includes a weekly cinema ticket, costs more and is a different plan
+  rather than an add-on, so cancelling it removes the ticket as well. Annual plans are pushed at
+  sign-up with a large discount and are the usual cause of a once-a-year MUBI charge. Student
+  pricing renews at the standard rate once the student verification lapses.
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 2
+    cancelUrl: https://mubi.com/account/subscription
+    steps:
+      - text: Sign in at mubi.com in a browser and open the profile menu at the top right, then Account.
+        detail: The phone and TV apps have no billing screen, and the flow has to be finished in a browser.
+      - text: Open the Subscription tab and read who the plan is billed by before going further.
+        warning: If the tab names Apple, Google or Amazon, the charge cannot be stopped on mubi.com.
+      - text: Choose Cancel subscription, then confirm on the screen that follows.
+      - text: Check the Subscription tab now shows the date access ends and keep the confirmation email.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      MUBI does not prorate a part-used month or year; the library and any downloads stay
+      available until the paid period ends.
+    retentionOfferNotes: A discounted period or a switch to the cheaper tier is offered before the confirmation step.
+    gotchas:
+      - An annual plan cancelled mid-term keeps running, and stays paid for, until the anniversary date.
+      - Films leave the MUBI library on a rotating schedule, so a title in a watchlist may be gone before the paid period ends.
+      - A MUBI GO cinema ticket already reserved for the current week stops working once access ends.
+    evidenceHint: Screenshot the Subscription tab showing the end date, and keep the confirmation email.
+    sourceUrl: https://help.mubi.com/hc/en-us
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: apple
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://apps.apple.com/account/subscriptions
+    steps:
+      - text: On iPhone or iPad, open Settings and tap your name at the very top of the list.
+      - text: Tap Subscriptions, then tap MUBI.
+        detail: On a Mac, open App Store, click your name at the bottom left, then Account Settings, then Manage next to Subscriptions.
+      - text: Tap Cancel Subscription and confirm on the sheet that appears.
+      - text: Note the expiry date shown under the MUBI entry.
+    noticePeriodDays: 0
+    gotchas:
+      - mubi.com cannot cancel an Apple-billed subscription; the Subscription tab there names Apple instead.
+      - Deleting the app does not stop the billing.
+    evidenceHint: Screenshot the Subscriptions screen showing MUBI expiring on a date.
+    sourceUrl: https://support.apple.com/en-us/118428
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: google
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://play.google.com/store/account/subscriptions
+    steps:
+      - text: Open the Google Play Store app, tap your profile picture, then Payments and subscriptions, then Subscriptions.
+      - text: Tap MUBI, then Cancel subscription, and pick a reason when prompted.
+      - text: Tap through to the end until the entry shows an expiry date instead of a renewal date.
+    noticePeriodDays: 0
+    gotchas:
+      - The subscription belongs to the Google account that bought it, which may not be the profile signed in on the phone today.
+      - Uninstalling the app leaves the subscription running.
+    evidenceHint: Screenshot the Play subscriptions entry showing the expiry date.
+    sourceUrl: https://support.google.com/googleplay/answer/7018481
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: amazon
+    method: app_store
+    difficulty: 2
+    cancelUrl: https://www.amazon.com/gp/video/settings
+    steps:
+      - text: Sign in at amazon.com and open Account and Lists, then Memberships and Subscriptions.
+      - text: Open Prime Video Channels and find the MUBI row.
+        detail: The same list appears in the Prime Video web player under the gear icon, then Channels.
+      - text: Choose Cancel Channel and confirm on the End Subscription screen.
+      - text: Check the row now shows the date the channel stops rather than a renewal date.
+    noticePeriodDays: 0
+    gotchas:
+      - The Amazon channel carries a smaller MUBI catalogue than the direct subscription and has no MUBI GO ticket, but it bills on its own.
+      - mubi.com cannot cancel an Amazon-billed channel.
+    evidenceHint: Screenshot the Channels page showing MUBI ending on a date.
+    sourceUrl: https://www.amazon.com/yourmembershipsandsubscriptions
+    lastVerifiedAt: "2026-07-25"

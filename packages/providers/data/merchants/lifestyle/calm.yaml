@@ -1,0 +1,86 @@
+slug: calm
+name: Calm
+legalName: Calm.com, Inc.
+category: health
+domains:
+  - calm.com
+aliases:
+  - Calm Premium
+  - Calm App
+  - Calm Sleep
+descriptorPatterns:
+  - CALM
+  - CALM.COM
+  - CALM COM
+  - CALM PREMIUM
+  - CALM SUBSCRIPTION
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: year
+    count: 1
+notes: >-
+  Calm sells mostly annual plans behind a 7-day trial, so the first real charge often lands a
+  year after anything the user remembers doing. Calm Sleep is a separate subscription from Calm
+  Premium and is cancelled separately. A subscription can only be ended where it was bought —
+  Calm's own help pages say so explicitly.
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 2
+    cancelUrl: https://www.calm.com/profile
+    steps:
+      - text: Sign in at calm.com/profile in a browser — the cancel control is not in the phone app for a web subscription.
+      - text: Open Settings, then Manage Subscription.
+      - text: Choose Cancel Subscription, then confirm on the screen that follows.
+        warning: >-
+          The confirmation screen offers a discounted year first. The subscription is only ended
+          once the final Cancel button is pressed.
+      - text: Reload the profile page and check that it shows an end date instead of a renewal date.
+    noticePeriodDays: 1
+    refundPolicy: >-
+      Calm states that a subscription bought on calm.com continues to the end of the paid term
+      and that partial terms are not refunded; requests for exceptions go to Calm support.
+    retentionOfferNotes: Offers a discounted renewal and a free extension before the final confirmation.
+    gotchas:
+      - A trial converts to a full year at the end of the trial period, so cancelling one day late costs a whole year.
+      - Calm Sleep is billed separately from Calm Premium and stays active after Calm Premium is cancelled.
+      - On a Lifetime membership the recurring subscription still has to be cancelled separately, or both keep billing.
+    evidenceHint: Screenshot the Manage Subscription page showing the end date, and keep the cancellation email.
+    sourceUrl: https://support.calm.com/hc/en-us/articles/115002473607-How-to-Cancel-Your-Subscription-or-Free-Trial
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: apple
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://apps.apple.com/account/subscriptions
+    steps:
+      - text: On iPhone or iPad, open Settings and tap your name at the top of the screen.
+      - text: Tap Subscriptions, then tap Calm.
+      - text: Tap Cancel Subscription and confirm on the sheet that appears.
+        warning: If no Cancel button is shown, the subscription is already set to expire on the date listed.
+    noticePeriodDays: 1
+    refundPolicy: Apple decides refunds for App Store purchases; Calm support cannot reverse an Apple charge.
+    gotchas:
+      - Deleting the Calm app leaves the App Store subscription running.
+      - Cancelling inside calm.com does not stop a subscription that Apple bills.
+      - A trial bought on iOS converts at the end of the trial unless it is cancelled at least 24 hours before that date.
+    evidenceHint: Screenshot the App Store Subscriptions screen showing "Expires on" and the date.
+    sourceUrl: https://support.calm.com/hc/en-us/articles/115005144313-Cancel-Calm-on-iPhone-Apple-Subscription-Guide
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: google
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://play.google.com/store/account/subscriptions
+    steps:
+      - text: Open the Google Play Store app and tap your profile icon at the top right.
+      - text: Tap Payments & subscriptions, then Subscriptions, then Calm.
+      - text: Tap Cancel subscription, choose a reason, and confirm.
+    noticePeriodDays: 1
+    gotchas:
+      - Uninstalling the app leaves the Google Play subscription running.
+      - The subscription sits on the Google account that paid for it, which may not be the account signed into Calm.
+    evidenceHint: Screenshot the Play subscription page showing the expiry date.
+    sourceUrl: https://support.calm.com/hc/en-us/articles/360005612053-Cancel-Calm-on-Android-Google-Play-Subscription-Guide
+    lastVerifiedAt: "2026-07-25"

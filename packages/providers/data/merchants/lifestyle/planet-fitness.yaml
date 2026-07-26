@@ -1,0 +1,77 @@
+slug: planet-fitness
+name: Planet Fitness
+legalName: Planet Fitness, Inc.
+category: fitness
+domains:
+  - planetfitness.com
+aliases:
+  - Planet Fitness Black Card
+  - PF Black Card
+  - Planet Fitness Gym
+descriptorPatterns:
+  - PLANET FITNESS
+  - PLANET FIT
+  - PLANET FIT CLUB FEES
+  - PLANET FITNESS ANNUAL FEE
+  - PLANETFITNESS.COM
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: year
+    count: 1
+notes: >-
+  Two charges, not one — monthly dues plus an annual fee that lands roughly two months after
+  joining and then on that anniversary. The annual fee is the charge people are surprised by,
+  and it is the reason a cancel-by date matters here more than almost anywhere else. Terms are
+  set per club because clubs are franchised, so the home club named on the agreement decides
+  which cancellation routes exist.
+playbooks:
+  - channel: direct
+    method: post
+    difficulty: 5
+    steps:
+      - text: Sign in to the member account on planetfitness.com and look for a cancellation option first — some franchised clubs offer it in the member portal and most do not.
+        detail: >-
+          The route that works everywhere is written notice to the home club, either handed over
+          at the desk or sent by post. Membership can only be ended through the home club named
+          on the agreement, not at any branch.
+      - text: Fill in the letter below with the membership number from the agreement or from a dues charge, and address it to the home club.
+      - text: Send it by a tracked or signed-for service, or hand it in at the desk and ask for a signed and dated copy.
+        warning: >-
+          Planet Fitness works from the date the club receives the notice, not the date it was
+          sent, and states billing changes can take up to seven business days.
+      - text: Watch the next two statements — the dues and the annual fee bill on different dates, and one can land after the other has stopped.
+    noticePeriodDays: 7
+    refundPolicy: >-
+      The annual fee is charged for the year ahead and Planet Fitness does not normally refund it
+      once it has been taken, which is why the notice has to arrive before that date.
+    retentionOfferNotes: >-
+      Desk staff routinely offer a downgrade to the cheaper tier or a freeze rather than
+      processing the cancellation; ask for the cancellation to be recorded in writing either way.
+    gotchas:
+      - Written notice has to reach the club by roughly the 10th for dues billed around the 17th, so a request made late in the month usually still pays one more month.
+      - The annual fee bills on its own anniversary and is easy to trigger by cancelling a week too late.
+      - Email and phone calls are frequently refused as a cancellation method; a signed letter or an in-person visit to the home club is the route that is accepted.
+      - Cancelling at a branch that is not the home club named on the agreement does not end the membership.
+    letterTemplate: |
+      {{fullName}}
+      {{date}}
+
+      Planet Fitness — Membership Services
+      [address of the home club named on the membership agreement]
+
+      Membership number: {{accountReference}}
+
+      I am writing to end my Planet Fitness membership at this club, effective at the earliest
+      date my membership agreement allows.
+
+      Please stop all further monthly dues and the annual fee from that date, and do not
+      transfer or downgrade the membership to another plan.
+
+      Please send me written confirmation of the cancellation and the date it takes effect, by
+      email to the address held on my account.
+
+      {{fullName}}
+    evidenceHint: Keep the postal tracking or the signed and dated counter copy of the letter, plus any confirmation email, and screenshot the last dues charge on the statement.
+    sourceUrl: https://www.planetfitness.com/about-planet-fitness/customer-service
+    lastVerifiedAt: "2026-07-25"

@@ -1,0 +1,81 @@
+slug: verizon
+name: Verizon
+legalName: Cellco Partnership d/b/a Verizon Wireless
+category: telecom
+domains:
+  - verizon.com
+  - verizonwireless.com
+aliases:
+  - Verizon Wireless
+  - Verizon Fios
+  - VZW
+descriptorPatterns:
+  - VERIZON WIRELESS
+  - VERIZON WRLS
+  - VZWRLSS
+  - VZWRLSS*APOCC VISB
+  - VERIZON FIOS
+  - VERIZON
+typicalIntervals:
+  - unit: month
+    count: 1
+
+notes: >-
+  Mobile and Fios are separate accounts with separate disconnect paths, so a household can be
+  paying two Verizon lines that have to be closed twice. Verizon also bills third-party
+  subscriptions through the mobile account ("Verizon Cloud", add-on streaming perks); those show
+  up on the Verizon descriptor but are cancelled inside My Verizon add-ons, not by disconnecting
+  service.
+
+playbooks:
+  - channel: direct
+    method: phone
+    difficulty: 4
+    phone: "1-800-837-4966"
+    hours: Mon-Fri 8am-7pm ET, Sat 8am-5pm ET
+    steps:
+      - text: Sign in at verizon.com, open My Verizon and choose Chat with us.
+        detail: >-
+          Type "Cancel" into the Ask a question box. The assistant hands a disconnect to a live
+          agent — there is no self-serve button that closes a mobile line on its own.
+      - text: >-
+          For Fios, go to Account, then Manage Service, then Disconnect — or type "disconnect"
+          into the Chat with Verizon box and choose Disconnect Fios home service.
+      - text: >-
+          If chat stalls or the agent will not process it, call 1-800-837-4966 and ask for the
+          disconnect team. Have the account owner's name and the account PIN ready.
+        detail: >-
+          Only the account owner or an authorised manager can disconnect. A user-level profile on
+          a family account gets refused after the wait.
+      - text: Ask the agent for the disconnect confirmation number and the exact end-of-service date.
+        warning: >-
+          Without a confirmation number there is nothing to quote if the next month's bill still
+          arrives.
+      - text: Return rented equipment (router, set-top boxes, extenders) within 30 days of the disconnect.
+      - text: Check the final bill for a zero balance about two cycles later.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      The final month is billed in full. Disconnecting mid-cycle does not shrink the last bill,
+      so the cheapest disconnect date is the day before a new cycle starts.
+    retentionOfferNotes: >-
+      Chat and phone agents lead with loyalty credits, a cheaper plan, or a device promotion
+      before passing the disconnect through. Accepting one restarts a contract term on some plans.
+    gotchas:
+      - The final month is not prorated — cancelling on day 2 of a cycle costs the same as day 29.
+      - >-
+        Disconnecting a line that still has a device payment agreement makes the whole remaining
+        installment balance due immediately on the final bill.
+      - >-
+        Fios disconnected inside a contract term draws an early termination fee, reduced month by
+        month over the remaining term.
+      - >-
+        To keep a mobile number, port it to the new carrier first — the port closes the line. A
+        disconnect done first releases the number and it can be lost.
+      - >-
+        Rented equipment not back within 30 days turns into an unreturned-equipment charge on the
+        final bill.
+    evidenceHint: >-
+      Save the chat transcript or the disconnect confirmation number, the stated end-of-service
+      date, and the equipment return receipt.
+    sourceUrl: https://www.verizon.com/support/disconnect-cancel-mobile/
+    lastVerifiedAt: "2026-07-25"

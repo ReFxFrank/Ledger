@@ -1,0 +1,11 @@
+/**
+ * The single stylesheet entry for consumers that want everything in one import:
+ *
+ *   @import '@ledger/ui/styles.css';
+ *
+ * It is exactly `tokens.css` today. Components carry their own styles as utility classes, and
+ * anything that cannot be expressed that way belongs in the frozen token file, deliberately —
+ * not here, where it would apply only to apps that happened to import this entry.
+ */
+
+@import './tokens.css';

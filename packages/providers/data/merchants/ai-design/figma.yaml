@@ -1,0 +1,49 @@
+slug: figma
+name: Figma
+legalName: Figma, Inc.
+category: design
+domains:
+  - figma.com
+aliases:
+  - Figma Professional
+  - FigJam
+  - Figma Design
+descriptorPatterns:
+  - FIGMA
+  - FIGMA INC
+  - FIGMA.COM
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: year
+    count: 1
+notes: >-
+  Figma bills a team, not a person, and per editor seat — so the amount changes whenever someone
+  is invited as an editor. Cancelling the plan downgrades the team to Starter; it does not close
+  the account, and a separate plugin subscription keeps billing on its own.
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 2
+    cancelUrl: https://www.figma.com/settings
+    steps:
+      - text: Open the team in Figma and click Admin in the sidebar to reach team settings.
+      - text: Go to the Settings tab and find the Plan section.
+      - text: Click Cancel plan, pick a cancellation reason, then click Cancel plan again to confirm.
+        detail: >-
+          On an organization the same control sits in the admin settings for the whole
+          organization rather than on an individual team.
+      - text: Check the Plan section now shows the date the team drops to Starter.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      Figma states that payments are not refunded. The team keeps paid features until the end of
+      the billing period and is downgraded to the free Starter tier after that.
+    gotchas:
+      - Only a team or organization admin sees the cancel control; an editor cannot stop the billing.
+      - Seats added before the downgrade are prorated onto the final invoice, so the last charge can be larger than the usual one.
+      - Cancelling downgrades the team to Starter rather than closing the account, and files beyond the Starter limits stop being editable.
+      - A plugin or widget subscription bought through Figma's community is billed separately and survives the plan cancellation.
+      - An annual plan runs to its anniversary; cancelling mid-term stops the renewal, not the current term.
+    evidenceHint: Screenshot the Plan section showing the downgrade date, plus the invoice email confirming the final amount.
+    sourceUrl: https://help.figma.com/hc/en-us/articles/360039829734-Cancel-your-subscription-Professional-Plan-
+    lastVerifiedAt: "2026-07-25"

@@ -1,0 +1,117 @@
+slug: disney-plus
+name: Disney+
+legalName: Disney DTC LLC
+category: streaming_video
+domains:
+  - disneyplus.com
+aliases:
+  - Disney Plus
+  - Disney+
+  - Disney Bundle
+  - Disney Plus Basic
+  - Disney Plus Premium
+descriptorPatterns:
+  - DISNEY PLUS
+  - DISNEYPLUS.COM
+  - DISNEYPLUS
+  - DISNEY BUNDLE
+  - DISNEY STREAMING
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: year
+    count: 1
+notes: >-
+  The Disney Bundle bills as one line and covers Disney+, Hulu and ESPN together, so cancelling
+  it removes all three. A Hulu subscription bought inside the bundle cannot be ended on
+  hulu.com. The annual plan is pushed hard at sign-up, which is why a single yearly charge with
+  a Disney descriptor is worth treating as a live subscription rather than a one-off.
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 2
+    cancelUrl: https://www.disneyplus.com/account/subscription
+    steps:
+      - text: Sign in at disneyplus.com in a browser, click the profile avatar at the top right and choose Account.
+        detail: >-
+          The TV app has no billing screen. Everything below happens in a browser or in the phone
+          app under Profile, then Account.
+      - text: Under Subscription, open the plan that is being ended.
+        detail: >-
+          A bundle shows as a single Disney Bundle row rather than three. If the row says the
+          subscription is billed by Apple, Google, Amazon, Roku or a TV provider, stop here and
+          use the playbook for that biller instead.
+      - text: Choose Cancel Subscription, pick a reason, then choose Complete Cancellation.
+        warning: >-
+          The screen before the last one offers to switch plan or take a discounted month, and
+          its button is styled as the main action. Only Complete Cancellation ends the plan.
+      - text: Confirm the account page now shows the date the subscription ends and save the confirmation email.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      Disney does not prorate the unused part of a paid period, including an annual plan
+      cancelled part-way through; access continues until that period ends.
+    retentionOfferNotes: >-
+      The exit flow offers a discounted month or a downgrade to the ad-supported tier before it
+      offers cancellation.
+    gotchas:
+      - Cancelling the Disney Bundle ends Hulu and ESPN as well, and each one loses its watchlist separately.
+      - An annual plan cancelled in month two still runs, and stays paid for, until the anniversary date.
+      - Downloads stop playing as soon as the paid period ends, even on a device that stays offline.
+    evidenceHint: Screenshot the Subscription page showing the end date, and keep the cancellation email.
+    sourceUrl: https://help.disneyplus.com/article/disneyplus-cancel-subscription
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: apple
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://apps.apple.com/account/subscriptions
+    steps:
+      - text: On iPhone or iPad, open Settings and tap your name at the very top of the list.
+      - text: Tap Subscriptions, then tap Disney+.
+        detail: On a Mac, open App Store, click your name at the bottom left, then Account Settings, then Manage next to Subscriptions.
+      - text: Tap Cancel Subscription and confirm on the sheet that appears.
+        detail: If the only button offered is Resubscribe, the subscription is already set to expire.
+      - text: Note the expiry date shown under the Disney+ entry.
+    noticePeriodDays: 0
+    gotchas:
+      - disneyplus.com cannot cancel an Apple-billed subscription; the account page there shows Apple as the biller and no cancel button.
+      - Deleting the Disney+ app does not stop the billing.
+      - A bundle bought through Apple still covers Hulu and ESPN, and cancelling here ends all three.
+    evidenceHint: Screenshot the Subscriptions screen showing Disney+ expiring on a date.
+    sourceUrl: https://support.apple.com/en-us/118428
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: google
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://play.google.com/store/account/subscriptions
+    steps:
+      - text: Open the Google Play Store app, tap your profile picture, then Payments and subscriptions, then Subscriptions.
+      - text: Tap Disney+, then Cancel subscription, and pick a reason when prompted.
+      - text: Tap through to the end until the entry shows an expiry date instead of a renewal date.
+    noticePeriodDays: 0
+    gotchas:
+      - The subscription belongs to the Google account that bought it, which may not be the profile signed in on the phone today.
+      - Uninstalling the app leaves the subscription running.
+    evidenceHint: Screenshot the Play subscriptions entry showing the expiry date.
+    sourceUrl: https://support.google.com/googleplay/answer/7018481
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: roku
+    method: app_store
+    difficulty: 2
+    cancelUrl: https://my.roku.com/account
+    steps:
+      - text: Sign in at my.roku.com and open Manage your subscriptions.
+      - text: Find Disney+ in the list and choose Unsubscribe, then confirm.
+        detail: >-
+          On the device, highlight the Disney+ tile on the Roku home screen, press the star
+          (Options) button, choose Manage subscription, then Cancel subscription.
+      - text: Check the entry now shows the date the subscription ends.
+    noticePeriodDays: 0
+    gotchas:
+      - Removing the Disney+ channel from the Roku home screen does not cancel the billing.
+      - disneyplus.com cannot cancel a Roku-billed subscription.
+    evidenceHint: Screenshot the Roku subscriptions page showing Disney+ ending on a date.
+    sourceUrl: https://support.roku.com/article/208756478
+    lastVerifiedAt: "2026-07-25"

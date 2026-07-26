@@ -1,0 +1,126 @@
+slug: runescape-membership
+name: RuneScape Membership
+legalName: Jagex Limited
+category: gaming
+domains:
+  - runescape.com
+  - jagex.com
+  - oldschool.runescape.com
+
+aliases:
+  - RuneScape
+  - Old School RuneScape
+  - OSRS Membership
+  - RS3 Membership
+  - Jagex Membership
+  - RuneScape Premier
+
+descriptorPatterns:
+  - JAGEX
+  - JAGEX LTD
+  - JAGEX LIMITED
+  - RUNESCAPE
+  - OLD SCHOOL RUNESCAPE
+
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: month
+    count: 3
+  - unit: year
+    count: 1
+
+notes: >-
+  Jagex is a UK company, so cards outside the UK often show the charge with a foreign-transaction
+  fee and a wobbling amount month to month. One Jagex account can hold several game accounts, each
+  with its own membership and its own charge on the same descriptor.
+
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 2
+    cancelUrl: https://secure.runescape.com/m=account-settings/
+    steps:
+      - text: Sign in at runescape.com with the Jagex account that pays, then open Account Settings.
+        detail: >-
+          A Jagex account can hold several game accounts. The Subscriptions page lists a membership
+          per game account, and each one has to be stopped on its own line.
+      - text: Open Subscriptions, then find the membership for the game account concerned.
+      - text: Choose to cancel the recurring payment and confirm on the screen that follows.
+        warning: A discounted term is offered before the final step; accepting it starts a new term rather than ending the current one.
+      - text: Check the Subscriptions page shows no next payment date, and keep Jagex's confirmation email.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      Jagex does not credit the unused part of a paid term; membership runs to the paid-up date and
+      then lapses to free play.
+    retentionOfferNotes: A cheaper term or a discounted month is offered inside the cancellation flow.
+    gotchas:
+      - Membership bought with Bonds is not a subscription - bonds are consumed and expire without renewing, so nothing is there to cancel.
+      - Membership bought inside the Old School RuneScape mobile app is billed by Apple or Google and the website cannot stop it.
+      - A recurring payment funded through PayPal also has a billing agreement on the PayPal side; leaving that open lets a new charge be taken later.
+      - Premier Membership is a 12-month term paid up front, and stopping the recurring payment neither shortens it nor produces a credit.
+      - Items and skills stay on the account after membership lapses, but members-only areas, skills and the bank space above the free limit are locked until it is renewed.
+    evidenceHint: Screenshot the Subscriptions page showing no next payment date, and keep Jagex's cancellation email.
+    sourceUrl: https://help.runescape.com/hc/en-gb/search?query=cancel%20membership
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: paypal
+    method: account_settings
+    difficulty: 2
+    cancelUrl: https://www.paypal.com/myaccount/autopay/
+    steps:
+      - text: Stop the membership with Jagex first, on the Subscriptions page in Account Settings.
+        detail: >-
+          Cancelling only the PayPal agreement leaves the membership looking active on the Jagex
+          side, which can leave the account showing an unpaid balance rather than a clean lapse.
+      - text: Sign in at paypal.com, open Settings from the gear icon, then Payments, then Manage automatic payments.
+      - text: Select the Jagex entry in the list and choose Cancel, then confirm.
+      - text: Check the entry moves to the cancelled list and keep PayPal's confirmation email.
+    noticePeriodDays: 0
+    gotchas:
+      - Membership already paid for runs to its end date; cancelling the agreement does not end it early or produce a credit.
+      - An agreement left active in PayPal can be charged again even after the Jagex-side cancellation, so check both lists.
+      - PayPal lists the agreement under the merchant name Jagex rather than RuneScape.
+    evidenceHint: Screenshot the PayPal automatic payments entry showing the agreement as cancelled.
+    sourceUrl: https://www.paypal.com/us/cshelp/article/help241
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: apple
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://apps.apple.com/account/subscriptions
+    steps:
+      - text: On an iPhone or iPad, open Settings and tap your name at the very top of the list.
+        detail: >-
+          From a Mac, open the App Store, click your name at the bottom of the sidebar, then Account
+          Settings, then Manage beside Subscriptions.
+      - text: Tap Subscriptions, then the RuneScape or Old School RuneScape entry, then Cancel Subscription and confirm.
+        warning: When no Cancel button is shown, the subscription is already set to expire on the date printed above it.
+      - text: Check the Subscriptions screen now shows an expiry date.
+    noticePeriodDays: 0
+    gotchas:
+      - Deleting the game app does not stop the billing.
+      - The Jagex website shows an Apple-billed membership as active with no cancel control.
+      - Membership runs to the end of the period Apple has already charged for.
+    evidenceHint: Screenshot the Subscriptions screen showing the expiry date.
+    sourceUrl: https://support.apple.com/en-us/118428
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: google
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://play.google.com/store/account/subscriptions
+    steps:
+      - text: Open the Google Play Store app, tap the profile icon, then Payments and subscriptions, then Subscriptions.
+        detail: From a browser, play.google.com/store/account/subscriptions shows the same list.
+      - text: Select the RuneScape or Old School RuneScape entry, tap Cancel subscription, choose a reason, then tap Cancel subscription again.
+        warning: The reason screen is not the confirmation; the list has to read Expires on afterwards.
+      - text: Check the account switcher if the membership is not listed - it is billed to whichever Google account bought it.
+    noticePeriodDays: 0
+    gotchas:
+      - Uninstalling the game app does not stop the billing.
+      - The Jagex website cannot stop a Google-billed membership.
+      - Membership runs to the end of the period already paid for.
+    evidenceHint: Screenshot the Play Subscriptions screen showing Expires on with the date.
+    sourceUrl: https://support.google.com/googleplay/answer/7018481
+    lastVerifiedAt: "2026-07-25"

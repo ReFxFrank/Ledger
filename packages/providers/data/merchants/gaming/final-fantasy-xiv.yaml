@@ -1,0 +1,90 @@
+slug: final-fantasy-xiv
+name: Final Fantasy XIV
+legalName: Square Enix Limited
+category: gaming
+domains:
+  - finalfantasyxiv.com
+  - square-enix.com
+
+aliases:
+  - FFXIV
+  - FF14
+  - Final Fantasy 14
+  - Mog Station
+  - FFXIV Subscription
+
+descriptorPatterns:
+  - SQUARE ENIX
+  - SQUARE ENIX LTD
+  - SQUARE-ENIX
+  - FINAL FANTASY XIV
+  - MOG STATION
+  - SQEX
+
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: month
+    count: 3
+  - unit: month
+    count: 6
+
+notes: >-
+  Billing lives on the Mog Station, a separate site from the game and from the Lodestone, and it is
+  driven by the Square Enix account rather than by the character. A player who registered the game
+  through Steam is billed by Steam instead, and the Mog Station will show the subscription with no
+  way to stop it - that split is the main reason cancellations fail here.
+
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 2
+    cancelUrl: https://secure.square-enix.com/account/app/svc/mogstation
+    steps:
+      - text: Sign in to the Mog Station with the Square Enix account ID and password, not the character name.
+        detail: >-
+          The Square Enix ID is the one created at registration and is often not the name anyone
+          remembers. If a one-time password token or authenticator app was set up, it is required
+          here; account recovery takes days, so start before the renewal date rather than on it.
+      - text: Open Your Account, then select the service account that holds the Final Fantasy XIV licence.
+        detail: >-
+          One Square Enix account can hold several service accounts, each with its own subscription
+          and its own charge. The subscription controls sit on the service account, not on the
+          Square Enix account above it.
+      - text: Choose the subscription option for that service account, then Cancel Subscription, and confirm.
+        warning: The page returns to the account summary without a banner; re-open it and check the plan shows an expiry date rather than a renewal date.
+      - text: Keep the confirmation email from Square Enix, which names the service account and the date access stops.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      Square Enix does not credit the unused part of a subscription period that has started; play
+      continues to the end of the paid period.
+    gotchas:
+      - A subscription registered through Steam cannot be cancelled on the Mog Station at all - only Steam can stop it, and the Mog Station will still show it as active.
+      - The PlayStation and Xbox versions are billed through the Mog Station, not through the console store, so the console subscription lists will not show it.
+      - The 90-day and 180-day plans are charged in full up front and stopping the recurring payment does not shorten the term or produce a credit.
+      - Entry and Standard are different monthly prices on the same service account, and switching between them restarts the billing period.
+      - Cancelling leaves the game licence and the characters on the account; nothing is deleted, and resubscribing later restores access.
+      - The free trial never charges, but adding a subscription to a trial account starts the recurring payment on the same day.
+    evidenceHint: Screenshot the Mog Station service account page showing the subscription expiry date, and keep the confirmation email.
+    sourceUrl: https://support.na.square-enix.com/
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: steam
+    method: account_settings
+    difficulty: 2
+    cancelUrl: https://store.steampowered.com/account/
+    steps:
+      - text: Sign in at help.steampowered.com and choose Games, Software, etc.
+        detail: >-
+          Use View complete gaming and software library if Final Fantasy XIV is not in the short list
+          of recent purchases. Steam files the subscription under the game, not under payment settings.
+      - text: Select Final Fantasy XIV, then the option to manage or cancel the subscription.
+      - text: Confirm the cancellation, then open store.steampowered.com/account and check the subscription line shows the date it ends.
+    noticePeriodDays: 0
+    gotchas:
+      - The Mog Station gives no cancel control for a Steam-registered service account, so cancelling there is not possible however many times it is tried.
+      - A Steam-registered service account cannot be moved to direct Square Enix billing afterwards.
+      - Steam charges the whole term up front and does not credit the unused part when the subscription is stopped part-way through.
+    evidenceHint: Screenshot the Steam account page showing the subscription end date, plus Steam's confirmation email.
+    sourceUrl: https://help.steampowered.com/en/
+    lastVerifiedAt: "2026-07-25"

@@ -1,0 +1,53 @@
+slug: calendly
+name: Calendly
+legalName: Calendly LLC
+category: software
+domains:
+  - calendly.com
+aliases:
+  - Calendly Standard
+  - Calendly Teams
+  - Calendly Pro
+descriptorPatterns:
+  - CALENDLY
+  - CALENDLY.COM
+  - CALENDLY LLC
+  - CALENDLY PRO
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: year
+    count: 1
+notes: >-
+  Calendly has no control called cancel. The subscription ends by switching the account to the
+  Free plan, which is the detail worth putting in front of a user before they go looking for a
+  cancel button that is not there. Paid seats are billed per user, so removing a colleague lowers
+  the invoice without stopping it.
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 2
+    cancelUrl: https://calendly.com/app/admin/billing
+    steps:
+      - text: Sign in at calendly.com as the billing admin and open the Admin Center, then Billing.
+        detail: On a Teams plan only the billing admin sees these controls; other members see the plan but cannot change it.
+      - text: Select Change plan, then Upgrade or Downgrade.
+      - text: Choose the Free plan and follow the flow to the end, answering the reason prompt when it appears.
+        warning: >-
+          Switching to Free is the cancellation. Leaving the flow before the final confirmation
+          keeps the paid plan and the next renewal in place.
+      - text: If the account has more paid seats than needed, remove those users first — otherwise the final invoice still includes them.
+      - text: Reload Billing and check it shows the paid plan ending on a date, then keep the confirmation email.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      Paid features continue to the end of the current billing cycle and the account then moves to
+      Free; anything beyond that is handled by Calendly billing support.
+    retentionOfferNotes: The plan picker leads with the paid tiers, and the Free option is the last one in the list.
+    gotchas:
+      - Scheduled meetings and booking links survive the downgrade, but the free plan allows only one event type, so extra event types stop taking bookings.
+      - Removing users lowers the next invoice without ending the subscription.
+      - An annual plan cancelled just after renewal runs the whole year already paid for.
+      - Deleting the Calendly account is a separate action and does not by itself settle an outstanding paid term.
+    evidenceHint: Screenshot the Billing page showing the plan ending on a date or set to Free, plus the confirmation email.
+    sourceUrl: https://help.calendly.com/hc/en-us/articles/32108988196759-How-to-cancel-your-Calendly-subscription
+    lastVerifiedAt: "2026-07-25"

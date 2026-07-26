@@ -31,7 +31,8 @@ function main(): void {
   const dir = positional ?? MERCHANT_DATA_DIR;
 
   const todayFlag = flag('today');
-  const today: PlainDate = todayFlag === null ? todayOn(new SystemClock()) : parsePlainDate(todayFlag);
+  const today: PlainDate =
+    todayFlag === null ? todayOn(new SystemClock()) : parsePlainDate(todayFlag);
   const daysFlag = flag('days');
   const thresholdDays = daysFlag === null ? STALE_AFTER_DAYS : Number(daysFlag);
   if (!Number.isInteger(thresholdDays) || thresholdDays < 0) {

@@ -6,8 +6,7 @@ import { ZodError } from 'zod';
 import { SystemClock, type Clock, isLedgerError } from '@ledger/core';
 import { type Database, Scope, getDatabase } from '@ledger/db';
 import { childLogger } from '@ledger/logger';
-import { loadServerEnv } from '@ledger/env';
-import { auth } from '../auth';
+import { type Auth, getAuth } from '../auth';
 
 const log = childLogger('trpc');
 
@@ -15,13 +14,13 @@ export interface Context {
   readonly db: Database;
   readonly clock: Clock;
   readonly headers: Headers;
-  readonly session: Awaited<ReturnType<typeof auth.api.getSession>>;
+  readonly session: Awaited<ReturnType<Auth['api']['getSession']>>;
   readonly ip: string | null;
   readonly userAgent: string | null;
 }
 
 export async function createContext(opts: { headers: Headers }): Promise<Context> {
-  const session = await auth.api.getSession({ headers: opts.headers });
+  const session = await getAuth().api.getSession({ headers: opts.headers });
 
   return {
     db: getDatabase().db,
@@ -81,13 +80,18 @@ export const publicProcedure = t.procedure.use(timing);
  *     there is no path to the database in this context that is not already bound to a user id.
  */
 const enforceSession = t.middleware(({ ctx, next }) => {
-  if (ctx.session === null || ctx.session.session === undefined) {
+  if (ctx.session?.session === undefined) {
     throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Sign in to continue.' });
   }
 
   const user = ctx.session.user;
-  if (user.banned === true) {
-    throw new TRPCError({ code: 'FORBIDDEN', message: 'This account is suspended.' });
+  /**
+   * A deletion request closes the account immediately, even though the cascade runs later in a
+   * job. Checked here rather than per-route so there is no window in which a request that has
+   * been made is still serving the data it was made about.
+   */
+  if (user.deletedAt !== null && user.deletedAt !== undefined) {
+    throw new TRPCError({ code: 'FORBIDDEN', message: 'This account is closed.' });
   }
 
   return next({
@@ -151,5 +155,3 @@ export const protectedProcedure = sessionProcedure.use(enforceTwoFactor);
 
 /** For irreversible or high-consequence actions. */
 export const sensitiveProcedure = protectedProcedure.use(enforceRecentReauth);
-
-export const env = loadServerEnv();

@@ -1,0 +1,71 @@
+slug: zoom
+name: Zoom
+legalName: Zoom Communications, Inc.
+category: software
+domains:
+  - zoom.us
+  - zoom.com
+aliases:
+  - Zoom Pro
+  - Zoom Workplace
+  - Zoom Video Communications
+descriptorPatterns:
+  - ZOOM.US
+  - ZOOM.COM
+  - ZOOM VIDEO
+  - ZOOM COMMUNICATIONS
+  - ZOOM WORKPLACE
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: year
+    count: 1
+notes: >-
+  Zoom sells add-ons (extra cloud recording storage, Zoom Phone numbers, Large Meetings, Webinars)
+  as separate line items on the same account, so cancelling the base plan can leave smaller
+  charges running. Annual plans are discounted heavily at checkout, which makes a single yearly
+  charge normal here.
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 2
+    cancelUrl: https://zoom.us/billing
+    steps:
+      - text: Sign in at zoom.us on the web as the account owner or an admin with billing rights.
+      - text: In the left-hand menu open Account Management, then Billing.
+      - text: On the Current Plans tab, find the plan and click Cancel Subscription.
+        detail: >-
+          The control turns off the automatic renewal rather than ending access. The plan keeps
+          working until the end of the term already paid for.
+      - text: Repeat for every add-on listed on the same tab — recording storage, Zoom Phone, Large Meetings and Webinars each renew on their own.
+        warning: Add-ons are billed separately and survive the cancellation of the base plan.
+      - text: Check the Current Plans tab now shows "Cancellation pending" or an expiry date for each item, and keep the confirmation email.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      Zoom describes refunds as available only where the account has had no usage since the last
+      billing date; otherwise the plan simply runs to the end of the term.
+    retentionOfferNotes: The cancellation flow offers a discount or a switch to a smaller plan before it confirms.
+    gotchas:
+      - Cancelling stops the renewal but does not free the licence immediately, so the paid features stay visible and the change looks like it failed.
+      - A plan bought through a Zoom sales quote cannot be cancelled on this screen — those changes only take effect at the end of the contracted term.
+      - Downgrading the number of licences is a different control from cancelling and leaves the subscription alive.
+      - A cancellation entered on the renewal date itself can still be preceded by the renewal charge.
+    evidenceHint: Screenshot the Billing Current Plans tab showing cancellation pending with the end date.
+    sourceUrl: https://support.zoom.com/hc/en/article?id=zm_kb&sysparm_article=KB0066687
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: google
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://play.google.com/store/account/subscriptions
+    steps:
+      - text: Open the Google Play Store app, tap your profile icon, then Payments & subscriptions, then Subscriptions.
+      - text: Tap the Zoom entry, then Cancel subscription, and pick a reason.
+      - text: Confirm, then check the entry shows an expiry date rather than a renewal date.
+    noticePeriodDays: 0
+    gotchas:
+      - A Play-billed Zoom plan shows in the Zoom billing page without a cancel control, because Google holds the payment method.
+      - Uninstalling the app does not stop the billing.
+    evidenceHint: Screenshot the Play subscriptions entry showing the expiry date.
+    sourceUrl: https://support.zoom.com/hc/en/article?id=zm_kb&sysparm_article=KB0066821
+    lastVerifiedAt: "2026-07-25"

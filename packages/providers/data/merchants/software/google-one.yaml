@@ -1,0 +1,90 @@
+slug: google-one
+name: Google One
+legalName: Google LLC
+category: cloud_storage
+domains:
+  - one.google.com
+aliases:
+  - Google One Storage
+  - Google Drive Storage
+  - Google One AI Premium
+  - Google Storage Plan
+descriptorPatterns:
+  - GOOGLE ONE
+  - GOOGLE ONE STORAGE
+  - GOOGLE STORAGE
+  - GOOGLE DRIVE STORAGE
+  - GOOGLE ONE AI PREMIUM
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: year
+    count: 1
+notes: >-
+  The GOOGLE * prefix on the descriptor means Google Payments took the money, which is true of a
+  web purchase and a Play Store purchase alike — it does not prove the subscription lives in the
+  Play Store. The reliable test is whether the plan is listed at
+  play.google.com/store/account/subscriptions. Storage bought on an iPhone is billed by Apple and
+  appears in neither Google surface. Annual plans are common here, so a single yearly charge is
+  worth treating as a subscription rather than a one-off.
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 1
+    cancelUrl: https://one.google.com/settings
+    steps:
+      - text: Open one.google.com in a browser and sign in with the Google account that holds the plan.
+        detail: >-
+          Storage is attached to one specific Google account. If the plan is not visible, the
+          browser is signed in as a different account — switch accounts from the avatar at the top
+          right rather than assuming the plan is gone.
+      - text: Open Settings in the left-hand menu, then choose Cancel membership.
+      - text: Confirm by choosing Cancel membership again on the dialog that appears.
+      - text: Reload the page and check that it now shows the date the benefits end.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      In most countries Google treats storage plan payments as non-refundable; storage and
+      benefits continue until the end of the paid cycle.
+    retentionOfferNotes: The cancel dialog offers a downgrade to a smaller paid plan before it offers to end the membership.
+    gotchas:
+      - Storage does not shrink at cancellation — it drops at the end of the billing cycle, and anything over the free 15 GB then becomes read-only across Drive, Gmail and Photos.
+      - Google keeps files over the limit rather than deleting them at once, but new mail can stop arriving in Gmail once the account is over quota.
+      - A plan bought through a phone carrier or a device promotion is billed by that partner and shows no cancel control here.
+    evidenceHint: Screenshot the Google One settings page showing the membership ending on a date, and keep the cancellation email.
+    sourceUrl: https://support.google.com/googleone/answer/9056360
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: google
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://play.google.com/store/account/subscriptions
+    steps:
+      - text: Open the Google Play Store app, tap your profile icon, then Payments & subscriptions, then Subscriptions.
+      - text: Tap Google One, then Cancel subscription, and choose a reason when prompted.
+        detail: >-
+          If Google One is not in this list, the plan was bought on the web and is cancelled at
+          one.google.com instead.
+      - text: Confirm, then check the entry shows an expiry date rather than a renewal date.
+    noticePeriodDays: 0
+    gotchas:
+      - The subscription belongs to the Google account that bought it, which may not be the account currently active on the phone.
+      - Removing the Google One app changes nothing about the billing.
+    evidenceHint: Screenshot the Play subscriptions entry showing the expiry date.
+    sourceUrl: https://support.google.com/googleplay/answer/7018481
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: apple
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://apps.apple.com/account/subscriptions
+    steps:
+      - text: On iPhone or iPad, open Settings and tap your name at the top.
+      - text: Tap Subscriptions, then tap Google One.
+      - text: Tap Cancel Subscription and confirm.
+    noticePeriodDays: 0
+    gotchas:
+      - Google One bought inside the iOS app is billed by Apple; one.google.com shows the plan but offers no cancel control for it.
+      - Signing out of the Google app or deleting it leaves the Apple billing running.
+    evidenceHint: Screenshot the Subscriptions screen showing Google One expiring on a date.
+    sourceUrl: https://support.apple.com/en-us/118428
+    lastVerifiedAt: "2026-07-25"

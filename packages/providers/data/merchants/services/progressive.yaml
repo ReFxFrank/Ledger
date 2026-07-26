@@ -1,0 +1,115 @@
+slug: progressive
+name: Progressive
+legalName: Progressive Casualty Insurance Company
+category: insurance
+domains:
+  - progressive.com
+aliases:
+  - Progressive Insurance
+  - Progressive Direct
+  - Progressive Auto
+descriptorPatterns:
+  - PROGRESSIVE INS
+  - PROGRESSIVE INSURANCE
+  - PROGRESSIVE DIRECT
+  - PROG DIRECT INS
+  - PROGRESSIVE
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: month
+    count: 6
+  - unit: year
+    count: 1
+
+notes: >-
+  Whether a Progressive policy can be cancelled online, and whether a fee applies, varies by state
+  and by whether the policy was bought direct or through an independent agent. Agent-written
+  policies are cancelled through the agent, and the descriptor on the statement can still read
+  PROGRESSIVE. Auto policies commonly run in six-month terms billed monthly.
+
+playbooks:
+  - channel: direct
+    method: phone
+    difficulty: 4
+    phone: "1-866-416-2003"
+    hours: Mon-Sun 24 hours
+    steps:
+      - text: >-
+          Line up the replacement policy first and note its start date — the cancellation date
+          should be the same day, not earlier.
+      - text: >-
+          Sign in at progressive.com and open your policy. Some states show a cancellation option
+          under Policy Details; most do not, and it routes to a representative.
+      - text: >-
+          Call 1-866-416-2003 (or 1-800-776-4737) and ask to cancel the policy. Give the policy
+          number and the exact effective date.
+        detail: >-
+          If the policy was written by an independent agent, Progressive will normally send you
+          back to that agent to process the cancellation.
+      - text: >-
+          Ask the representative whether a cancellation fee applies in your state and what the
+          return premium will be.
+      - text: >-
+          Ask for written confirmation of the cancellation by email or post, showing the effective
+          date.
+      - text: >-
+          Stop the recurring payment only once the policy shows as cancelled, so a genuine final
+          installment is not missed.
+      - text: Watch the next two statements for the premium stopping and any refund arriving.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      Premium paid beyond the cancellation date is normally returned. Some states allow a
+      cancellation charge on a mid-term cancellation, which is taken out of the return amount.
+    retentionOfferNotes: >-
+      Representatives offer to re-shop coverage levels, apply discounts, or move to a lower tier
+      before processing the cancellation.
+    gotchas:
+      - >-
+        Online self-cancellation is not available in every state — most policies still finish with
+        a representative on the phone.
+      - >-
+        Policies sold through an independent agent are cancelled by that agent, even though the
+        charge on the statement says Progressive.
+      - >-
+        A mid-term cancellation can carry a fee depending on the state; ask for the figure before
+        agreeing to the date.
+      - >-
+        Cancelling before the replacement policy starts creates a coverage gap that raises future
+        premiums.
+      - >-
+        Stopping the payment at the bank does not cancel the policy — it produces a cancellation
+        for non-payment, which is worse on a record than a voluntary one.
+    letterTemplate: |
+      {{fullName}}
+      {{postalAddress}}
+
+      {{date}}
+
+      Progressive
+      Policy Services
+
+      Policy number: {{accountReference}}
+
+      To whom it may concern,
+
+      I am writing to request cancellation of the Progressive policy shown above, with an
+      effective date of {{date}} or the earliest date after that which my policy allows.
+
+      Please confirm to me in writing at the address above:
+
+        - the date coverage on this policy ends,
+        - the amount of any return premium and how it will be paid,
+        - the amount of any cancellation fee that applies in my state,
+        - that no further payments will be taken from my card or bank account.
+
+      Please treat this letter as my written request to end the policy.
+
+      Sincerely,
+
+      {{fullName}}
+    evidenceHint: >-
+      Representative name, call date and confirmation number, the written cancellation
+      confirmation showing the effective date, and the declarations page of the replacement policy.
+    sourceUrl: https://www.progressive.com/answers/how-to-cancel-car-insurance/
+    lastVerifiedAt: "2026-07-25"

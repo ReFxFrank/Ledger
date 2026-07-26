@@ -1,0 +1,117 @@
+slug: safestore
+name: Safestore
+legalName: Safestore Limited
+category: storage_unit
+domains:
+  - safestore.co.uk
+aliases:
+  - Safestore Self Storage
+  - Safestore UK
+descriptorPatterns:
+  - SAFESTORE
+  - SAFESTORE LTD
+  - SAFESTORE LIMITED
+  - SAFESTORE SELF STORAGE
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: week
+    count: 4
+
+notes: >-
+  The notice you owe depends on which licence you signed. A variable-price licence has no notice
+  period at all — tell the store and move out. A fixed or flexible licence carries a 14-day
+  minimum stay and 14 days' notice, and the notice has to land at least 14 days before the next
+  invoice date to stop that invoice. Check which one is on your copy of the agreement before
+  assuming either.
+
+playbooks:
+  - channel: direct
+    method: email
+    difficulty: 4
+    phone: "0800 444 800"
+    hours: Mon-Fri 8am-6pm, Sat 9am-5pm UK time
+    steps:
+      - text: >-
+          Look at your licence agreement and find the next invoice date and which contract type
+          you are on — variable, flexible or fixed.
+      - text: >-
+          Email your notice to the store that holds the unit, not to head office. The store's
+          email address is on the invoice and on that store's page at safestore.co.uk.
+        detail: >-
+          Notice can also be given by post, by hand, or by recorded delivery. Email is the fastest
+          route that still leaves a dated record, which is what matters if the date is disputed.
+      - text: >-
+          Send it at least 14 days before the next invoice date so that invoice is not raised.
+          Notice given later usually means one more invoice.
+      - text: >-
+          Ask the store to reply confirming the vacate date, the final amount due, and that the
+          continuous payment authority or Direct Debit will be stopped.
+      - text: >-
+          Clear the unit completely, remove your padlock, and hand the keys or the fob back at the
+          store counter.
+        warning: >-
+          A unit that still has your padlock on it counts as occupied and continues to be charged.
+      - text: >-
+          Ask for a written vacate confirmation on the day you leave and check the card statement
+          for one further cycle.
+    noticePeriodDays: 14
+    refundPolicy: >-
+      Storage is invoiced in advance for whole periods. Where a period has already been invoiced
+      and paid, whether any of it comes back depends on the licence type on your agreement — ask
+      the store to put the figure in writing.
+    retentionOfferNotes: >-
+      Stores frequently offer a discount or a smaller unit when notice is given, particularly
+      after a price increase letter. A new unit is a new licence agreement with its own terms.
+    gotchas:
+      - >-
+        Notice given fewer than 14 days before the invoice date does not stop that invoice — one
+        more period is charged.
+      - >-
+        Notice must reach the store holding the unit; a message to the national number or a
+        website contact form may not be logged against the licence.
+      - >-
+        Leaving a padlock on the door means the unit still reads as occupied and charging
+        continues after the vacate date.
+      - >-
+        Store insurance or StoreProtect cover is charged alongside storage and ends only when the
+        licence is properly closed.
+      - >-
+        Introductory rates step up after the promotional period, which is usually the cause of an
+        unexplained increase on a long-running unit.
+    letterTemplate: |
+      {{fullName}}
+      {{postalAddress}}
+
+      {{date}}
+
+      Safestore
+      [store name and address as printed on my invoice]
+
+      Customer account / unit reference: {{accountReference}}
+
+      Dear Safestore,
+
+      I am writing to give notice to end my storage licence for the unit above. Please treat this
+      as my notice under the agreement, and take the vacate date as the date 14 days from your
+      receipt of this letter, or the earliest date the agreement allows if that is sooner.
+
+      Please confirm to me in writing at the address above:
+
+        - the date my licence will end,
+        - the final amount due and the date it will be collected,
+        - that the Direct Debit or card payment authority on this account will be stopped after
+          that date,
+        - that any insurance or StoreProtect cover attached to the unit will also end.
+
+      I will clear the unit and remove my padlock on or before the vacate date, and I would like
+      written confirmation once the unit has been logged as vacated.
+
+      Yours faithfully,
+
+      {{fullName}}
+    evidenceHint: >-
+      Keep the sent email with its date and the store's reply, the vacate confirmation from the
+      counter, and a photo of the empty unit with your padlock removed.
+    sourceUrl: https://www.safestore.co.uk/terms-and-conditions/refund-cancellation-policy/
+    lastVerifiedAt: "2026-07-25"

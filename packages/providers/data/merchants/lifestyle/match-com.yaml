@@ -1,0 +1,95 @@
+slug: match-com
+name: Match.com
+legalName: Match Group, LLC
+category: dating
+domains:
+  - match.com
+  - uk.match.com
+aliases:
+  - Match
+  - Match Dating
+  - Match Premium
+descriptorPatterns:
+  - MATCH.COM
+  - MATCH COM
+  - MATCH.COM SUBSCRIPTION
+  - MATCH.COM MEMBERSHIP
+  - MTCH MATCH.COM
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: month
+    count: 3
+  - unit: month
+    count: 6
+  - unit: month
+    count: 12
+notes: >-
+  Match sells multi-month terms that renew as one charge, and it sells add-on features that
+  renew on their own schedule alongside the subscription. Turning off the subscription renewal
+  does not turn off the add-ons — each has its own switch on the same page, and this is the most
+  common reason a smaller charge continues after a cancellation.
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 3
+    steps:
+      - text: Sign in at match.com in a browser and open Settings, then Manage Subscription.
+        detail: >-
+          The mobile app routes this to a help article rather than to the controls, so use a
+          browser.
+      - text: Choose to cancel the subscription or turn off automatic renewal, then work through the offer screens to the final confirmation.
+      - text: Go back through the same page and switch off every add-on feature listed separately.
+        warning: >-
+          Add-ons such as extra visibility or message features renew independently and keep
+          charging after the main subscription has been cancelled.
+      - text: Reload Manage Subscription and confirm the page shows an expiry date and no renewals scheduled.
+      - text: If the page will not complete the cancellation, use the help centre contact route and ask for written confirmation of the end date.
+    noticePeriodDays: 1
+    refundPolicy: >-
+      Match states that a cancellation stops future renewals and that the profile stays usable
+      until the end of the paid term; a cancelled free trial ends access immediately.
+    retentionOfferNotes: >-
+      Offers discounted extensions and free extra months, some of which restart the term and move
+      the renewal date; read what is being accepted.
+    gotchas:
+      - A retention offer that adds free months usually restarts the subscription term, so the renewal date moves rather than disappears.
+      - Add-on features have their own renewal switches and survive the main cancellation.
+      - Hiding or deleting the profile does not stop the billing.
+      - A subscription bought in the iOS or Android app cannot be cancelled on match.com and has to be ended in the store.
+    evidenceHint: Screenshot the Manage Subscription page showing the expiry date and every add-on switched off, plus the confirmation email.
+    sourceUrl: https://help.match.com/hc/en-us/articles/6077124196891-Canceling
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: apple
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://apps.apple.com/account/subscriptions
+    steps:
+      - text: On iPhone or iPad, open Settings and tap your name at the top of the screen.
+      - text: Tap Subscriptions, then tap Match.
+      - text: Tap Cancel Subscription and confirm.
+        warning: If no Cancel button appears, the subscription is already set to expire on the date shown.
+    noticePeriodDays: 1
+    gotchas:
+      - Match states that a subscription bought through Apple has to be cancelled through Apple.
+      - Deleting the Match profile or the app leaves the App Store subscription running.
+    evidenceHint: Screenshot the App Store Subscriptions screen showing the expiry date.
+    sourceUrl: https://help.match.com/hc/en-us/articles/6077124196891-Canceling
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: google
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://play.google.com/store/account/subscriptions
+    steps:
+      - text: Open the Google Play Store app and tap your profile icon at the top right.
+      - text: Tap Payments & subscriptions, then Subscriptions, then Match.
+      - text: Tap Cancel subscription and confirm.
+    noticePeriodDays: 1
+    gotchas:
+      - Uninstalling the app leaves the Google Play subscription running.
+      - The subscription sits on the Google account that paid for it, which may not be the account in use now.
+    evidenceHint: Screenshot the Play subscription page showing the expiry date.
+    sourceUrl: https://support.google.com/googleplay/answer/7018481
+    lastVerifiedAt: "2026-07-25"

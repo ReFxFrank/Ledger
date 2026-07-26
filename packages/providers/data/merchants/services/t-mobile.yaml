@@ -1,0 +1,82 @@
+slug: t-mobile
+name: T-Mobile
+legalName: T-Mobile USA, Inc.
+category: telecom
+domains:
+  - t-mobile.com
+  - metrobyt-mobile.com
+aliases:
+  - T Mobile
+  - TMobile
+  - T-Mobile US
+descriptorPatterns:
+  - T-MOBILE
+  - TMOBILE
+  - T-MOBILE PCS SVC
+  - TMOBILE*AUTO PAY
+  - T-MOBILE.COM
+  - TMOBILE POSTPAID
+  - METRO BY T-MOBILE
+  - METROPCS
+typicalIntervals:
+  - unit: month
+    count: 1
+
+notes: >-
+  T-Mobile dates cancellations forward: the request is accepted now and the line closes at the end
+  of the current billing cycle, so a charge that lands after you cancel is usually the cycle you
+  are already inside rather than a failed cancellation. A cancelled line can be reactivated within
+  90 days, which also means the account is not fully gone during that window.
+
+playbooks:
+  - channel: direct
+    method: phone
+    difficulty: 4
+    phone: "1-800-937-8997"
+    hours: Mon-Sun 4am-midnight PT
+    steps:
+      - text: >-
+          Check active promotions on the line first at T-Mobile.com under Account, then Plan —
+          device credits stop the moment the line closes.
+      - text: >-
+          Call 1-800-937-8997, or dial 611 from the T-Mobile handset, and ask for the account
+          closure or cancellation team.
+        detail: >-
+          There is no button in the My T-Mobile web account or the app that closes a line. The
+          call, or a visit to a T-Mobile store, is the path.
+      - text: >-
+          Confirm with the agent which lines are closing and on what date, and ask for the
+          cancellation to be read back to you.
+      - text: Ask for a cancellation confirmation number and note the agent's name.
+      - text: >-
+          Port the number out first if you want to keep it — give the new carrier your T-Mobile
+          account number and transfer PIN before you call to cancel.
+        warning: >-
+          Closing the line first releases the number, and it may not be recoverable afterwards.
+      - text: Check the final bill for the remaining device installment balance and a zero closing balance.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      Cancellations are future-dated to the end of the current billing cycle; the cycle you are in
+      is billed in full and is not prorated to the cancel date.
+    retentionOfferNotes: >-
+      Retention offers a plan downgrade, a loyalty credit, or a device promotion. Taking a device
+      promotion normally starts a fresh 24-month installment agreement on that line.
+    gotchas:
+      - >-
+        The line stays live to the end of the current cycle — a charge arriving after the call is
+        normally that cycle, not a failed cancellation.
+      - >-
+        Remaining device installment balances are due on the final bill as soon as the line
+        closes, and bill-credit promotions stop immediately.
+      - Voicemail messages and DIGITS call history are deleted at cancellation and cannot be recovered.
+      - >-
+        Cancelling one line of a multi-line plan can push the remaining lines to a higher per-line
+        price because the multi-line discount changes.
+      - >-
+        T-Mobile Home Internet and T-Mobile Fiber are separate accounts with their own cancel
+        numbers; closing a mobile line leaves them running.
+    evidenceHint: >-
+      Note the cancellation confirmation number, the agent's name, the stated end date, and keep
+      the final bill.
+    sourceUrl: https://www.t-mobile.com/support/account/cancel-service
+    lastVerifiedAt: "2026-07-25"

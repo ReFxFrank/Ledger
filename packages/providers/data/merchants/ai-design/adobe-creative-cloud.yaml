@@ -1,0 +1,118 @@
+slug: adobe-creative-cloud
+name: Adobe Creative Cloud
+legalName: Adobe Inc.
+category: design
+domains:
+  - adobe.com
+aliases:
+  - Adobe
+  - Creative Cloud
+  - Adobe CC
+  - Adobe Photography Plan
+  - Photoshop
+  - Lightroom
+  - Adobe Express
+descriptorPatterns:
+  - ADOBE
+  - ADOBE INC
+  - ADOBE.COM
+  - ADOBE CREATIVE CLOUD
+  - ADOBE SYSTEMS
+  - ADOBE SYSTEMS SOFTWARE IRELAND
+  - ADOBE IRELAND
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: year
+    count: 1
+notes: >-
+  Adobe sells three shapes of the same plan and they exit very differently: monthly with no
+  commitment, annual paid up front, and annual paid monthly — the last one carries an early
+  termination fee and is the default option on the pricing page. A monthly Adobe charge is
+  therefore not evidence of a monthly commitment. UK and EU customers are billed by the Irish
+  entity, which is why the descriptor often mentions Ireland.
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 3
+    cancelUrl: https://account.adobe.com/plans
+    steps:
+      - text: Sign in at account.adobe.com and open Plans, then Manage plan on the plan you want to end.
+      - text: Click Cancel your plan and answer the reason question.
+      - text: Work past the offer screens — Adobe puts a cheaper plan, a discounted period and a pause option ahead of the cancel button.
+        warning: Accepting any offer here ends the cancellation attempt and the flow has to be restarted.
+      - text: Read the cancellation-fee figure on the final screen before confirming.
+        detail: >-
+          On an annual plan billed monthly the fee is 50% of the payments left in the term. The
+          screen shows the amount it will charge; on the plan anniversary that figure is zero.
+      - text: Confirm, then check Plans shows the plan as expiring and wait for the confirmation email.
+      - text: If the flow hands you to a chat agent, ask in writing for the cancellation date and the final amount.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      Adobe's published terms: cancelling within 14 days of the order refunds it in full. After 14
+      days, an annual plan billed monthly can carry an early termination fee of 50% of the
+      remaining contract, an annual prepaid plan is not refunded and runs to the end of its term,
+      and a monthly plan runs to the end of that month.
+    retentionOfferNotes: >-
+      The exit flow offers a plan swap, a discounted period and a pause before it offers
+      cancellation. Each one keeps the subscription and its renewal date.
+    gotchas:
+      - An annual plan billed monthly carries a 50% early termination fee once the first 14 days have passed.
+      - The plan anniversary is the one point an annual plan ends without that fee, and the renewal happens automatically if it is missed.
+      - Some accounts cannot finish the flow online and are handed to a chat agent — the plan stays live until that conversation ends.
+      - A plan bought through Apple, Google or Microsoft is not cancellable at account.adobe.com.
+      - Cloud storage drops to the free allowance when the plan ends, and files over that limit stop syncing.
+    letterTemplate: |
+      To Adobe Customer Care
+
+      Date: {{date}}
+      Account email / order reference: {{accountReference}}
+
+      I am asking you to cancel my Adobe subscription on this account, effective at the earliest
+      date my current plan allows.
+
+      Please confirm in writing:
+        - the date the subscription ends,
+        - any amount that will still be charged, including an early termination fee if one applies,
+        - that no further payments will be taken after that date.
+
+      Please do not switch me to a different plan, apply a discount, or pause the subscription.
+
+      {{fullName}}
+    evidenceHint: Save the chat transcript or confirmation email plus a screenshot of the Plans page showing the plan expiring and any fee quoted before you confirmed.
+    sourceUrl: https://helpx.adobe.com/account/individual/subscriptions-and-plans/renewals-and-cancellations/cancel-adobe-subscription.html
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: apple
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://apps.apple.com/account/subscriptions
+    steps:
+      - text: On iPhone or iPad open Settings, tap your name at the top, then tap Subscriptions.
+      - text: Tap the Adobe entry — it is listed under the app that sold it, such as Lightroom or Adobe Express, not under Creative Cloud.
+      - text: Tap Cancel Subscription and confirm.
+    noticePeriodDays: 0
+    gotchas:
+      - Adobe cannot stop an Apple-billed plan, and the Plans page on adobe.com shows it without a cancel button.
+      - The subscription is listed under the individual app's name, which is why it is often missed in the Apple list.
+      - Deleting the app leaves the Apple subscription running.
+    evidenceHint: Screenshot the Subscriptions screen showing the Adobe app with an expiry date.
+    sourceUrl: https://support.apple.com/en-us/118428
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: google
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://play.google.com/store/account/subscriptions
+    steps:
+      - text: Open the Google Play Store app and tap your profile icon in the top right.
+      - text: Tap Payments & subscriptions, then Subscriptions, and find the Adobe app that sold the plan.
+      - text: Tap Cancel subscription, choose a reason and confirm.
+    noticePeriodDays: 0
+    gotchas:
+      - The entry is named after the app (Lightroom, Adobe Express) rather than Creative Cloud.
+      - Uninstalling the app does not stop Google Play billing.
+      - Access continues to the end of the period already paid for.
+    evidenceHint: Screenshot the Play subscription entry showing the cancelled state and end date.
+    sourceUrl: https://support.google.com/googleplay/answer/7018481
+    lastVerifiedAt: "2026-07-25"

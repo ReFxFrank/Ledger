@@ -1,0 +1,75 @@
+slug: mullvad
+name: Mullvad VPN
+legalName: Mullvad VPN AB
+category: security_vpn
+domains:
+  - mullvad.net
+aliases:
+  - Mullvad
+  - Mullvad Browser VPN
+descriptorPatterns:
+  - MULLVAD
+  - MULLVAD VPN
+  - MULLVAD VPN AB
+  - MULLVAD.NET
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: year
+    count: 1
+notes: >-
+  Mullvad sells time rather than a subscription. Money buys a number of months on a 16-digit
+  account number, the account simply expires when the time runs out, and nothing renews on its
+  own. A repeating Mullvad charge is therefore either a habit of topping up on the same day each
+  month, an old PayPal agreement from before recurring payments were withdrawn, or a store
+  subscription. Treat a detected Mullvad cadence as a spending pattern, not as a commitment.
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 1
+    cancelUrl: https://mullvad.net/en/account
+    steps:
+      - text: >-
+          Sign in at mullvad.net/en/account with the 16-digit account number. The number is in
+          the Mullvad app under Account, and there is no email or password on the account.
+      - text: >-
+          Read the Paid until date. That date is when access stops on its own, with no action
+          needed and no further charge.
+      - text: >-
+          If a Mullvad charge is still arriving, it is not coming from this page. Check
+          paypal.com under Payments, then Automatic payments, for an old Mullvad agreement, and
+          check the App Store or Play subscriptions list.
+      - text: >-
+          To stop using the account entirely, stop adding time and let the Paid until date pass.
+          Uninstalling the app is optional and changes nothing about billing.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      Unused time is refundable on request through the support form at mullvad.net, minus what
+      the payment provider charges; the account has to be identified by its number.
+    gotchas:
+      - There is no auto-renewal to switch off, so a support agent has nothing to cancel either.
+      - Time bought with a voucher or cash cannot be traced back to a card statement, so match charges by date and amount.
+      - Letting the account lapse keeps the account number valid; adding time later resumes the same account rather than opening a new one.
+    evidenceHint: Screenshot the account page showing the Paid until date.
+    sourceUrl: https://mullvad.net/en/help
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: apple
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://apps.apple.com/account/subscriptions
+    steps:
+      - text: On iPhone or iPad, open Settings, tap your name at the very top, then tap Subscriptions.
+      - text: >-
+          Look for a Mullvad entry. Time bought in the iOS app is sold as a one-off purchase, so
+          in most cases nothing is listed here and there is nothing to stop.
+      - text: >-
+          If a Mullvad entry does appear, tap it, tap Cancel Subscription and confirm, then note
+          the expiry date.
+    noticePeriodDays: 0
+    gotchas:
+      - A one-off in-app purchase of time appears in the purchase history rather than in Subscriptions, and refunds for it go through reportaproblem.apple.com.
+      - mullvad.net has no record of an App Store payment and cannot act on it.
+    evidenceHint: Screenshot the Subscriptions list, including the case where no Mullvad entry is present.
+    sourceUrl: https://support.apple.com/en-us/118428
+    lastVerifiedAt: "2026-07-25"

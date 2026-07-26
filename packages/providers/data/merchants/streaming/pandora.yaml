@@ -1,0 +1,91 @@
+slug: pandora
+name: Pandora
+legalName: Pandora Media, LLC
+category: music_audio
+domains:
+  - pandora.com
+aliases:
+  - Pandora Plus
+  - Pandora Premium
+  - Pandora One
+  - Pandora Radio
+descriptorPatterns:
+  - PANDORA.COM
+  - PANDORA MEDIA
+  - PANDORA PLUS
+  - PANDORA PREMIUM
+  - PANDORA INTERNET RADIO
+  - PANDORA SUBSCRIPTION
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: year
+    count: 1
+notes: >-
+  The bare fragment PANDORA is deliberately not claimed here, because the jewellery retailer of
+  the same name prints it too and a false match would attach a cancellation playbook to a shop
+  purchase. Pandora is owned by SiriusXM, and a bundled plan sold with a SiriusXM subscription
+  is billed by SiriusXM and cannot be cancelled on pandora.com. Annual Plus and Premium plans
+  are sold at a discount, so a once-a-year charge here is a live subscription.
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 2
+    cancelUrl: https://www.pandora.com/account/subscription
+    steps:
+      - text: Sign in at pandora.com in a browser and open the profile menu at the top right, then Settings.
+        detail: The phone app has no cancel control and points back to the website.
+      - text: Open the Subscription tab and read who the plan is billed by.
+        warning: >-
+          If it names Apple, Google, Amazon, Roku or SiriusXM, the charge has to be stopped with
+          that biller instead.
+      - text: Choose Cancel Subscription, then confirm on the screen that follows.
+        warning: A discounted period or a downgrade to the cheaper Plus tier is offered ahead of the confirmation.
+      - text: Check the Subscription tab now shows the date access ends and keep the confirmation email.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      Pandora does not prorate the unused part of a paid month or year; the paid features run to
+      the end of the period and the account then reverts to ad-supported radio.
+    retentionOfferNotes: A free or discounted period is commonly offered inside the cancel flow.
+    gotchas:
+      - The account drops to the ad-supported tier rather than closing, so the app keeps working and the cancellation looks like it failed.
+      - Offline stations and downloads stop playing when the paid period ends.
+      - A Pandora plan included with a SiriusXM subscription ends only when that SiriusXM subscription is dealt with.
+    evidenceHint: Screenshot the Subscription tab showing the end date, and keep the confirmation email.
+    sourceUrl: https://help.pandora.com/s/article/Cancel-Subscription
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: apple
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://apps.apple.com/account/subscriptions
+    steps:
+      - text: On iPhone or iPad, open Settings and tap your name at the very top of the list.
+      - text: Tap Subscriptions, then tap Pandora.
+        detail: On a Mac, open App Store, click your name at the bottom left, then Account Settings, then Manage next to Subscriptions.
+      - text: Tap Cancel Subscription and confirm on the sheet that appears.
+      - text: Note the expiry date shown under the Pandora entry.
+    noticePeriodDays: 0
+    gotchas:
+      - Pandora sells a large share of its subscriptions inside the iPhone app, so Apple billing is the common case rather than the exception.
+      - pandora.com cannot cancel an Apple-billed subscription; the Subscription tab names Apple instead.
+      - Deleting the app does not stop the billing.
+    evidenceHint: Screenshot the Subscriptions screen showing Pandora expiring on a date.
+    sourceUrl: https://support.apple.com/en-us/118428
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: google
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://play.google.com/store/account/subscriptions
+    steps:
+      - text: Open the Google Play Store app, tap your profile picture, then Payments and subscriptions, then Subscriptions.
+      - text: Tap Pandora, then Cancel subscription, and pick a reason when prompted.
+      - text: Tap through to the end until the entry shows an expiry date instead of a renewal date.
+    noticePeriodDays: 0
+    gotchas:
+      - The subscription belongs to the Google account that bought it, which may not be the profile signed in on the phone today.
+      - Uninstalling the app leaves the subscription running.
+    evidenceHint: Screenshot the Play subscriptions entry showing the expiry date.
+    sourceUrl: https://support.google.com/googleplay/answer/7018481
+    lastVerifiedAt: "2026-07-25"

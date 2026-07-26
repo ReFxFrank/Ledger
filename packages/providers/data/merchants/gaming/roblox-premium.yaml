@@ -1,0 +1,99 @@
+slug: roblox-premium
+name: Roblox Premium
+legalName: Roblox Corporation
+category: gaming
+domains:
+  - roblox.com
+
+aliases:
+  - Roblox
+  - Builders Club
+  - Premium 450
+  - Premium 1000
+  - Premium 2200
+  - Roblox Premium Membership
+
+descriptorPatterns:
+  - ROBLOX
+  - ROBLOX.COM
+  - ROBLOX PREMIUM
+  - ROBLOX CORPORATION
+
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: year
+    count: 1
+
+notes: >-
+  The ROBLOX descriptor covers both the recurring membership and one-off Robux top-ups, and a
+  household with children often has several of each in a month. Only the membership renews; the
+  Robux purchases are single charges that happen to repeat.
+
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 2
+    cancelUrl: https://www.roblox.com/my/account#!/billing
+    steps:
+      - text: Sign in at roblox.com with the account that holds Premium, then open Settings from the gear icon and choose Billing.
+        detail: >-
+          Premium belongs to the account that plays, not to the adult who paid. If the child's
+          account is the one showing the Premium badge, the cancellation has to happen while signed
+          in as that account.
+      - text: Under the Premium section choose Cancel Renewal.
+      - text: Confirm on the dialog that follows, then check the page shows the date Premium ends.
+        warning: The dialog offers to keep the membership; the cancellation only registers once the confirming button is used.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      Roblox does not refund the current period or any Robux already granted; the membership runs to
+      the end of the paid period.
+    gotchas:
+      - Premium bought inside the Roblox app on an iPhone or an Android device is billed by that store, and the website shows the membership with no cancel control.
+      - The monthly Robux allowance stops at the end of the period, but Robux already credited stay in the account.
+      - Trading, reselling and Premium-only items stop working the moment Premium ends, and items listed for sale are delisted.
+      - Robux bought as one-off top-ups use the same descriptor as the membership, so a statement can show both in the same month.
+      - An annual plan cancelled part-way through still runs to its anniversary date rather than to the end of the current month.
+    evidenceHint: Screenshot the Billing page showing Premium ending on the date, and keep the confirmation email from Roblox.
+    sourceUrl: https://en.help.roblox.com/hc/en-us/search?query=cancel%20premium
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: apple
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://apps.apple.com/account/subscriptions
+    steps:
+      - text: On an iPhone or iPad, open Settings and tap your name at the very top of the list.
+        detail: >-
+          From a Mac, open the App Store, click your name at the bottom of the sidebar, then Account
+          Settings, then Manage beside Subscriptions.
+      - text: Tap Subscriptions, then Roblox, then Cancel Subscription and confirm.
+        warning: When no Cancel button is shown, the subscription is already set to expire on the date printed above it.
+      - text: Check the Subscriptions screen now shows an expiry date for Roblox.
+    noticePeriodDays: 0
+    gotchas:
+      - Deleting the Roblox app does not stop the billing.
+      - The Roblox website cannot cancel an Apple-billed membership, and its billing page will keep showing the membership as active until the period ends.
+      - On a Family Sharing setup the organiser is billed, so the cancel control appears only on the organiser's Apple Account.
+    evidenceHint: Screenshot the Subscriptions screen showing the expiry date.
+    sourceUrl: https://support.apple.com/en-us/118428
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: google
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://play.google.com/store/account/subscriptions
+    steps:
+      - text: Open the Google Play Store app, tap the profile icon, then Payments and subscriptions, then Subscriptions.
+        detail: From a browser, play.google.com/store/account/subscriptions shows the same list.
+      - text: Select Roblox, tap Cancel subscription, choose a reason, then tap Cancel subscription again.
+        warning: The reason screen is not the confirmation; the list has to read Expires on afterwards.
+      - text: Check the account switcher if Roblox is not listed - it is billed to whichever Google account bought it.
+    noticePeriodDays: 0
+    gotchas:
+      - Uninstalling the app does not stop the billing.
+      - The Roblox website cannot cancel a Google-billed membership.
+      - Access and the Robux allowance run to the end of the period already paid for.
+    evidenceHint: Screenshot the Play Subscriptions screen showing Expires on with the date.
+    sourceUrl: https://support.google.com/googleplay/answer/7018481
+    lastVerifiedAt: "2026-07-25"

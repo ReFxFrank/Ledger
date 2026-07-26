@@ -253,7 +253,9 @@ describe('merchantFileSchema — no legal claims (docs/legal-notes.md)', () => {
       /legal claim "You have the right"/,
     );
     expectRejected(
-      withPlaybook({ steps: [{ text: 'Call support.', detail: 'They are legally required to agree.' }] }),
+      withPlaybook({
+        steps: [{ text: 'Call support.', detail: 'They are legally required to agree.' }],
+      }),
       /legal claim/,
     );
     expectRejected(
@@ -271,7 +273,10 @@ describe('merchantFileSchema — no legal claims (docs/legal-notes.md)', () => {
       merchant({ notes: 'The law requires them to offer a web cancellation.' }),
       /legal claim/,
     );
-    expectRejected(withPlaybook({ refundPolicy: 'Guaranteed refund on annual plans.' }), /legal claim/);
+    expectRejected(
+      withPlaybook({ refundPolicy: 'Guaranteed refund on annual plans.' }),
+      /legal claim/,
+    );
   });
 
   it('accepts the same facts stated as provider behaviour', () => {

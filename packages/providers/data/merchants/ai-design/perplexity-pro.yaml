@@ -1,0 +1,86 @@
+slug: perplexity-pro
+name: Perplexity Pro
+legalName: Perplexity AI, Inc.
+category: ai
+domains:
+  - perplexity.ai
+aliases:
+  - Perplexity
+  - Perplexity AI
+  - Perplexity Max
+descriptorPatterns:
+  - PERPLEXITY
+  - PERPLEXITY AI
+  - PERPLEXITY.AI
+  - PERPLEXITY PRO
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: year
+    count: 1
+notes: >-
+  Pro is sold on the web, in the iOS app and in the Play app, and the three are separate
+  subscriptions on the same account — the web Settings page only ever shows the web one.
+  Pro handed out through a partner promotion is administered by that partner and shows no
+  charge at all.
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 2
+    cancelUrl: https://www.perplexity.ai/settings/account
+    steps:
+      - text: Sign in at perplexity.ai and open your profile icon, then Account (Settings on desktop).
+      - text: Scroll to the Subscription section and click Manage Plan, then Cancel Subscription.
+        detail: >-
+          The Subscription block sits below the profile and interest settings, so it is under a
+          scroll on smaller windows.
+      - text: Confirm on the following screen and wait for the page to show the plan as ending.
+      - text: Re-open Settings and click Manage subscription again to check it now reports the end date.
+        detail: Perplexity's own help page asks users to re-check here, because the flow can silently not complete.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      Perplexity states the account reverts to the free version at the end of the current billing
+      cycle; the remainder of the paid period is not refunded.
+    gotchas:
+      - Deleting the Perplexity account does not stop the subscription — the cancellation has to happen first.
+      - A subscription bought in the iOS or Android app is invisible in the web settings and can only be stopped in the store.
+      - Access stays on Pro until the end of the paid period, so the plan still looks active the day after cancelling.
+      - An annual plan charges once on the anniversary; the single yearly line is a live subscription, not a one-off.
+    evidenceHint: Screenshot the Subscription section showing the plan ending, and keep the cancellation email.
+    sourceUrl: https://www.perplexity.ai/help-center/en/articles/10354283-canceling-a-subscription
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: apple
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://apps.apple.com/account/subscriptions
+    steps:
+      - text: On iPhone or iPad open Settings, tap your name at the top, then tap Subscriptions.
+      - text: Tap Perplexity, then Cancel Subscription and confirm.
+        detail: The same list is in the App Store app under your profile picture, then Subscriptions.
+      - text: Check the entry now reads Expires rather than Renews.
+    noticePeriodDays: 0
+    gotchas:
+      - Deleting the Perplexity app leaves the Apple subscription running.
+      - Cancelling here does not touch a separate web subscription on the same email address.
+      - Refunds for an Apple-billed period are requested from Apple, not from Perplexity.
+    evidenceHint: Screenshot the Subscriptions screen showing Perplexity with an expiry date.
+    sourceUrl: https://www.perplexity.ai/help-center/en/articles/10353015-billing-for-ios-subscriptions
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: google
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://play.google.com/store/account/subscriptions
+    steps:
+      - text: Open the Google Play Store app and tap your profile icon in the top right.
+      - text: Tap Payments & subscriptions, then Subscriptions, then Perplexity.
+      - text: Tap Cancel subscription, choose a reason and confirm.
+    noticePeriodDays: 0
+    gotchas:
+      - Uninstalling the app does not stop Google Play billing.
+      - Pro access continues to the end of the period already paid for.
+      - Only the Google account that bought the subscription can see it in this list.
+    evidenceHint: Screenshot the Play subscription entry showing the cancelled state and end date.
+    sourceUrl: https://www.perplexity.ai/help-center/en/articles/10353020-billing-for-android-subscriptions
+    lastVerifiedAt: "2026-07-25"

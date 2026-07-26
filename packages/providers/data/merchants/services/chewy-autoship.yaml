@@ -1,0 +1,89 @@
+slug: chewy-autoship
+name: Chewy Autoship
+legalName: Chewy, Inc.
+category: pets
+domains:
+  - chewy.com
+aliases:
+  - Chewy
+  - Autoship
+  - Chewy Autoship & Save
+descriptorPatterns:
+  - CHEWY.COM
+  - CHEWY
+  - CHEWY INC
+  - CHEWY AUTOSHIP
+  - CHEWY.COM 800-672-4399
+typicalIntervals:
+  - unit: week
+    count: 4
+  - unit: month
+    count: 1
+  - unit: month
+    count: 2
+  - unit: month
+    count: 3
+
+notes: >-
+  Autoship is not one subscription — an account can hold several, each with its own products,
+  interval and next-ship date, and each producing its own charge. A household that thinks it has
+  "a Chewy subscription" often has three. The amount varies between shipments because prices and
+  promotions change, so a fixed-amount cadence check will miss it; the interval is the stable
+  signal.
+
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 2
+    steps:
+      - text: >-
+          Sign in at chewy.com and open Account, then Manage Autoship. Every active Autoship on
+          the account is listed here with its next ship date.
+      - text: >-
+          Open the Autoship you want to stop and check what is inside it — cancelling removes all
+          future shipments of that Autoship, not just one item.
+        detail: >-
+          To drop a single product instead, use Remove next to that item and leave the rest of the
+          Autoship running.
+      - text: >-
+          Scroll to the bottom of the Autoship page and choose Cancel This Autoship, then confirm.
+      - text: >-
+          Repeat for every other Autoship listed — each one bills separately and cancelling one
+          does not touch the others.
+        warning: >-
+          This is the step people miss. The Manage Autoship page is the only place that shows all
+          of them.
+      - text: >-
+          If an order is already processing, cancel it under Orders instead; changes are only
+          possible up to the cut-off the pre-shipment email describes.
+      - text: >-
+          If the page will not save, call 1-800-672-4399 — Chewy support can cancel an Autoship
+          directly.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      An Autoship order that has already shipped is not stopped by cancelling; Chewy generally
+      refunds returned items and often tells customers to keep or donate perishable ones.
+    retentionOfferNotes: >-
+      The cancel flow offers to change the frequency, skip the next delivery, or apply a discount
+      instead. Choosing Skip leaves the Autoship active and it resumes at the next interval.
+    gotchas:
+      - >-
+        Skip is not cancel — a skipped delivery leaves the Autoship live and billing resumes at
+        the next scheduled date.
+      - >-
+        Cancelling one Autoship does not affect the others on the account; check the full list on
+        Manage Autoship.
+      - >-
+        The Autoship discount is applied to the first order and a smaller ongoing discount after
+        that, so the charge amount changes between shipments.
+      - >-
+        Changes are only possible up to the cut-off stated in the pre-shipment email, which is
+        typically midnight the day before the ship date.
+      - >-
+        Chewy Pharmacy and prescription-food Autoships are managed on the same page but can
+        require a vet authorisation refresh, which sometimes reactivates a paused order.
+    evidenceHint: >-
+      Screenshot the Manage Autoship page showing no active Autoships, plus the cancellation
+      confirmation email.
+    sourceUrl: https://www.chewy.com/customer-care/autoship/creating-or-updating-autoship/change-an-autoship-order
+    lastVerifiedAt: "2026-07-25"

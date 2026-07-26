@@ -1,0 +1,108 @@
+slug: netflix
+name: Netflix
+legalName: Netflix, Inc.
+category: streaming_video
+domains:
+  - netflix.com
+aliases:
+  - Netflix Standard
+  - Netflix Premium
+  - Netflix Basic
+  - Netflix with ads
+descriptorPatterns:
+  - NETFLIX
+  - NETFLIX.COM
+  - NETFLIX INC
+  - NETFLIX INTERNATIONAL
+typicalIntervals:
+  - unit: month
+    count: 1
+notes: >-
+  Netflix sells monthly plans only, so a Netflix charge that repeats yearly is almost always a
+  gift-card top-up rather than a plan. Members who joined before 2019 can still be billed by
+  Apple, Google or Roku; those accounts show no cancel button on netflix.com at all.
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 1
+    cancelUrl: https://www.netflix.com/cancelplan
+    steps:
+      - text: Sign in at netflix.com in a browser, open the profile icon at the top right and choose Account.
+      - text: In the Membership section, choose Cancel Membership.
+        detail: >-
+          The control sits in the Membership card at the top of the account page, above Plan
+          details. If there is no cancel button at all, Netflix is not the biller and the same
+          card names the partner (Apple, Google, Roku, Comcast, Sky, T-Mobile) that is.
+      - text: Choose Finish Cancellation on the second screen.
+        warning: Closing the tab before this second screen leaves the membership running.
+      - text: Reload the account page and check it now reads that the membership ends on a specific date.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      Netflix does not refund the unused part of a month; streaming continues until the end of
+      the period already paid for.
+    retentionOfferNotes: >-
+      The exit flow offers the cheaper ad-supported plan rather than a discount. Accepting it
+      keeps the membership alive at a lower price instead of ending it.
+    gotchas:
+      - Access and the charge already taken run to the end of the current billing period.
+      - Profiles, viewing history and My List are kept for 10 months, so restarting inside that window quietly restores the old account rather than opening a new one.
+      - When a partner bills the membership, netflix.com shows that partner's instructions instead of a cancel button.
+    evidenceHint: Screenshot the account page showing the date the membership ends.
+    sourceUrl: https://help.netflix.com/en/node/407
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: apple
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://apps.apple.com/account/subscriptions
+    steps:
+      - text: On iPhone or iPad, open Settings and tap your name at the very top of the list.
+      - text: Tap Subscriptions, then tap Netflix.
+        detail: On a Mac, open App Store, click your name at the bottom left, then Account Settings, then Manage next to Subscriptions.
+      - text: Tap Cancel Subscription and confirm on the sheet that appears.
+        detail: If the only button offered is Resubscribe, the subscription is already set to expire.
+      - text: Note the expiry date shown under the Netflix entry.
+    noticePeriodDays: 0
+    gotchas:
+      - Netflix stopped taking new Apple-billed members in 2018, so this only applies to accounts opened before then.
+      - Deleting the Netflix app does not stop the billing.
+      - netflix.com cannot cancel an Apple-billed membership; it has no record of the payment method.
+    evidenceHint: Screenshot the Subscriptions screen showing Netflix expiring on a date.
+    sourceUrl: https://support.apple.com/en-us/118428
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: google
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://play.google.com/store/account/subscriptions
+    steps:
+      - text: Open the Google Play Store app, tap your profile picture, then Payments and subscriptions, then Subscriptions.
+      - text: Tap Netflix, then Cancel subscription, and pick a reason when prompted.
+      - text: Tap through to the end until the entry shows an expiry date instead of a renewal date.
+    noticePeriodDays: 0
+    gotchas:
+      - The subscription belongs to the Google account that bought it, which may not be the profile currently signed in on the phone.
+      - Netflix stopped taking new Google Play billing in 2019, so this applies to older accounts.
+      - Uninstalling the app leaves the subscription running.
+    evidenceHint: Screenshot the Play subscriptions entry showing the expiry date.
+    sourceUrl: https://support.google.com/googleplay/answer/7018481
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: roku
+    method: app_store
+    difficulty: 2
+    cancelUrl: https://my.roku.com/account
+    steps:
+      - text: Sign in at my.roku.com and open Manage your subscriptions.
+      - text: Find Netflix in the list and choose Unsubscribe, then confirm.
+        detail: >-
+          On the device itself, highlight the Netflix tile on the Roku home screen, press the
+          star (Options) button, and choose Manage subscription, then Cancel subscription.
+      - text: Check the entry now shows the date the subscription ends.
+    noticePeriodDays: 0
+    gotchas:
+      - Removing the Netflix channel from the Roku home screen does not cancel the billing.
+      - netflix.com cannot cancel a Roku-billed membership.
+    evidenceHint: Screenshot the Roku subscriptions page showing Netflix ending on a date.
+    sourceUrl: https://support.roku.com/article/208756478
+    lastVerifiedAt: "2026-07-25"

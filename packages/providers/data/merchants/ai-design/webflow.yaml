@@ -1,0 +1,53 @@
+slug: webflow
+name: Webflow
+legalName: Webflow, Inc.
+category: software
+domains:
+  - webflow.com
+aliases:
+  - Webflow Site Plan
+  - Webflow Workspace
+  - Webflow CMS
+descriptorPatterns:
+  - WEBFLOW
+  - WEBFLOW INC
+  - WEBFLOW.COM
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: year
+    count: 1
+notes: >-
+  Two independent subscriptions share this descriptor: a Site plan per published site and a
+  Workspace plan for the team, each with its own renewal date. Several Webflow lines on one
+  statement is the normal shape of an agency account, not a duplicate charge. There is no
+  Cancel button anywhere — the cancellation is spelled "downgrade to Starter".
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 2
+    cancelUrl: https://webflow.com/dashboard
+    steps:
+      - text: Sign in and open the Webflow dashboard, then select the site whose plan you want to stop.
+      - text: Open Site settings, go to the Plans tab and choose the free Starter Site plan to downgrade.
+      - text: Choose whether the downgrade happens at the end of the billing period or immediately.
+        warning: Immediately unpublishes the site straight away, and Webflow gives no credit for the unused time.
+      - text: For a paid Workspace, open Workspace settings, then Plans, and downgrade to the Starter Workspace plan.
+        detail: >-
+          Webflow blocks that downgrade until every extra member and every paid seat has been
+          removed from the Workspace, so remove them first or the button stays inactive.
+      - text: Check the billing page afterwards; a scheduled downgrade is listed there until it takes effect.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      Webflow states that it generally does not refund or credit unused time when a plan is
+      cancelled early. Paid features are kept to the end of the billing period unless the
+      immediate option is chosen.
+    gotchas:
+      - Cancelling a Site plan unpublishes the site and removes its custom domain at the end of the period.
+      - Site plans and Workspace plans are separate subscriptions — stopping one leaves the other billing.
+      - The Workspace downgrade is blocked until all members and paid seats have been removed.
+      - Annual plans only stop at the anniversary; the yearly charge lands in one lump.
+      - Ecommerce sites carry an additional plan tier on top of the Site plan and it ends with the same downgrade.
+    evidenceHint: Screenshot the billing page showing the scheduled downgrade and its date, and keep Webflow's confirmation email.
+    sourceUrl: https://help.webflow.com/hc/en-us/articles/33961220482707-Downgrade-or-cancel-your-Site-plan
+    lastVerifiedAt: "2026-07-25"

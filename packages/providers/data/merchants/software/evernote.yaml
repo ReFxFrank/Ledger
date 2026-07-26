@@ -1,0 +1,108 @@
+slug: evernote
+name: Evernote
+legalName: Bending Spoons S.p.A.
+category: software
+domains:
+  - evernote.com
+aliases:
+  - Evernote Premium
+  - Evernote Personal
+  - Evernote Professional
+  - Evernote Plus
+descriptorPatterns:
+  - EVERNOTE
+  - EVERNOTE CORP
+  - EVERNOTE PREMIUM
+  - EVERNOTE PERSONAL
+  - EVERNOTE PROFESSIONAL
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: year
+    count: 1
+notes: >-
+  Evernote is now operated by Bending Spoons, which also bills for several unrelated apps, so a
+  statement line reading BENDING SPOONS is deliberately not claimed as an Evernote fragment here —
+  it would misattribute charges for their other products. Evernote sells through its own site,
+  the App Store, Google Play and PayPal, and each biller has to be cancelled where the money is
+  taken; the account page shows the plan either way, which is what makes this one easy to get
+  wrong.
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 2
+    cancelUrl: https://accounts.evernote.com/settings/billing/subscription
+    steps:
+      - text: Sign in to Evernote Web at evernote.com and open Account Settings from the avatar in the top corner.
+      - text: Choose Billing in the left-hand menu, then scroll to the bottom and select Cancel subscription.
+        detail: >-
+          If the Billing page names Apple, Google Play or PayPal as the payment source, there is
+          no cancel control here and the subscription has to be ended with that biller instead.
+      - text: Click Continue to cancel, give a reason, then click the final Cancel subscription button.
+        warning: The reason screen is part of the flow — closing it leaves the subscription renewing.
+      - text: Wait for the confirmation email and check the Billing page shows the plan expiring on a date.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      The subscription stays active to the end of the current billing cycle and the account then
+      reverts to Evernote Free; refund requests outside that are handled by support case by case.
+    retentionOfferNotes: The exit flow offers a discount or a switch from annual to monthly billing before it will complete the cancellation.
+    gotchas:
+      - Notes are kept when the account drops to Free, but the free plan limits the number of notes and syncing devices, so an over-limit account becomes read-only in practice.
+      - Switching from annual to monthly inside the exit flow is presented as the cheaper option and restarts the billing relationship rather than ending it.
+      - An annual plan cancelled the day after renewal still runs a full year unless support agrees otherwise.
+    evidenceHint: Screenshot the Billing page showing the expiry date and keep the cancellation email.
+    sourceUrl: https://help.evernote.com/hc/en-us/articles/115005949208-How-to-cancel-your-Evernote-subscription
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: apple
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://apps.apple.com/account/subscriptions
+    steps:
+      - text: On iPhone or iPad, open Settings and tap your name at the top.
+      - text: Tap Subscriptions, then tap Evernote.
+      - text: Tap Cancel Subscription and confirm.
+        detail: On a Mac, open App Store, click your name at the bottom left, then Account Settings, then Manage next to Subscriptions.
+    noticePeriodDays: 0
+    gotchas:
+      - evernote.com shows the plan but has no cancel control for an Apple-billed subscription.
+      - Deleting the app leaves the billing running.
+    evidenceHint: Screenshot the Subscriptions screen showing Evernote expiring on a date.
+    sourceUrl: https://support.apple.com/en-us/118428
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: google
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://play.google.com/store/account/subscriptions
+    steps:
+      - text: Open the Google Play Store app, tap your profile icon, then Payments & subscriptions, then Subscriptions.
+      - text: Tap Evernote, then Cancel subscription, and choose a reason.
+      - text: Confirm and check the entry now shows an expiry date.
+    noticePeriodDays: 0
+    gotchas:
+      - The subscription belongs to the Google account that bought it, not necessarily the one signed in on the device now.
+      - Uninstalling the app does not stop the billing.
+    evidenceHint: Screenshot the Play subscriptions entry showing the expiry date.
+    sourceUrl: https://support.google.com/googleplay/answer/7018481
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: paypal
+    method: account_settings
+    difficulty: 2
+    cancelUrl: https://www.paypal.com/myaccount/autopay/
+    steps:
+      - text: Cancel the subscription in the Evernote account first, at Account Settings, then Billing.
+      - text: Then sign in at paypal.com and open Settings, Payments, Manage automatic payments.
+      - text: Find Evernote in the list and choose Cancel, so the billing agreement cannot be charged again.
+        detail: >-
+          A live PayPal billing agreement is what lets a charge reappear after the provider-side
+          cancellation, so it is worth closing even when the Evernote page already shows the plan
+          ending.
+    noticePeriodDays: 0
+    gotchas:
+      - Cancelling only in PayPal leaves the Evernote subscription marked unpaid rather than cancelled, which can end in a collections email.
+      - The agreement can be listed under Bending Spoons rather than Evernote.
+    evidenceHint: Screenshot both the Evernote billing page and the PayPal automatic payments entry showing it cancelled.
+    sourceUrl: https://help.evernote.com/hc/en-us/articles/115005949208-How-to-cancel-your-Evernote-subscription
+    lastVerifiedAt: "2026-07-25"

@@ -1,0 +1,55 @@
+slug: slack
+name: Slack
+legalName: Slack Technologies, LLC
+category: software
+domains:
+  - slack.com
+aliases:
+  - Slack Pro
+  - Slack Business Plus
+  - Slack Technologies
+descriptorPatterns:
+  - SLACK
+  - SLACK.COM
+  - SLACK TECHNOLOGIES
+  - SLACK PRO
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: year
+    count: 1
+notes: >-
+  Slack charges per active member and reconciles at the end of the period, so the amount moves
+  month to month even when nothing about the plan changed — a price-change alert on Slack is
+  usually a headcount change. Billing is per workspace, so one person can be paying for two
+  workspaces from the same email address. Enterprise Grid is contracted and never self-serve.
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 2
+    cancelUrl: https://my.slack.com/admin/billing
+    steps:
+      - text: In the Slack desktop app, click the workspace name at the top of the sidebar, then Tools & settings, then Manage billing.
+        detail: >-
+          Only a Workspace Owner or an admin with billing permission sees this. Everyone else can
+          open the page but finds no plan controls on it.
+      - text: On the Overview tab, click Change plan details.
+      - text: Choose Downgrade to Free, decide whether it applies immediately or at the next renewal date, then click Continue to Checkout.
+        warning: >-
+          Leaving the timing on "at the next renewal date" means one more full charge before the
+          plan ends.
+      - text: Review the summary and click Downgrade Slack to finish.
+      - text: Reload the Billing page and check the plan now reads Free, or shows the date the paid plan ends.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      Slack credits the unused part of a prepaid plan to the workspace as Slack credit rather than
+      returning it to the card, and the credit only has value if the workspace upgrades again.
+    retentionOfferNotes: The downgrade path offers the cheaper paid tier before it offers Free.
+    gotchas:
+      - Deleting the workspace, leaving it, or removing every member does not end the subscription — the billing sits on the workspace, not on the people in it.
+      - On the Free plan the workspace loses access to message history beyond the free window and to most integrations, and old messages are hidden rather than deleted.
+      - A workspace paying by invoice cannot be downgraded from this screen and has to go through Slack billing support.
+      - Adding a member mid-cycle produces a prorated charge immediately, so a cancellation late in the cycle can still be followed by a small final invoice.
+    evidenceHint: Screenshot the Billing overview showing the plan set to Free or the date the paid plan ends, plus the confirmation email.
+    sourceUrl: https://slack.com/help/articles/48764458651795-Change-or-cancel-your-paid-Slack-plan
+    lastVerifiedAt: "2026-07-25"

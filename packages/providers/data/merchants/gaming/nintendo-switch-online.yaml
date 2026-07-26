@@ -1,0 +1,66 @@
+slug: nintendo-switch-online
+name: Nintendo Switch Online
+legalName: Nintendo of America Inc.
+category: gaming
+domains:
+  - nintendo.com
+  - accounts.nintendo.com
+
+aliases:
+  - NSO
+  - Switch Online
+  - Nintendo Online
+  - Nintendo Switch Online Expansion Pack
+  - NSO Expansion Pack
+  - Nintendo Family Membership
+
+descriptorPatterns:
+  - NINTENDO
+  - NINTENDO ESHOP
+  - NINTENDO OF AMERICA
+  - NINTENDO CO LTD
+  - NINTENDO EUROPE
+  - NINTENDO.COM
+
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: month
+    count: 3
+  - unit: year
+    count: 1
+
+notes: >-
+  Individual and Family are separate products at the same descriptor, and the Expansion Pack is an
+  upgrade of the same membership rather than a second charge. The 12-month terms dominate, so a
+  single yearly charge is the normal shape here rather than the exception.
+
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 2
+    cancelUrl: https://accounts.nintendo.com/
+    steps:
+      - text: Sign in at accounts.nintendo.com with the Nintendo Account that pays.
+        detail: >-
+          On a Family Membership only the organiser is billed and only the organiser sees the
+          controls. A member signing in finds nothing to cancel even though the charge exists.
+      - text: Open Shop Menu in the left-hand navigation, then Your Subscriptions, then Nintendo Switch Online.
+      - text: Choose Turn Off Automatic Renewal and confirm.
+        detail: >-
+          Turning off automatic renewal is the only cancellation Nintendo offers. The membership
+          keeps running until the end date already paid for and then stops on its own.
+        warning: The confirmation dialog has a second Cancel-style button that dismisses the dialog and leaves renewal on.
+      - text: From the console instead, open Nintendo eShop, select your user icon, then Nintendo Switch Online, then the automatic renewal setting.
+      - text: Re-open the membership page and check it shows an end date with automatic renewal off.
+    noticePeriodDays: 0
+    refundPolicy: Nintendo does not refund the unused part of a term; access continues to the end date already paid for.
+    gotchas:
+      - Save data kept in the cloud is removed a few months after the membership ends and cannot be downloaded while it is inactive - back up before the end date.
+      - Turning off automatic renewal on the organiser's account ends access for every account in a Family Membership, up to eight people.
+      - A 12-month membership bought at a promotional or first-year price renews at the standard price.
+      - Prepaid membership codes redeemed on the account extend the end date and cannot be reversed or refunded.
+      - Nintendo Switch Online and the Expansion Pack upgrade renew together as one charge, so downgrading is done here rather than by cancelling.
+    evidenceHint: Screenshot the membership page showing automatic renewal off and the end date, and keep Nintendo's confirmation email.
+    sourceUrl: https://en-americas-support.nintendo.com/app/answers/list/kw/cancel%20automatic%20renewal
+    lastVerifiedAt: "2026-07-25"

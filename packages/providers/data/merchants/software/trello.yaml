@@ -1,0 +1,69 @@
+slug: trello
+name: Trello
+legalName: Atlassian Pty Ltd
+category: software
+domains:
+  - trello.com
+aliases:
+  - Trello Premium
+  - Trello Standard
+  - Trello Gold
+  - Atlassian Trello
+descriptorPatterns:
+  - TRELLO
+  - TRELLO.COM
+  - ATLASSIAN TRELLO
+  - TRELLO PREMIUM
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: year
+    count: 1
+notes: >-
+  Atlassian bills Trello alongside Jira, Confluence and everything else it sells, so a statement
+  line reading only ATLASSIAN is not claimed here — attributing it to Trello would mislabel a Jira
+  charge. Trello is billed per Workspace and per member, so the amount changes when people are
+  added even though the plan did not. Legacy Trello Gold bought inside the iOS app is billed by
+  Apple and cannot be ended on trello.com.
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 2
+    steps:
+      - text: Sign in at trello.com and open the Workspace that is being billed, then choose Settings, then Billing.
+        detail: >-
+          Billing is per Workspace. A member of several Workspaces has a separate billing page for
+          each, and only a Workspace admin sees the controls.
+      - text: Scroll to the bottom of the Billing page and use the cancellation link there.
+        detail: The link sits under the payment details and the invoice list, below the fold on most screens.
+      - text: Confirm the cancellation, then reload the page and check the Workspace shows the paid plan ending on a date.
+      - text: If you are not an admin and cannot reach an admin who is, contact Trello support and ask them to stop the subscription on the Workspace.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      The Workspace keeps its paid features until the end of the billing period and then becomes
+      free; the unused part of an annual term is not returned automatically.
+    retentionOfferNotes: The billing page presents a downgrade from Premium to Standard more prominently than the cancellation link.
+    gotchas:
+      - The cancel control is a text link at the very bottom of the billing page rather than a button, and is easy to miss.
+      - Leaving the Workspace or deleting boards does not stop the charges; the subscription belongs to the Workspace.
+      - Adding a member to a paid Workspace adds a prorated charge straight away, so a final small invoice can arrive after cancelling.
+      - Atlassian bills several products to the same card, so check which product the charge names before cancelling anything.
+    evidenceHint: Screenshot the Workspace billing page showing the plan ending on a date, plus the Atlassian confirmation email.
+    sourceUrl: https://support.atlassian.com/trello/docs/change-or-cancel-your-trello-plan/
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: apple
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://apps.apple.com/account/subscriptions
+    steps:
+      - text: On iPhone or iPad, open Settings and tap your name at the top.
+      - text: Tap Subscriptions, then tap the Trello entry.
+      - text: Tap Cancel Subscription and confirm.
+    noticePeriodDays: 0
+    gotchas:
+      - This applies to older Trello Gold subscriptions started inside the iOS app; trello.com has no cancel control for them.
+      - Deleting the Trello app leaves the billing running.
+    evidenceHint: Screenshot the Subscriptions screen showing Trello expiring on a date.
+    sourceUrl: https://support.apple.com/en-us/118428
+    lastVerifiedAt: "2026-07-25"

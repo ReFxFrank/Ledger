@@ -1,0 +1,104 @@
+slug: bumble
+name: Bumble
+legalName: Bumble Trading LLC
+category: dating
+domains:
+  - bumble.com
+aliases:
+  - Bumble Boost
+  - Bumble Premium
+  - Bumble Premium Plus
+descriptorPatterns:
+  - BUMBLE
+  - BUMBLE.COM
+  - BUMBLE INC
+  - BUMBLE BOOST
+  - BUMBLE TRADING
+typicalIntervals:
+  - unit: week
+    count: 1
+  - unit: month
+    count: 1
+  - unit: month
+    count: 3
+  - unit: month
+    count: 6
+notes: >-
+  Bumble sells terms as short as a week and as long as six months, and Boost, Premium and
+  Premium+ are separate subscriptions that can run at the same time on one account. Some
+  purchases were made by SMS billing through a mobile carrier, and those are stopped by replying
+  STOP to the carrier rather than anywhere inside Bumble.
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 2
+    steps:
+      - text: Sign in at bumble.com in a browser with the same phone number or account used in the app.
+      - text: Open the settings menu and find "Manage your Boost" or the equivalent entry for the Premium subscription, in the lower left of the screen.
+      - text: Choose the cancel option there and confirm on the next screen.
+      - text: Repeat for every subscription listed — Boost, Premium and Premium+ are billed separately and cancelling one leaves the others running.
+      - text: Check that each one now shows an end date rather than a renewal date.
+    noticePeriodDays: 1
+    refundPolicy: >-
+      Bumble states that a cancelled subscription stays usable to the end of the period already
+      paid for, and that a refund request is separate from stopping the renewal.
+    retentionOfferNotes: Offers a discounted renewal or a shorter term before the cancellation completes.
+    gotchas:
+      - Bumble states the subscription renews unless it is cancelled at least 24 hours before the renewal date.
+      - Deleting the Bumble account does not cancel the subscription.
+      - A subscription bought by SMS through a mobile carrier is stopped by sending STOP to the carrier's number, not in the app.
+    evidenceHint: Screenshot each subscription showing its end date, and keep the confirmation email.
+    sourceUrl: https://support.bumble.com/hc/en-us/articles/28534541366045-Canceling-subscriptions
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: apple
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://apps.apple.com/account/subscriptions
+    steps:
+      - text: On iPhone or iPad, open Settings and tap your name at the top of the screen.
+      - text: Tap Subscriptions, then tap Bumble.
+      - text: Tap Cancel Subscription and confirm.
+        detail: Boost and Premium can appear as separate entries; cancel each one that is active.
+    noticePeriodDays: 1
+    gotchas:
+      - Deleting the Bumble account leaves the App Store subscription running.
+      - Cancelling on bumble.com does not stop a subscription that Apple bills.
+    evidenceHint: Screenshot the App Store Subscriptions screen showing the expiry date for each entry.
+    sourceUrl: https://support.bumble.com/hc/en-us/articles/28534541366045-Canceling-subscriptions
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: google
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://play.google.com/store/account/subscriptions
+    steps:
+      - text: Open the Google Play Store app and tap your profile icon at the top right.
+      - text: Tap Payments & subscriptions, then Subscriptions, then Bumble.
+      - text: Tap Cancel subscription and confirm, then repeat for any other Bumble entry in the list.
+    noticePeriodDays: 1
+    gotchas:
+      - Uninstalling the app leaves the Google Play subscription running.
+      - The subscription belongs to the Google account that paid for it, not to the Bumble profile.
+    evidenceHint: Screenshot the Play subscription page showing the expiry date.
+    sourceUrl: https://support.google.com/googleplay/answer/7018481
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: carrier
+    method: app_store
+    difficulty: 3
+    steps:
+      - text: Find the charge on the mobile phone bill rather than on a card statement — SMS-billed subscriptions appear there.
+      - text: Send STOP to the short code the subscription messages come from, and keep the reply as proof.
+      - text: If no short code is known, ask the mobile operator to remove the third-party subscription from the account.
+        detail: >-
+          Which operator collects the money differs per member, so there is no single page to
+          link to here.
+      - text: Check the next phone bill to confirm the charge has stopped.
+    noticePeriodDays: 0
+    gotchas:
+      - Nothing inside the Bumble app stops a carrier-billed subscription.
+      - The confirmation is an SMS reply rather than an email, so keep the message.
+    evidenceHint: Keep the STOP confirmation SMS and the phone bill line showing the charge ending.
+    sourceUrl: https://bumble.com/en-us/help/how-can-i-cancel-my-subscription-when-purchased-via-sms
+    lastVerifiedAt: "2026-07-25"

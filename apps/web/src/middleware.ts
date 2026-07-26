@@ -12,7 +12,7 @@ import { type NextRequest, NextResponse } from 'next/server';
  */
 export function middleware(request: NextRequest): NextResponse {
   const nonce = Buffer.from(crypto.randomUUID()).toString('base64');
-  const isDev = process.env['NODE_ENV'] !== 'production';
+  const isDev = process.env.NODE_ENV !== 'production';
 
   const csp = [
     `default-src 'self'`,
@@ -38,6 +38,19 @@ export function middleware(request: NextRequest): NextResponse {
 
   const headers = new Headers(request.headers);
   headers.set('x-nonce', nonce);
+  /**
+   * The same policy goes onto the *request*, not just the response. That is the only hook Next
+   * has: its renderer reads the request's CSP header to find the nonce and stamps it on the
+   * bootstrap and chunk-loading scripts it emits. Without this line the header below is a
+   * policy that blocks the app's own scripts.
+   */
+  headers.set('Content-Security-Policy', csp);
+  /**
+   * The current path, for server components. A layout cannot read `usePathname`, and the app
+   * shell needs to know whether the user is already on the enrolment screen before it decides
+   * to redirect them there.
+   */
+  headers.set('x-pathname', request.nextUrl.pathname);
 
   const response = NextResponse.next({ request: { headers } });
   response.headers.set('Content-Security-Policy', csp);

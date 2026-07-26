@@ -1,0 +1,112 @@
+slug: deezer
+name: Deezer
+legalName: Deezer S.A.
+category: music_audio
+domains:
+  - deezer.com
+aliases:
+  - Deezer Premium
+  - Deezer Family
+  - Deezer HiFi
+  - Deezer Student
+descriptorPatterns:
+  - DEEZER
+  - DEEZER.COM
+  - DEEZER PREMIUM
+  - DEEZER SA
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: year
+    count: 1
+notes: >-
+  Deezer sells more of its subscriptions through mobile operators and hardware partners than any
+  other music service in this dataset, particularly in France, the UK and Germany. Those plans
+  never appear as a Deezer line on a bank statement at all; they sit inside a mobile bill, which
+  is why a user can be certain they pay for Deezer and find no matching transaction.
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 2
+    cancelUrl: https://www.deezer.com/account/subscription
+    steps:
+      - text: Sign in at deezer.com in a browser and open My Account from the menu under your name.
+        detail: The phone app sends this flow out to a browser, so start there.
+      - text: Open the Subscription page and read who the plan is billed by.
+        warning: >-
+          If it names Apple, Google or a mobile operator, the charge has to be stopped with that
+          biller and nothing on deezer.com will do it.
+      - text: Choose Cancel my subscription, then work through the offer screens to the final confirmation.
+        warning: >-
+          Deezer offers a discounted period and a downgrade before the confirmation, and both
+          buttons are styled ahead of the plain cancel link.
+      - text: Check the Subscription page now shows the date access ends and keep the confirmation email.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      Deezer does not prorate the unused part of a paid month or year; the account keeps Premium
+      features until the paid period ends and then reverts to the free tier.
+    retentionOfferNotes: A discounted period is offered inside the cancel flow and restarts the billing cycle if accepted.
+    gotchas:
+      - The account drops to the free tier rather than closing, so playlists remain but downloads stop playing.
+      - Only the plan owner can cancel a Family plan; a member leaving the plan does not stop the charge.
+      - An annual plan cancelled mid-term keeps running, and stays paid for, until the anniversary date.
+    evidenceHint: Screenshot the Subscription page showing the end date, and keep the confirmation email.
+    sourceUrl: https://support.deezer.com/hc/en-gb
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: apple
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://apps.apple.com/account/subscriptions
+    steps:
+      - text: On iPhone or iPad, open Settings and tap your name at the very top of the list.
+      - text: Tap Subscriptions, then tap Deezer.
+        detail: On a Mac, open App Store, click your name at the bottom left, then Account Settings, then Manage next to Subscriptions.
+      - text: Tap Cancel Subscription and confirm on the sheet that appears.
+      - text: Note the expiry date shown under the Deezer entry.
+    noticePeriodDays: 0
+    gotchas:
+      - deezer.com cannot cancel an Apple-billed subscription.
+      - Deleting the app does not stop the billing.
+    evidenceHint: Screenshot the Subscriptions screen showing Deezer expiring on a date.
+    sourceUrl: https://support.apple.com/en-us/118428
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: google
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://play.google.com/store/account/subscriptions
+    steps:
+      - text: Open the Google Play Store app, tap your profile picture, then Payments and subscriptions, then Subscriptions.
+      - text: Tap Deezer, then Cancel subscription, and pick a reason when prompted.
+      - text: Tap through to the end until the entry shows an expiry date instead of a renewal date.
+    noticePeriodDays: 0
+    gotchas:
+      - The subscription belongs to the Google account that bought it, which may not be the profile signed in on the phone today.
+      - Uninstalling the app leaves the subscription running.
+    evidenceHint: Screenshot the Play subscriptions entry showing the expiry date.
+    sourceUrl: https://support.google.com/googleplay/answer/7018481
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: carrier
+    method: account_settings
+    difficulty: 3
+    steps:
+      - text: Open the Subscription page at deezer.com and read the biller named there.
+        detail: >-
+          A plan sold by an operator shows that operator's name and no payment card, and Deezer
+          shows no cancel control at all for it.
+      - text: Sign in to the operator's own account or app and open its add-ons, options or entertainment section.
+        detail: >-
+          Deezer is normally filed under add-ons rather than by name, and the label may be the
+          operator's own bundle name instead of Deezer.
+      - text: Remove the Deezer option there and ask the operator to confirm in writing when it stops.
+      - text: Check the next mobile bill to confirm the line item is gone.
+    noticePeriodDays: 0
+    gotchas:
+      - The charge sits inside a mobile bill, so searching a bank statement for Deezer finds nothing.
+      - Operator plans usually end at the end of the current bill period rather than immediately.
+      - Removing the option can also remove any bundled data allowance that came with it.
+    evidenceHint: Keep the operator's confirmation and the next bill showing the option removed.
+    sourceUrl: https://support.deezer.com/hc/en-gb
+    lastVerifiedAt: "2026-07-25"

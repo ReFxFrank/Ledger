@@ -1,0 +1,70 @@
+slug: monday-com
+name: monday.com
+legalName: monday.com Ltd.
+category: software
+domains:
+  - monday.com
+aliases:
+  - monday.com work management
+  - monday work os
+  - dapulse
+descriptorPatterns:
+  - MONDAY.COM
+  - MONDAY COM LTD
+  - MONDAY WORK MANAGEMENT
+  - DAPULSE
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: year
+    count: 1
+notes: >-
+  The important fact about this entry is the 30-day notice — monday.com asks existing customers to
+  cancel at least 30 days before the subscription end date, otherwise the plan can renew for
+  another term. That makes the cancel-by date, not the renewal date, the one worth alerting on.
+  The company was founded as dapulse and older statement lines can still carry that name.
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 3
+    steps:
+      - text: Sign in at monday.com as an account admin, click your profile picture, then Administration.
+        detail: Only an admin can cancel. A regular member finds no Billing entry in this menu at all.
+      - text: Choose Billing in the left-hand menu and find the product under Overview.
+      - text: Click the three-dot menu next to the product and choose Cancel product.
+      - text: Pick a reason, click Cancel product plan, then click Cancel plan renewal on the screen that shows the end date.
+        warning: >-
+          The flow has two confirmations. Stopping after the first one leaves the plan renewing,
+          and the wording on that screen looks like the cancellation already happened.
+      - text: Check the Billing page shows the plan end date, and keep the confirmation email.
+      - text: If the account is paid by invoice or wire transfer, this flow is unavailable — send the written request below to the account manager named on the invoice.
+    noticePeriodDays: 30
+    refundPolicy: >-
+      monday.com describes refunds as available only within a limited window after payment and
+      assessed per account; otherwise the plan runs to the end of the term already invoiced.
+    retentionOfferNotes: The cancellation flow offers a smaller seat count or a cheaper tier before the second confirmation.
+    gotchas:
+      - Cancelling later than 30 days before the subscription end date can still be followed by a renewal for another full term.
+      - Accounts paid by wire transfer or invoice have no self-serve cancel control and depend on the account manager acting on a written request.
+      - Removing seats or users reduces the invoice but leaves the subscription renewing.
+      - Boards become read-only when the plan drops to the free tier, and the free tier caps how many people can open the account at all.
+    letterTemplate: |
+      {{fullName}}
+      {{date}}
+
+      Subject: Cancellation of monday.com subscription - account {{accountReference}}
+
+      Hello,
+
+      I am the account admin for the monday.com account {{accountReference}}. I am writing on
+      {{date}} to end this subscription and to stop it renewing at the end of the current term.
+
+      Please treat this message as my written notice, apply it from the earliest date the
+      agreement allows, and reply confirming the cancellation, the final billing date and the date
+      access ends.
+
+      Thank you,
+      {{fullName}}
+    evidenceHint: Screenshot the Billing page showing the plan end date, and keep the confirmation email or the account manager's written reply.
+    sourceUrl: https://support.monday.com/hc/en-us/articles/24256854535570-How-to-cancel-a-monday-product
+    lastVerifiedAt: "2026-07-25"

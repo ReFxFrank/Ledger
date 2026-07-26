@@ -1,0 +1,92 @@
+slug: claude-pro
+name: Claude Pro
+legalName: Anthropic PBC
+category: ai
+domains:
+  - claude.ai
+  - anthropic.com
+aliases:
+  - Claude
+  - Claude AI
+  - Anthropic
+  - Claude Max
+descriptorPatterns:
+  - ANTHROPIC
+  - ANTHROPIC PBC
+  - ANTHROPIC.COM
+  - CLAUDE.AI
+  - CLAUDE.AI SUBSCRIPTION
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: year
+    count: 1
+notes: >-
+  Pro and Max are the same subscription record at different price points, so both resolve here.
+  Anthropic API console credits bill from the same descriptor but are usage-based, so an
+  ANTHROPIC line whose amount moves every month is more likely console usage than a plan.
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 1
+    cancelUrl: https://claude.ai/settings/billing
+    steps:
+      - text: Sign in at claude.ai, click your initials in the lower-left corner and choose Settings.
+      - text: Open the Billing tab and click Cancel on the Pro or Max plan.
+        detail: >-
+          On the desktop app the same Settings entry sits behind your initials in the lower-left
+          corner. The Billing tab inside the iOS and Android apps does not cancel anything itself
+          — it hands off to whichever store took the payment.
+        warning: Leaving the flow before the final confirmation screen leaves the plan renewing.
+      - text: Confirm, then re-open Billing and check the plan is listed as ending on a date.
+      - text: Keep the cancellation email — it names the day Pro access stops.
+    noticePeriodDays: 1
+    refundPolicy: >-
+      Anthropic states that cancellation takes effect at the end of the current billing period.
+      Time already paid for is not refunded and access continues until that date.
+    gotchas:
+      - Anthropic asks for the cancellation at least 24 hours before the renewal date; later than that and the next period is still charged.
+      - Access does not stop on the day you cancel — the plan runs to the end of the period already paid for.
+      - An annual plan is charged once on the anniversary, so a single yearly line is still a live subscription.
+      - Pro bought inside the iOS or Android app is billed by the store and cannot be stopped from the claude.ai Billing tab.
+    evidenceHint: Screenshot the Billing tab showing the plan marked as ending, and keep the cancellation email.
+    sourceUrl: https://support.anthropic.com/en/articles/8325617-how-do-i-cancel-my-claude-pro-subscription
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: apple
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://apps.apple.com/account/subscriptions
+    steps:
+      - text: On iPhone or iPad open Settings, tap your name at the top, then tap Subscriptions.
+      - text: Tap Claude, then Cancel Subscription and confirm.
+        detail: >-
+          The route inside the app ends in the same place — initials in the top right, Billing,
+          then Manage subscription hands you to Apple's own subscription screen.
+      - text: Check the entry now reads Expires rather than Renews.
+    noticePeriodDays: 1
+    gotchas:
+      - Deleting the Claude app leaves the Apple subscription running.
+      - Apple charges the next period if the cancellation lands inside 24 hours of the renewal date.
+      - Cancelling at Apple does not delete the Anthropic account or the conversation history.
+      - A plan bought on claude.ai never appears in this list; it is cancelled on the web instead.
+    evidenceHint: Screenshot the Subscriptions screen showing the expiry date.
+    sourceUrl: https://support.anthropic.com/en/articles/9264804-how-can-i-cancel-my-claude-pro-subscription-on-the-claude-app-for-ios
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: google
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://play.google.com/store/account/subscriptions
+    steps:
+      - text: Open the Google Play Store app and tap your profile icon in the top right.
+      - text: Tap Payments & subscriptions, then Subscriptions, then Claude.
+      - text: Tap Cancel subscription, choose a reason and confirm.
+    noticePeriodDays: 1
+    gotchas:
+      - Uninstalling the Claude app does not stop Google Play billing.
+      - The subscription keeps working to the end of the period already paid for.
+      - Google Play only lists subscriptions bought on the same Google account that made the purchase.
+    evidenceHint: Screenshot the Play subscription entry showing the cancelled or expiring state.
+    sourceUrl: https://support.google.com/googleplay/answer/7018481
+    lastVerifiedAt: "2026-07-25"

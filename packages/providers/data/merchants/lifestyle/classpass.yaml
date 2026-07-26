@@ -1,0 +1,87 @@
+slug: classpass
+name: ClassPass
+legalName: ClassPass Inc.
+category: fitness
+domains:
+  - classpass.com
+aliases:
+  - Class Pass
+  - ClassPass Membership
+  - ClassPass Credits
+descriptorPatterns:
+  - CLASSPASS
+  - CLASSPASS.COM
+  - CLASSPASS INC
+  - CLASSPASS UK
+  - CLASSPASS MEMBERSHIP
+typicalIntervals:
+  - unit: month
+    count: 1
+notes: >-
+  ClassPass bills a monthly credit pack, and unused credits — including rolled-over ones —
+  disappear when the membership ends rather than at the end of the paid month, so the timing of
+  the cancellation decides whether the last pack is usable. Studio late-cancel and no-show fees
+  are charged separately from the membership and can arrive after it has ended.
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 2
+    cancelUrl: https://classpass.com/account
+    steps:
+      - text: Sign in at classpass.com in a browser and click your initials at the top right, then Account.
+      - text: Open the Billing section and choose "Cancel my membership".
+        detail: >-
+          The link sits under the plan and payment details rather than next to the plan name, and
+          is styled as text, not as a button.
+      - text: Follow the prompts to the end and confirm the cancellation request.
+      - text: Wait for the cancellation confirmation email from the ClassPass customer experience team.
+        warning: >-
+          ClassPass treats the confirmation email as proof the request was received. If it does
+          not arrive, the request did not land and the membership is still running.
+    noticePeriodDays: 2
+    refundPolicy: >-
+      ClassPass charges no fee to cancel, but unused credits, including rollover credits, are not
+      refunded or carried out of the membership.
+    retentionOfferNotes: >-
+      The flow offers a pause of one to three months and a smaller credit pack before it offers
+      cancellation.
+    gotchas:
+      - ClassPass asks for the request 48 hours before the renewal date so it can be processed in time; a request made on renewal day can still be billed.
+      - Cancelling during a trial ends access immediately and forfeits the trial credits and any classes already booked.
+      - Reservations already booked are cancelled with the membership, and studio late-cancel fees can still be charged to the card afterwards.
+    evidenceHint: Keep the cancellation confirmation email — it is the only record ClassPass issues — and screenshot the Billing page showing no upcoming renewal.
+    sourceUrl: https://help.classpass.com/hc/en-us/articles/204578119-How-do-I-cancel-my-ClassPass-membership
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: apple
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://apps.apple.com/account/subscriptions
+    steps:
+      - text: On iPhone or iPad, open Settings, tap your name, then Subscriptions, and look for ClassPass in the list.
+        detail: >-
+          Most ClassPass memberships are billed by ClassPass itself. If ClassPass is not in this
+          list, use the direct playbook instead.
+      - text: Tap ClassPass, then Cancel Subscription, and confirm.
+    noticePeriodDays: 1
+    gotchas:
+      - Deleting the app leaves an App Store subscription running.
+      - Cancelling on classpass.com does not stop a membership that Apple bills.
+    evidenceHint: Screenshot the App Store Subscriptions screen showing the expiry date.
+    sourceUrl: https://support.apple.com/en-us/118428
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: google
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://play.google.com/store/account/subscriptions
+    steps:
+      - text: Open the Google Play Store app, tap your profile icon, then Payments & subscriptions, then Subscriptions.
+      - text: If ClassPass appears in the list, tap it, then Cancel subscription, and confirm.
+        detail: If ClassPass is not listed, the membership is billed by ClassPass and ends through the account page on classpass.com.
+    noticePeriodDays: 1
+    gotchas:
+      - Uninstalling the app leaves a Google Play subscription running.
+    evidenceHint: Screenshot the Play subscription page showing the expiry date.
+    sourceUrl: https://support.google.com/googleplay/answer/7018481
+    lastVerifiedAt: "2026-07-25"

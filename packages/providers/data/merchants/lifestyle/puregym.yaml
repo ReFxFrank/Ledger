@@ -1,0 +1,55 @@
+slug: puregym
+name: PureGym
+legalName: PureGym Limited
+category: fitness
+domains:
+  - puregym.com
+aliases:
+  - Pure Gym
+  - PureGym Core
+  - PureGym Plus
+descriptorPatterns:
+  - PUREGYM
+  - PURE GYM
+  - PUREGYM LTD
+  - PUREGYM LIMITED
+  - PUREGYM.COM
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: year
+    count: 1
+notes: >-
+  PureGym runs two membership shapes with very different exits. A flexible monthly membership
+  can be ended online in the Members Area; a fixed-term membership cannot, and has to go through
+  Member Services. Payment is by Direct Debit, so the last collection often lands after the
+  cancellation request and is expected rather than a failure.
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 3
+    cancelUrl: https://members.puregym.com/freeze-or-cancel
+    steps:
+      - text: Sign in to the Members Area at members.puregym.com.
+      - text: Open Your Profile, then "Freezing or Cancelling", and choose to cancel rather than freeze.
+        warning: >-
+          Freeze is offered first and is the highlighted option; a frozen membership keeps the
+          account open and restarts collections by itself.
+      - text: Follow the steps to the confirmation screen and note the last payment date it gives you.
+      - text: On a fixed-term membership, where the online option is not offered, email PureGym Member Services from the address on the account, quote the membership number, and ask for written confirmation of the end date.
+      - text: Leave the Direct Debit in place until the confirmed end date has passed, then check the bank for any further collection.
+    noticePeriodDays: 5
+    refundPolicy: >-
+      A payment already requested is not returned; the membership stays usable for the month it
+      covers and ends on the next payment date. PureGym describes a partial refund route for
+      ending a fixed term early, arranged through Member Services.
+    retentionOfferNotes: >-
+      The flow leads with a freeze, presented as keeping the current price and avoiding a rejoin
+      fee later.
+    gotchas:
+      - Within about five days of the Direct Debit date the online cancellation is blocked until that payment has been taken, so the request has to wait and one more month is collected.
+      - A fixed-term membership has no online cancel option at all — Member Services has to end it, and the fixed term normally still has to be paid for.
+      - Cancelling the Direct Debit at the bank without telling PureGym leaves the membership open and the arrears growing.
+    evidenceHint: Screenshot the cancellation confirmation showing the end date and the final payment date, and keep any email from Member Services.
+    sourceUrl: https://www.puregym.com/help-centre/freezing-or-ending/how-do-i-cancel-my-monthly-membership/
+    lastVerifiedAt: "2026-07-25"

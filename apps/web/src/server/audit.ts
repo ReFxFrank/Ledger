@@ -79,6 +79,9 @@ export async function recordSystemAudit(
       meta,
     });
   } catch (error) {
-    log.error({ action, entity, entityId }, 'failed to write system audit entry');
+    log.error(
+      { action, entity, entityId, err: error instanceof Error ? error.message : String(error) },
+      'failed to write system audit entry',
+    );
   }
 }

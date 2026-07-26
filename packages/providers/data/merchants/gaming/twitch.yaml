@@ -1,0 +1,106 @@
+slug: twitch
+name: Twitch
+legalName: Twitch Interactive, Inc.
+category: creator_support
+domains:
+  - twitch.tv
+
+aliases:
+  - Twitch Sub
+  - Twitch Subscription
+  - Twitch Turbo
+  - Twitch Channel Sub
+
+descriptorPatterns:
+  - TWITCH
+  - TWITCHTV
+  - TWITCH.TV
+  - TWITCH INTERACTIVE
+  - TWITCH TURBO
+
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: month
+    count: 3
+  - unit: month
+    count: 6
+
+notes: >-
+  Every channel subscription is its own recurring payment on the same descriptor, so a viewer who
+  supports six streamers has six charges that only differ by amount and date. Tier 1, 2 and 3 subs,
+  multi-month blocks and Twitch Turbo all land here, and Bits are one-off purchases that use the
+  same descriptor without renewing.
+
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 2
+    cancelUrl: https://www.twitch.tv/subscriptions
+    steps:
+      - text: Sign in at twitch.tv and open twitch.tv/subscriptions, or use Subscriptions in the menu under your avatar.
+        detail: >-
+          The page lists every active sub with its next payment date and the store that bills it.
+          Anything marked as billed through Apple or Google cannot be stopped from this page.
+      - text: Find the channel and choose Don't Renew Subscription.
+      - text: Confirm on the dialog, then check the row now reads that the subscription ends on a date.
+        warning: The dialog offers to keep the sub; closing it without using the confirming control leaves the renewal in place.
+      - text: Repeat for every channel in the list, since each subscription renews separately.
+      - text: Cancel Twitch Turbo on its own page under Settings, then Turbo - it is not part of the channel subscription list.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      Twitch does not credit the unused part of a subscription month or of a multi-month block once
+      it has started; the badges and emotes stay until the end of the paid period.
+    gotchas:
+      - Cancelling one channel subscription leaves the others renewing; there is no single control that stops them all.
+      - A 3-month or 6-month sub renews as another whole block and is charged in one payment, so the next charge is several times the monthly figure.
+      - The free channel sub included with Amazon Prime has to be re-applied by hand each month and never renews, so it will not appear as a charge.
+      - A gift sub does not renew, but Twitch prompts the recipient to continue it, and accepting starts a new recurring subscription in their own name.
+      - A sub started in the Twitch iPhone or Android app is billed by that store and shows no cancel control on the website.
+      - Emotes, the badge and the ad-free viewing on that channel stop at the end of the paid period, not immediately.
+    evidenceHint: Screenshot the Subscriptions page showing the channel ending on the date, and keep Twitch's confirmation email.
+    sourceUrl: https://help.twitch.tv/s/article/subscriptions-guide
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: apple
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://apps.apple.com/account/subscriptions
+    steps:
+      - text: On an iPhone or iPad, open Settings and tap your name at the very top of the list.
+        detail: >-
+          From a Mac, open the App Store, click your name at the bottom of the sidebar, then Account
+          Settings, then Manage beside Subscriptions.
+      - text: Tap Subscriptions, then the Twitch entry for the channel, then Cancel Subscription and confirm.
+        detail: >-
+          Apple lists each channel sub separately, usually as Twitch with the channel name beneath
+          it. Cancel each one that should stop.
+        warning: When no Cancel button is shown, that subscription is already set to expire on the date printed above it.
+      - text: Check the Subscriptions screen shows an expiry date for each Twitch entry that was cancelled.
+    noticePeriodDays: 0
+    gotchas:
+      - Deleting the Twitch app does not stop the billing.
+      - The Twitch website shows an Apple-billed sub with no cancel control, so it looks uncancellable there.
+      - Apple-billed subs are charged at a different price from the website, and the amounts on the statement will not match the web price.
+    evidenceHint: Screenshot the Subscriptions screen showing the expiry date for each Twitch entry.
+    sourceUrl: https://support.apple.com/en-us/118428
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: google
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://play.google.com/store/account/subscriptions
+    steps:
+      - text: Open the Google Play Store app, tap the profile icon, then Payments and subscriptions, then Subscriptions.
+        detail: From a browser, play.google.com/store/account/subscriptions shows the same list.
+      - text: Select the Twitch entry for the channel, tap Cancel subscription, choose a reason, then tap Cancel subscription again.
+        warning: The reason screen is not the confirmation; the list has to read Expires on afterwards.
+      - text: Repeat for every Twitch entry in the list, since each channel is billed separately.
+    noticePeriodDays: 0
+    gotchas:
+      - Uninstalling the app does not stop the billing.
+      - The Twitch website cannot cancel a Google-billed channel subscription.
+      - Each channel appears as its own Play subscription, and cancelling one leaves the rest renewing.
+    evidenceHint: Screenshot the Play Subscriptions screen showing Expires on for each Twitch entry.
+    sourceUrl: https://support.google.com/googleplay/answer/7018481
+    lastVerifiedAt: "2026-07-25"

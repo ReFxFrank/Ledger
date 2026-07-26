@@ -1,0 +1,83 @@
+slug: extra-space-storage
+name: Extra Space Storage
+legalName: Extra Space Storage Inc.
+category: storage_unit
+domains:
+  - extraspace.com
+aliases:
+  - Extra Space
+  - ExtraSpace Storage
+  - Extra Space Self Storage
+descriptorPatterns:
+  - EXTRA SPACE STORAGE
+  - EXTRA SPACE
+  - EXTRASPACE
+  - EXTRASPACE.COM
+  - EXTRA SPACE MGMT
+typicalIntervals:
+  - unit: month
+    count: 1
+
+notes: >-
+  Move-out notice is given to the individual facility, not to a central customer service line, and
+  the required notice differs by how it is given — written notice is expected further ahead than
+  verbal. The facility manager's direct number is on the rental agreement and on the store page
+  for that location.
+
+playbooks:
+  - channel: direct
+    method: phone
+    difficulty: 3
+    phone: "1-800-283-2144"
+    hours: Mon-Fri 8am-8pm, Sat-Sun 9am-6pm local time
+    steps:
+      - text: >-
+          Find your rent due date on the rental agreement or in My Account, and count back — give
+          notice at least 15 days ahead if you are writing, 10 days ahead if you are calling.
+      - text: >-
+          Call the facility where the unit is, not the national line, and tell the manager the
+          date you will be out. Ask them to log the notice on the account.
+        detail: >-
+          The store number is on your rental agreement and on that location's page at
+          extraspace.com. The national number can route you but the notice is logged locally.
+      - text: >-
+          Follow up in writing to the same facility so there is a dated record, and ask for
+          written acknowledgement of the move-out date.
+      - text: >-
+          Empty the unit, remove your lock, and sweep it out on or before the move-out date. Some
+          facilities ask you to sign a move-out form in the office.
+        warning: >-
+          A lock left on the door means the unit reads as occupied and rent continues, regardless
+          of what notice was given.
+      - text: >-
+          Cancel autopay in My Account only after the move-out is confirmed, so a genuine final
+          balance does not go unpaid.
+      - text: Check My Account shows the unit closed and no further scheduled payment.
+    noticePeriodDays: 15
+    refundPolicy: >-
+      Rent is charged monthly in advance. Whether an unused part of the month comes back depends
+      on the individual facility and the state the unit is in — ask the manager before you move.
+    retentionOfferNotes: >-
+      Managers commonly offer a rate reduction or a smaller unit rather than lose the rental,
+      especially after a recent rent increase. A transfer creates a new agreement.
+    gotchas:
+      - >-
+        Notice goes to the facility that holds the unit; a message to the national line or a note
+        in the app may never reach the account.
+      - >-
+        Written notice is expected at least 15 days ahead and verbal notice at least 10 days
+        ahead — the two are not interchangeable.
+      - >-
+        Leaving your lock on the unit keeps the rental open and rent accruing no matter what
+        notice was given.
+      - >-
+        Tenant protection or insurance added at signup bills with the rent and only stops when the
+        unit is properly closed out.
+      - >-
+        Rent increases are notified by letter or email and take effect quietly, which is often
+        what a sudden jump on the statement is.
+    evidenceHint: >-
+      Keep the dated written notice you sent, the manager's acknowledgement, the signed move-out
+      form if the office uses one, and a photo of the empty unit with your lock removed.
+    sourceUrl: https://www.extraspace.com/self-storage/faq/how-much-notice-is-required-to-move-out/
+    lastVerifiedAt: "2026-07-25"

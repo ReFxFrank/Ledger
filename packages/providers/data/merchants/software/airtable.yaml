@@ -1,0 +1,54 @@
+slug: airtable
+name: Airtable
+legalName: Formagrid, Inc.
+category: software
+domains:
+  - airtable.com
+aliases:
+  - Airtable Team
+  - Airtable Pro
+  - Airtable Business
+descriptorPatterns:
+  - AIRTABLE
+  - AIRTABLE.COM
+  - AIRTABLE TEAM
+  - AIRTABLE PRO
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: year
+    count: 1
+notes: >-
+  Airtable bills per workspace and per collaborator, so one login can hold several paid workspaces
+  and cancelling one leaves the others charging. The plan is changed by choosing the Free plan —
+  there is no button labelled cancel, which is the single most common reason people believe they
+  have cancelled when they have not.
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 2
+    steps:
+      - text: Sign in at airtable.com and open the workspace that is being billed, then open its workspace settings.
+        detail: >-
+          Check the workspace name before doing anything else. Each paid workspace has its own
+          plan and its own charge, and the names are easy to confuse.
+      - text: Under Workspace plan, click Change plan.
+      - text: Click Choose free and follow the flow to the end.
+        warning: >-
+          There is no control called Cancel. Selecting the Free plan is the cancellation, and
+          closing the tab before the final confirmation leaves the paid plan in place.
+      - text: On a self-serve Business plan, open the admin panel, click Billing, then the ellipsis next to Business under Plan details, then Downgrade, then Acknowledge changes.
+      - text: Reload the workspace settings and check the Workspace plan section names the scheduled downgrade date.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      Airtable states that fees already paid for the current term are not returned on
+      cancellation; the workspace keeps the paid plan until the end of that term.
+    retentionOfferNotes: The plan picker shows the cheaper paid tiers alongside Free, and the Free option sits at the end of the row.
+    gotchas:
+      - The downgrade takes effect at the end of the billing cycle, so the workspace still looks paid immediately afterwards.
+      - On the free plan, bases over the record limit and features such as automations history, sync and extensions stop working, but the data stays.
+      - Removing collaborators lowers the next invoice without ending the subscription.
+      - Enterprise accounts are contracted and cannot be downgraded from the workspace settings at all.
+    evidenceHint: Screenshot the Workspace plan section showing the scheduled downgrade date, plus the confirmation email.
+    sourceUrl: https://support.airtable.com/docs/changing-your-airtable-workspace-plan
+    lastVerifiedAt: "2026-07-25"

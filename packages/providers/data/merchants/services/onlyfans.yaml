@@ -1,0 +1,89 @@
+slug: onlyfans
+name: OnlyFans
+legalName: Fenix International Limited
+category: creator_support
+domains:
+  - onlyfans.com
+aliases:
+  - Only Fans
+  - Fenix Internet
+descriptorPatterns:
+  - ONLYFANS
+  - ONLYFANS.COM
+  - FENIX INTERNET
+  - FENIX INTERNET LLC
+  - OF*ONLYFANS
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: month
+    count: 3
+  - unit: month
+    count: 6
+  - unit: year
+    count: 1
+
+notes: >-
+  Charges frequently print as FENIX INTERNET rather than the brand name, which is the single most
+  useful thing to know about this merchant — a recurring FENIX INTERNET line is an OnlyFans
+  subscription. Each creator subscribed to is a separate recurring charge on the same descriptor,
+  so one account can produce several independent monthly amounts. There is no App Store or Play
+  Store billing to worry about; everything is charged to the card on file.
+
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 2
+    cancelUrl: https://onlyfans.com/my/collections/user-lists/subscriptions/active
+    steps:
+      - text: >-
+          Sign in at onlyfans.com and open the menu, then Collections, then Subscriptions, and
+          choose the Active list.
+        detail: >-
+          This list is the only complete view of what is renewing. The Expired tab shows
+          subscriptions that have already lapsed and can be ignored.
+      - text: >-
+          Open the creator you are leaving and click the subscription button showing the price and
+          renewal date.
+      - text: >-
+          Turn off auto-renew (or choose Cancel subscription) and confirm. The button should then
+          read as expiring on a date instead of renewing.
+        warning: >-
+          Unfollowing, blocking, or removing the creator from a list does not stop the renewal —
+          only turning off auto-renew does.
+      - text: >-
+          Go back to the Active list and repeat for every other creator that is still renewing.
+      - text: >-
+          Removing the card under Settings, Payments does not cancel anything, but it is worth
+          checking after every subscription shows as expiring.
+      - text: >-
+          Check the Payments history page after the next expected renewal date to confirm nothing
+          was taken.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      Access continues to the end of the period already paid for. Charges for the current period
+      are generally not returned once the period has started.
+    retentionOfferNotes: >-
+      Creators can send discounted rebind or win-back offers by direct message after a
+      cancellation; accepting one starts a new recurring subscription.
+    gotchas:
+      - >-
+        The statement often reads FENIX INTERNET rather than OnlyFans, which is why these charges
+        go unrecognised for months.
+      - >-
+        Each creator renews separately on its own date — cancelling one leaves the others running
+        under an identical descriptor.
+      - >-
+        Deleting the account or removing the payment card does not cancel an active subscription;
+        auto-renew has to be switched off on each one.
+      - >-
+        Bundle offers (three, six or twelve months) charge the whole bundle up front and renew as
+        a bundle unless auto-renew is turned off.
+      - >-
+        Tips and pay-per-view messages are one-off charges on the same descriptor and are not
+        subscriptions, so they will not appear in the Subscriptions list.
+    evidenceHint: >-
+      Screenshot the Active subscriptions list showing each entry as expiring with its date, and
+      keep the Payments history page for the following month.
+    sourceUrl: https://onlyfans.com/help
+    lastVerifiedAt: "2026-07-25"

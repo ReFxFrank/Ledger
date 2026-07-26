@@ -1,0 +1,69 @@
+slug: playstation-plus
+name: PlayStation Plus
+legalName: Sony Interactive Entertainment LLC
+category: gaming
+domains:
+  - playstation.com
+  - sonyentertainmentnetwork.com
+
+aliases:
+  - PS Plus
+  - PSN Plus
+  - PlayStation Plus Essential
+  - PlayStation Plus Extra
+  - PlayStation Plus Premium
+  - PlayStation Plus Deluxe
+
+descriptorPatterns:
+  - PLAYSTATION NETWORK
+  - PLAYSTATIONNETWORK
+  - PLAYSTATION PLUS
+  - PLAYSTATION.COM
+  - SONY INTERACTIVE ENTERTAINMENT
+  - PSN
+
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: month
+    count: 3
+  - unit: year
+    count: 1
+
+notes: >-
+  The same PLAYSTATION NETWORK descriptor covers game purchases, wallet top-ups and the
+  subscription, so cadence rather than the descriptor is what separates a membership from a
+  one-off. Essential, Extra and Premium are one subscription at three tiers, not three products.
+
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 2
+    cancelUrl: https://library.playstation.com/subscriptions
+    steps:
+      - text: Sign in at playstation.com with the account that pays, then open Subscriptions from the menu under your avatar.
+        detail: >-
+          A household often has one account that owns the subscription and another that plays on the
+          console. Only the paying account shows the plan, and console sharing does not move it.
+      - text: Select PlayStation Plus, then Cancel Subscription.
+        detail: >-
+          Some storefronts label the same control Turn off auto-renew. It sits under the plan
+          summary, below the payment method, not in the account settings pages.
+      - text: Confirm on the following screen, then check the entry reads Expires on rather than Renews on.
+        warning: Stopping at the offer screen leaves auto-renew switched on.
+      - text: From a PS5 instead, open Settings, Users and Accounts, Account, Payment and Subscriptions, Subscriptions, then PlayStation Plus.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      Sony's published position is that a subscription can be refunded within 14 days of purchase,
+      reduced in proportion to any use of the service. Requests go through the PlayStation support
+      chat rather than through the account pages.
+    retentionOfferNotes: A discounted upgrade or a longer term is offered before the final confirmation step.
+    gotchas:
+      - Wallet funds are taken first at renewal, so a topped-up wallet can pay for a renewal that was meant to stop.
+      - Games from the Extra and Premium catalogues stop launching the moment the period ends; games bought outright stay playable.
+      - Cloud saves are kept only for a limited window after the membership lapses and cannot be downloaded while it is inactive.
+      - A 12-month code redeemed on the account extends the end date and is not refunded, and turning off auto-renew does not shorten it.
+      - A plan bought at a promotional price renews at the standard price for that tier.
+    evidenceHint: Screenshot the Subscriptions page showing Expires on with the date, and keep the confirmation email from PlayStation.
+    sourceUrl: https://www.playstation.com/en-us/support/subscriptions/cancel-playstation-plus/
+    lastVerifiedAt: "2026-07-25"

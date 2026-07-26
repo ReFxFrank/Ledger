@@ -1,0 +1,68 @@
+slug: world-of-warcraft
+name: World of Warcraft
+legalName: Blizzard Entertainment, Inc.
+category: gaming
+domains:
+  - worldofwarcraft.com
+  - battle.net
+  - blizzard.com
+
+aliases:
+  - WoW
+  - WoW Subscription
+  - World of Warcraft Game Time
+  - Warcraft Subscription
+
+# The bare BLIZZARD fragment is deliberately not claimed: it covers Diablo, Overwatch and one-off
+# store purchases as well, and a wrong match here would put a game purchase in the subscription list.
+descriptorPatterns:
+  - WORLD OF WARCRAFT
+  - BLIZZARD ENTERTAINMENT
+  - BLIZZARD ENT
+  - BATTLE.NET
+  - BLIZZARD BATTLE.NET
+
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: month
+    count: 3
+  - unit: month
+    count: 6
+
+notes: >-
+  Blizzard sells two things that look identical on a statement - a recurring subscription and
+  prepaid game time. Only the first renews. The 3-month and 6-month plans are charged as one
+  payment up front, so the cadence on the statement is quarterly or half-yearly rather than monthly.
+
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 2
+    cancelUrl: https://account.battle.net/subscriptions
+    steps:
+      - text: Sign in at account.battle.net with the Battle.net account that owns the licence, not the character name used in game.
+        detail: >-
+          An authenticator prompt appears here on most accounts. Without the phone that holds it the
+          sign-in fails and the renewal goes through on schedule, so start this well before the date.
+      - text: Open Subscriptions from the account menu and find World of Warcraft.
+      - text: Choose Cancel Subscription and confirm on the screen that follows.
+        detail: >-
+          Blizzard stops the recurring payment rather than ending access. The game time already paid
+          for stays on the account and runs out on its own.
+        warning: Leaving the flow at the offer screen keeps the recurring payment in place.
+      - text: Check the Subscriptions page no longer shows a next payment date, and keep Blizzard's confirmation email.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      Blizzard does not credit game time that has already been bought; it stays on the account until
+      it expires. Refund requests are raised as a support ticket and are decided case by case.
+    retentionOfferNotes: A discounted longer plan is offered during the flow, and accepting it charges the new term immediately.
+    gotchas:
+      - Game time added with a WoW Token or a prepaid card is not a subscription at all, so there is nothing to cancel - it simply expires.
+      - Battle.net Balance is spent automatically at renewal, so a positive balance can pay for a renewal that was meant to stop.
+      - The 3-month and 6-month plans are charged in full up front, and cancelling part-way through does not produce a partial credit.
+      - Characters, gold and the account itself are untouched by cancelling; only the ability to log in stops when the time runs out.
+      - Cancelling the WoW subscription does not touch other Blizzard subscriptions on the same Battle.net account.
+    evidenceHint: Screenshot the Subscriptions page showing no next payment date, plus Blizzard's cancellation email.
+    sourceUrl: https://us.battle.net/support/en/search?q=cancel%20subscription
+    lastVerifiedAt: "2026-07-25"

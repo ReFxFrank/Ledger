@@ -1,0 +1,98 @@
+slug: peloton
+name: Peloton
+legalName: Peloton Interactive, Inc.
+category: fitness
+domains:
+  - onepeloton.com
+  - onepeloton.co.uk
+aliases:
+  - Peloton Interactive
+  - Peloton All-Access
+  - Peloton App
+  - Peloton Digital
+descriptorPatterns:
+  - PELOTON
+  - PELOTON INTERACTIVE
+  - ONEPELOTON.COM
+  - ONEPELOTON.CO.UK
+  - PELOTON MEMBERSHIP
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: year
+    count: 1
+notes: >-
+  Two different products bill separately. The All-Access Membership attached to a Bike, Tread or
+  Row is always billed by Peloton and is never sold through an app store; the standalone Peloton
+  App membership can be bought from Peloton, Apple or Google. Ending one leaves the other
+  running, and households frequently hold both at once.
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 2
+    cancelUrl: https://members.onepeloton.com/preferences/subscriptions
+    steps:
+      - text: Sign in at members.onepeloton.com in a web browser.
+        detail: >-
+          The touchscreen on the Bike or Tread has no membership screen at all, and the phone app
+          only manages an App membership, so the browser is the only place the All-Access
+          Membership can be ended.
+      - text: Open the profile menu at the top right, choose Subscriptions, and find the row for the membership being ended.
+        detail: >-
+          All-Access Membership and Peloton App Membership appear as separate rows with separate
+          prices. Read the row before acting on it.
+      - text: Choose Manage next to that row, then Pause or Cancel, then Cancel Membership.
+        warning: >-
+          Pause is the first and larger option on that screen. A paused membership starts billing
+          again by itself when the pause runs out.
+      - text: Answer the reason screens and press the final confirmation button — the membership stays active until that last screen is submitted.
+      - text: Check for the cancellation email and note the date access ends.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      Peloton bills the period up front and does not prorate a partial month; classes and the
+      leaderboard stay available until the paid period ends.
+    retentionOfferNotes: >-
+      The flow offers a pause of up to three months before it offers cancellation, and the pause
+      screen is styled as the primary action.
+    gotchas:
+      - Pausing is presented where cancelling should be, and billing resumes automatically when the pause expires.
+      - Cancelling All-Access does not cancel a separate App membership, and cancelling the App membership does not touch All-Access.
+      - Without All-Access the hardware keeps only the Just Ride or Just Run modes, and secondary household profiles lose their history view.
+    evidenceHint: Screenshot the Subscriptions screen showing the status and the end date, and keep the confirmation email.
+    sourceUrl: https://support.onepeloton.com/s/article/Peloton-Membership-How-to-Manage-Your-All-Access-Membership
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: apple
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://apps.apple.com/account/subscriptions
+    steps:
+      - text: On iPhone or iPad, open Settings and tap your name at the top of the screen.
+      - text: Tap Subscriptions, then tap Peloton in the list.
+        detail: Subscriptions already ending are grouped under Expired at the bottom of the list.
+      - text: Tap Cancel Subscription and confirm on the sheet that appears.
+        warning: If there is no Cancel Subscription button, that subscription is already set to expire.
+    noticePeriodDays: 0
+    gotchas:
+      - Only the standalone Peloton App membership can be billed by Apple — an All-Access Membership is never in this list.
+      - Deleting the Peloton app leaves the App Store subscription running.
+      - Signing out of Peloton or asking Peloton support to close the account does not stop a charge that Apple collects.
+    evidenceHint: Screenshot the App Store Subscriptions screen showing "Expires on" with the date.
+    sourceUrl: https://support.onepeloton.com/s/article/Peloton-Membership-How-To-Cancel-Your-App-Membership
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: google
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://play.google.com/store/account/subscriptions
+    steps:
+      - text: Open the Google Play Store app and tap your profile icon at the top right.
+      - text: Tap Payments & subscriptions, then Subscriptions, then Peloton.
+      - text: Tap Cancel subscription, pick a reason, and confirm.
+    noticePeriodDays: 0
+    gotchas:
+      - Check which Google account is signed in — a subscription bought on a second account is invisible from the first.
+      - Uninstalling the app leaves the Google Play subscription running.
+    evidenceHint: Screenshot the Play subscription page showing the expiry date.
+    sourceUrl: https://support.google.com/googleplay/answer/7018481
+    lastVerifiedAt: "2026-07-25"

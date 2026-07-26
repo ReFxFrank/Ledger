@@ -1,0 +1,108 @@
+slug: barkbox
+name: BarkBox
+legalName: Bark & Co, Inc.
+category: pets
+domains:
+  - barkbox.com
+  - bark.co
+aliases:
+  - Bark
+  - Super Chewer
+  - BARK Box
+descriptorPatterns:
+  - BARKBOX
+  - BARKBOX.COM
+  - BARK BOX
+  - BARKSHOP
+  - BARK.CO
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: month
+    count: 6
+  - unit: year
+    count: 1
+
+notes: >-
+  The multi-month plans are the trap. A 6- or 12-month BarkBox or Super Chewer plan is a
+  commitment, and turning off renewal part-way through stops the renewal but not the remaining
+  boxes or the remaining charges. Only a month-to-month plan stops at the next billing date.
+  BarkBox and Super Chewer are separate subscriptions and can both be running on one login.
+
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 3
+    cancelUrl: https://barkbox.com/account
+    steps:
+      - text: >-
+          Sign in at barkbox.com and open your account, then find the Subscription Settings
+          section for the plan you are ending.
+      - text: >-
+          Check which plan you are on first. Month-to-month can be stopped at the next billing
+          date; a 6- or 12-month plan runs to the end of its committed term.
+      - text: >-
+          Switch off auto-renewal for that plan and follow the prompts through to the final
+          confirmation screen.
+        warning: >-
+          The flow inserts offers and pause options between you and the confirmation; leaving
+          before the last screen leaves the plan renewing.
+      - text: >-
+          Repeat for Super Chewer, Bark Food, Bark Bright or Bark Air if any of those are also on
+          the account — each is a separate subscription.
+      - text: >-
+          If the setting will not save, contact the Happy Team by chat from the help pages, email,
+          or call 855-944-2275, and ask them to cancel the subscription outright.
+      - text: >-
+          Save the cancellation confirmation email and check the card for one further cycle.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      Boxes already paid for under a committed term continue to ship after auto-renewal is turned
+      off. Refunds for an unshipped box are handled case by case by the Happy Team.
+    retentionOfferNotes: >-
+      The cancel flow offers a free extra toy, a discounted month, a themed box swap, or a pause.
+      Pausing keeps the subscription alive and it restarts on its own.
+    gotchas:
+      - >-
+        Turning off auto-renew on a 6- or 12-month plan does not end it early — the remaining
+        boxes and charges continue to the end of the committed term.
+      - >-
+        Pause is offered where cancel is expected; a paused plan resumes automatically and starts
+        charging again.
+      - >-
+        BarkBox and Super Chewer are separate subscriptions; cancelling one leaves the other
+        billing under a similar descriptor.
+      - >-
+        Cancelling after the month's box has been prepared still ships that box and that charge
+        stands.
+      - >-
+        Accepting a retention offer of extra months converts a monthly plan into a new committed
+        term.
+    letterTemplate: |
+      To: BARK customer support
+
+      Subject: Cancellation request — {{accountReference}}
+
+      Hello,
+
+      I would like to cancel the subscription on my account, {{accountReference}}, registered to
+      {{fullName}}. This request is made on {{date}}.
+
+      Please cancel every active subscription on this account — BarkBox, Super Chewer and any
+      Bark Food, Bright or add-on plan — and do not renew any of them.
+
+      Please reply confirming in writing:
+
+        - which subscriptions have been cancelled,
+        - the date each one ends and whether any further box will ship,
+        - the date of the last charge that will be taken from my card,
+        - that no further charges will be made after that date.
+
+      Thank you,
+
+      {{fullName}}
+    evidenceHint: >-
+      Screenshot the Subscription Settings page showing auto-renewal off, and keep the
+      cancellation confirmation email with the end date on it.
+    sourceUrl: https://faq.barkbox.com/hc/en-us/articles/360034125713-How-do-I-cancel-
+    lastVerifiedAt: "2026-07-25"

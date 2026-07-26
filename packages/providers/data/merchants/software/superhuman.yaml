@@ -1,0 +1,55 @@
+slug: superhuman
+name: Superhuman
+legalName: Superhuman Labs Inc.
+category: software
+domains:
+  - superhuman.com
+aliases:
+  - Superhuman Mail
+  - Superhuman Labs
+  - Superhuman Email
+descriptorPatterns:
+  - SUPERHUMAN
+  - SUPERHUMAN.COM
+  - SUPERHUMAN LABS
+  - SUPERHUMAN MAIL
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: year
+    count: 1
+notes: >-
+  Superhuman is priced per seat and is one of the more expensive consumer-facing subscriptions in
+  this dataset, so a missed renewal is costly. The cancel control is not in a settings menu at all
+  — it lives behind the command palette (Cmd+K on macOS, Ctrl+K on Windows), which is why people
+  often conclude there is no self-serve cancellation.
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 2
+    cancelUrl: https://superhuman.com/admin
+    steps:
+      - text: Open Superhuman and press Cmd+K on macOS or Ctrl+K on Windows to open the command palette.
+      - text: Type Cancel Subscription and choose it, then follow the prompts to the end.
+        detail: >-
+          The same thing can be done by signing in at superhuman.com/admin and using the billing
+          controls there, which is the only route if the app is no longer installed.
+      - text: If you are on a team, note that a member cannot cancel their own seat — the team admin removes the seat or cancels the team subscription.
+        warning: >-
+          Leaving a team without the admin removing the seat can leave the seat billed to the
+          team rather than ending the charge.
+      - text: If the palette offers no cancel entry, choose Billing Support from the same palette and ask in writing for the subscription to be closed.
+      - text: Keep the confirmation email, and check the next statement date for a further Superhuman charge.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      Access continues to the end of the period already paid for; anything beyond that is settled
+      by the billing team on request.
+    retentionOfferNotes: The cancellation flow offers a pause or a discounted period before it completes.
+    gotchas:
+      - The cancel control is inside the command palette rather than in a settings screen, so it is invisible to anyone looking through menus.
+      - Deleting the app or removing the email account from it leaves the seat billed.
+      - Annual seats are charged up front, so cancelling mid-term does not stop the current year.
+      - On a contracted team plan the flow is unavailable and the change goes through the billing team instead.
+    evidenceHint: Keep the cancellation email naming the end date, and screenshot the admin page showing the seat no longer renewing.
+    sourceUrl: https://help.superhuman.com/hc/en-us/articles/46005769279373-Cancelling-Your-Subscription
+    lastVerifiedAt: "2026-07-25"

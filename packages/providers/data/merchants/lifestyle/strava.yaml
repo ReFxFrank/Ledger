@@ -1,0 +1,86 @@
+slug: strava
+name: Strava
+legalName: Strava, Inc.
+category: fitness
+domains:
+  - strava.com
+aliases:
+  - Strava Premium
+  - Strava Subscription
+  - Strava Summit
+descriptorPatterns:
+  - STRAVA
+  - STRAVA INC
+  - STRAVA.COM
+  - STRAVA SUBSCRIPTION
+  - STRAVA UK
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: year
+    count: 1
+notes: >-
+  Strava pushes the annual plan hard at signup, so a single yearly charge is common and is easy
+  to miss between renewals. The Runna training subscription is sold separately and is billed on
+  its own line even when both are used from the Strava app.
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 2
+    cancelUrl: https://www.strava.com/settings/subscription
+    steps:
+      - text: Sign in at strava.com in a browser and open Settings from the profile menu at the top right.
+      - text: Choose My Account, then Cancel subscription under the subscription summary.
+        detail: >-
+          On mobile the same screen is reached from the You tab, then the gear icon, then Your
+          Strava Subscription, then Manage Your Subscription.
+      - text: Pick a reason, then confirm on the final screen.
+      - text: Reopen Settings and confirm the subscription now shows an end date rather than a renewal date.
+    noticePeriodDays: 1
+    refundPolicy: >-
+      Access to subscription features continues to the end of the paid term; Strava does not
+      prorate an unused part of an annual term.
+    retentionOfferNotes: >-
+      The cancellation flow offers a discounted renewal or a switch to the cheaper plan before it
+      completes the cancellation.
+    gotchas:
+      - Strava states the subscription renews unless it is cancelled at least 24 hours before the term ends, so an annual plan cancelled on renewal day can still renew.
+      - Cancelling removes the paid features but does not delete activities, and it does not close the account.
+      - A subscription bought inside the iOS or Android app is not cancellable on strava.com at all — the settings screen will point back to the store.
+    evidenceHint: Screenshot the subscription settings page showing the date access ends.
+    sourceUrl: https://support.strava.com/en-us/articles/15401936-how-to-cancel-your-subscription
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: apple
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://apps.apple.com/account/subscriptions
+    steps:
+      - text: On iPhone or iPad, open Settings and tap your name at the top of the screen.
+      - text: Tap Subscriptions, then tap Strava.
+      - text: Tap Cancel Subscription and confirm.
+        warning: If no Cancel button appears, the subscription is already set to expire on the date shown.
+    noticePeriodDays: 1
+    refundPolicy: Apple decides refunds for App Store purchases; Strava support cannot reverse an Apple charge.
+    gotchas:
+      - Deleting the Strava app leaves the App Store subscription running.
+      - Cancelling on strava.com does not stop a subscription that Apple bills.
+    evidenceHint: Screenshot the App Store Subscriptions screen showing the expiry date.
+    sourceUrl: https://support.apple.com/en-us/118428
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: google
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://play.google.com/store/account/subscriptions
+    steps:
+      - text: Open the Google Play Store app and tap your profile icon at the top right.
+      - text: Tap Payments & subscriptions, then Subscriptions, then Strava.
+      - text: Tap Cancel subscription and confirm.
+    noticePeriodDays: 1
+    gotchas:
+      - The subscription belongs to the Google account that bought it, not to the Strava login.
+      - Uninstalling the app leaves the Google Play subscription running.
+    evidenceHint: Screenshot the Play subscription page showing the expiry date.
+    sourceUrl: https://support.google.com/googleplay/answer/7018481
+    lastVerifiedAt: "2026-07-25"

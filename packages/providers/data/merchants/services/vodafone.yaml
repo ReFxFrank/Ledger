@@ -1,0 +1,113 @@
+slug: vodafone
+name: Vodafone
+legalName: Vodafone Limited
+category: telecom
+domains:
+  - vodafone.co.uk
+  - vodafone.com
+aliases:
+  - Vodafone UK
+  - Vodafone Pay Monthly
+  - Vodafone Broadband
+descriptorPatterns:
+  - VODAFONE
+  - VODAFONE LTD
+  - VODAFONE UK
+  - VODAFONE LIMITED
+  - VODAFONE DD
+typicalIntervals:
+  - unit: month
+    count: 1
+
+notes: >-
+  Two exits with very different timing. Asking for a PAC and handing it to a new network ends the
+  Vodafone agreement as soon as the new network uses it. Cancelling without moving the number
+  starts a 30-day notice period that is charged in full. Which one is cheaper depends entirely on
+  whether the number is being kept.
+
+playbooks:
+  - channel: direct
+    method: phone
+    difficulty: 4
+    phone: "0333 304 0191"
+    hours: Mon-Fri 8am-8pm, Sat 8am-6pm, Sun 10am-5pm UK time
+    steps:
+      - text: >-
+          Decide whether you are keeping the number. If you are, request a PAC by texting PAC to
+          65075 — the switch, not a cancellation call, ends the agreement.
+        detail: >-
+          A PAC is valid for 30 days. If the new network never uses it, the Vodafone plan simply
+          carries on and keeps billing.
+      - text: >-
+          To leave without keeping the number, text STAC to 75075, or call 191 from a Vodafone
+          phone (0333 304 0191 from any other line).
+      - text: >-
+          If you are cancelling outright rather than switching, tell the agent you are giving
+          30 days' notice and ask for the exact date service stops.
+      - text: >-
+          Ask for the final bill amount, the date it will be taken, and written confirmation by
+          email or post.
+      - text: >-
+          Leave the Direct Debit in place until the final bill has been taken — usually about two
+          weeks after service ends.
+        warning: >-
+          Cancelling the Direct Debit at the bank before the final bill leaves an unpaid balance
+          on the account.
+      - text: Return any loaned broadband router in the prepaid bag Vodafone sends out.
+    noticePeriodDays: 30
+    refundPolicy: >-
+      The 30-day notice period is charged in full and the allowance stays usable during it.
+      Leaving inside a minimum term adds an early exit charge for the remaining months.
+    retentionOfferNotes: >-
+      The 191 team routes cancellations to a retentions desk that offers a lower monthly price or
+      extra data. Accepting normally starts a fresh minimum term.
+    gotchas:
+      - >-
+        Cancelling without switching starts a 30-day notice period that is billed even if the SIM
+        is never used again.
+      - >-
+        Requesting a PAC does nothing on its own — the agreement only ends when the new network
+        uses the code.
+      - >-
+        Leaving inside the minimum term adds an early exit charge; ask for the figure before
+        agreeing to anything.
+      - >-
+        Home Broadband and Pay Monthly mobile are separate agreements and each needs its own
+        notice.
+      - >-
+        Cancelling the Direct Debit at the bank does not end the agreement and leaves the final
+        bill unpaid.
+    letterTemplate: |
+      {{fullName}}
+      {{postalAddress}}
+
+      {{date}}
+
+      Vodafone Limited
+      Vodafone House, The Connection
+      Newbury, Berkshire RG14 2FN
+
+      Account / mobile number: {{accountReference}}
+
+      Dear Vodafone,
+
+      I am writing to give notice to end my Vodafone agreement on the account above. Please treat
+      this letter as my 30 days' notice, running from the date you receive it.
+
+      Please confirm to me in writing at the address above:
+
+        - the date my service will end,
+        - the final amount due and the date it will be collected,
+        - that no further payments will be taken by Direct Debit after that date,
+        - the amount of any early exit charge, if one applies.
+
+      I would also like written confirmation that my account has been closed once it has been.
+
+      Yours faithfully,
+
+      {{fullName}}
+    evidenceHint: >-
+      Keep the PAC or STAC text message, the cancellation reference from the call, and the "sorry
+      you're leaving" letter or email with the end date on it.
+    sourceUrl: https://www.vodafone.co.uk/help-and-information/cancel-your-account
+    lastVerifiedAt: "2026-07-25"

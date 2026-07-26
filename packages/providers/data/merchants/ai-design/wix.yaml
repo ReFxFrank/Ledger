@@ -1,0 +1,87 @@
+slug: wix
+name: Wix
+legalName: Wix.com Ltd.
+category: software
+domains:
+  - wix.com
+aliases:
+  - Wix.com
+  - Wix Premium
+  - Wix Studio
+descriptorPatterns:
+  - WIX
+  - WIX.COM
+  - WIX COM LTD
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: year
+    count: 1
+  - unit: year
+    count: 2
+notes: >-
+  Wix sells one, two and three-year terms at a discount, so a Wix charge can be years apart and
+  still be a live subscription. Site plans, domains, Business Email and paid apps are separate
+  subscriptions on the same account and each renews on its own date.
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 2
+    cancelUrl: https://manage.wix.com/account/subscriptions
+    steps:
+      - text: Sign in at wix.com and open Subscriptions in your account (Account, then Premium Subscriptions).
+      - text: Click the More Actions icon next to the plan you want to end and choose Cancel Plan.
+      - text: Confirm the cancellation on the following screen.
+        detail: >-
+          Inside the first 14 days of a new plan the site plan ends immediately and is refunded.
+          After that the cancellation switches off auto-renewal and the plan runs to its expiry
+          date.
+      - text: Go back through the Subscriptions list and cancel the domain, Business Email and app subscriptions separately if they are not wanted.
+        warning: Cancelling the site plan leaves those subscriptions renewing on their own dates.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      Wix's published policy: a new site plan cancelled within 14 days ends immediately and is
+      refunded. After 14 days the payment is not returned and the plan runs to its expiry date.
+    gotchas:
+      - Cancelling a site plan does not cancel the domain, mailbox or app subscriptions bought alongside it.
+      - After the first 14 days the cancel action only stops the renewal; the plan is not refunded and stays live until expiry.
+      - The site stays online but reverts to a wix.com address with Wix ads once the plan ends.
+      - A domain bought with the plan usually renews annually at a higher price than the first year.
+      - A plan bought inside the Wix mobile app is billed by the App Store or Google Play and is not in this list.
+    evidenceHint: Screenshot the Subscriptions list after cancelling, showing which subscriptions are ended and which are still renewing.
+    sourceUrl: https://support.wix.com/en/article/canceling-a-wix-premium-plan
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: apple
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://apps.apple.com/account/subscriptions
+    steps:
+      - text: On iPhone or iPad open Settings, tap your name at the top, then tap Subscriptions.
+      - text: Tap the Wix entry, then Cancel Subscription and confirm.
+      - text: Check the entry now reads Expires rather than Renews.
+    noticePeriodDays: 0
+    gotchas:
+      - A plan bought in the Wix app cannot be cancelled from the Wix account page, because Apple holds the payment method.
+      - Deleting the Wix app leaves the Apple subscription running.
+      - Refunds for an Apple-billed period are requested from Apple, not from Wix.
+    evidenceHint: Screenshot the Subscriptions screen showing the Wix entry with an expiry date.
+    sourceUrl: https://support.wix.com/en/article/wix-mobile-apps-about-the-refund-policy-for-the-mobile-app-premium-plan
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: google
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://play.google.com/store/account/subscriptions
+    steps:
+      - text: Open the Google Play Store app and tap your profile icon in the top right.
+      - text: Tap Payments & subscriptions, then Subscriptions, then the Wix entry.
+      - text: Tap Cancel subscription, choose a reason and confirm.
+    noticePeriodDays: 0
+    gotchas:
+      - Uninstalling the Wix app does not stop Google Play billing.
+      - The plan stays active to the end of the period already paid for.
+      - Only the Google account that bought the plan can see it in this list.
+    evidenceHint: Screenshot the Play subscription entry showing the cancelled state and end date.
+    sourceUrl: https://support.google.com/googleplay/answer/7018481
+    lastVerifiedAt: "2026-07-25"

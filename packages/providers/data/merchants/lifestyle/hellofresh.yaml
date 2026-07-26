@@ -1,0 +1,60 @@
+slug: hellofresh
+name: HelloFresh
+legalName: HelloFresh SE
+category: food_delivery
+domains:
+  - hellofresh.com
+  - hellofresh.co.uk
+aliases:
+  - Hello Fresh
+  - HelloFresh Meal Kit
+  - HelloFresh Box
+descriptorPatterns:
+  - HELLOFRESH
+  - HELLO FRESH
+  - HELLOFRESH.COM
+  - HELLOFRESH US
+  - HELLOFRESH UK
+typicalIntervals:
+  - unit: week
+    count: 1
+notes: >-
+  Billing is weekly and runs ahead of delivery, so the charge for a box arrives days before the
+  box does. Skipping a week is not cancelling — a skipped week suppresses one charge and leaves
+  the plan running. The wine and pet boxes are separate subscriptions with their own cancel
+  flows.
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 2
+    cancelUrl: https://www.hellofresh.com/my-account
+    steps:
+      - text: Sign in at hellofresh.com in a browser and open My Menu, then the Plan settings page.
+        detail: >-
+          The phone app hides the cancellation route behind the help chat in some regions; the
+          browser version of the account is the reliable path.
+      - text: Scroll to the Status section at the bottom of Plan settings and choose Cancel Plan.
+        warning: >-
+          Pause and Skip weeks appear above Cancel Plan and are styled as the preferred choice. A
+          paused plan restarts on its own.
+      - text: Work through the reason and offer screens to the final confirmation.
+      - text: Go back to the Upcoming deliveries page and check that no box is still scheduled.
+        detail: >-
+          A box that is already past its cut-off stays scheduled after the plan is cancelled, and
+          it will still be charged and delivered.
+      - text: Keep the cancellation email that HelloFresh sends.
+    noticePeriodDays: 5
+    refundPolicy: >-
+      HelloFresh states that orders not cancelled before the weekly cut-off are charged and
+      delivered; the cut-off, not the cancellation date, decides which box is the last one.
+    retentionOfferNotes: >-
+      Expect discount credits on the next several boxes, a smaller plan, and a pause offer before
+      the cancel button becomes available.
+    gotchas:
+      - The cut-off is 11:59pm Pacific five days before the next delivery — a plan cancelled after that still gets and pays for one more box.
+      - Skipping weeks is not cancelling; the plan resumes automatically once the skipped weeks run out.
+      - HelloFresh wine and pet plans are separate subscriptions and keep billing after the meal-kit plan is cancelled.
+      - Reactivation offers arriving by email restart the weekly billing as soon as they are accepted.
+    evidenceHint: Screenshot the Plan settings page showing the plan as cancelled and the Upcoming page showing no scheduled box, plus the cancellation email.
+    sourceUrl: https://support.hellofresh.com/hc/en-us/articles/115008544627-How-do-I-cancel-
+    lastVerifiedAt: "2026-07-25"

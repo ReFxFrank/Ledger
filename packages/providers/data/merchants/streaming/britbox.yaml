@@ -1,0 +1,123 @@
+slug: britbox
+name: BritBox
+legalName: BritBox Limited
+category: streaming_video
+domains:
+  - britbox.com
+  - britbox.co.uk
+aliases:
+  - Brit Box
+  - BritBox UK
+  - BritBox International
+descriptorPatterns:
+  - BRITBOX
+  - BRITBOX.COM
+  - BRITBOX.CO.UK
+  - BRITBOX UK
+  - BRITBOX INTERNATIONAL
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: year
+    count: 1
+notes: >-
+  BritBox is sold both directly and as an add-on inside other services, and the add-on route is
+  the more common one outside the UK. A BritBox bought through Prime Video Channels, Apple,
+  Roku or a UK pay-TV package never appears in the account section on britbox.com, which sends
+  people looking for a cancel button that is not there.
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 2
+    cancelUrl: https://www.britbox.com/account
+    steps:
+      - text: Sign in at britbox.com or britbox.co.uk in a browser and open Account from the profile menu at the top right.
+        detail: The TV and phone apps have no billing screen; the flow only exists in a browser.
+      - text: Open Manage Account, then Subscription, and read the line that names who bills the subscription.
+        warning: >-
+          If it names Apple, Google, Amazon, Roku or a pay-TV provider, nothing on britbox.com
+          will stop the charge.
+      - text: Choose Cancel Subscription, pick a reason, then confirm on the next screen.
+      - text: Check the Subscription page now shows the date access ends and keep the confirmation email.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      BritBox does not prorate the unused part of a paid month or year; the account keeps
+      streaming until the paid period ends.
+    retentionOfferNotes: A discounted month is commonly offered on the reason screen before the confirmation.
+    gotchas:
+      - An annual plan cancelled mid-term keeps running, and stays paid for, until the anniversary date.
+      - The UK and international services are separate products with separate accounts, and cancelling one leaves the other charging.
+    evidenceHint: Screenshot the Subscription page showing the end date, and keep the confirmation email.
+    sourceUrl: https://help.britbox.com/hc/en-us
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: apple
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://apps.apple.com/account/subscriptions
+    steps:
+      - text: On iPhone or iPad, open Settings and tap your name at the very top of the list.
+      - text: Tap Subscriptions, then tap BritBox.
+        detail: On a Mac, open App Store, click your name at the bottom left, then Account Settings, then Manage next to Subscriptions.
+      - text: Tap Cancel Subscription and confirm on the sheet that appears.
+      - text: Note the expiry date shown under the BritBox entry.
+    noticePeriodDays: 0
+    gotchas:
+      - britbox.com cannot cancel an Apple-billed subscription.
+      - A BritBox bought as an Apple TV Channel is listed under Subscriptions in the same place, not inside the BritBox app.
+    evidenceHint: Screenshot the Subscriptions screen showing BritBox expiring on a date.
+    sourceUrl: https://support.apple.com/en-us/118428
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: google
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://play.google.com/store/account/subscriptions
+    steps:
+      - text: Open the Google Play Store app, tap your profile picture, then Payments and subscriptions, then Subscriptions.
+      - text: Tap BritBox, then Cancel subscription, and pick a reason when prompted.
+      - text: Tap through to the end until the entry shows an expiry date instead of a renewal date.
+    noticePeriodDays: 0
+    gotchas:
+      - The subscription belongs to the Google account that bought it, which may not be the profile signed in on the phone today.
+      - Uninstalling the app leaves the subscription running.
+    evidenceHint: Screenshot the Play subscriptions entry showing the expiry date.
+    sourceUrl: https://support.google.com/googleplay/answer/7018481
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: amazon
+    method: app_store
+    difficulty: 2
+    cancelUrl: https://www.amazon.com/gp/video/settings
+    steps:
+      - text: Sign in at amazon.com and open Account and Lists, then Memberships and Subscriptions.
+      - text: Open Prime Video Channels and find the BritBox row.
+        detail: The same list appears in the Prime Video web player under the gear icon, then Channels.
+      - text: Choose Cancel Channel and confirm on the End Subscription screen.
+      - text: Check the row now shows the date the channel stops rather than a renewal date.
+    noticePeriodDays: 0
+    gotchas:
+      - Prime Video Channels is how most people outside the UK hold BritBox, and britbox.com cannot cancel it.
+      - The BritBox app signed in with the same email will not show this subscription at all.
+    evidenceHint: Screenshot the Channels page showing BritBox ending on a date.
+    sourceUrl: https://www.amazon.com/yourmembershipsandsubscriptions
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: roku
+    method: app_store
+    difficulty: 2
+    cancelUrl: https://my.roku.com/account
+    steps:
+      - text: Sign in at my.roku.com and open Manage your subscriptions.
+      - text: Find BritBox in the list and choose Unsubscribe, then confirm.
+        detail: >-
+          On the device, highlight the BritBox tile on the Roku home screen, press the star
+          (Options) button, choose Manage subscription, then Cancel subscription.
+      - text: Check the entry now shows the date the subscription ends.
+    noticePeriodDays: 0
+    gotchas:
+      - Removing the channel from the Roku home screen does not cancel the billing.
+      - britbox.com cannot cancel a Roku-billed subscription.
+    evidenceHint: Screenshot the Roku subscriptions page showing BritBox ending on a date.
+    sourceUrl: https://support.roku.com/article/208756478
+    lastVerifiedAt: "2026-07-25"

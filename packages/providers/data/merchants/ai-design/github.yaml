@@ -1,0 +1,53 @@
+slug: github
+name: GitHub
+legalName: GitHub, Inc.
+category: software
+domains:
+  - github.com
+aliases:
+  - GitHub Pro
+  - GitHub Team
+  - GitHub Sponsors
+descriptorPatterns:
+  - GITHUB
+  - GITHUB.COM
+  - GITHUB INC
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: year
+    count: 1
+notes: >-
+  The bare GitHub descriptor covers everything GitHub bills — the account plan, Copilot seats,
+  Sponsors, Marketplace apps, Actions minutes and extra storage — and cannot be split apart from
+  the descriptor alone, so it is claimed here rather than by github-copilot. A GitHub charge that
+  varies month to month is usually metered usage rather than the plan.
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 2
+    cancelUrl: https://github.com/settings/billing
+    steps:
+      - text: Click your profile photo in the upper-right corner of any GitHub page, then Settings.
+      - text: In the Access section of the sidebar click Billing and licensing, then Additional billing details.
+      - text: Under Current plan open the Edit dropdown and choose Downgrade to Free.
+        detail: >-
+          There is no button labelled Cancel for a personal account. Downgrade to Free is the
+          cancellation, and it lives behind that dropdown rather than on the billing summary.
+      - text: Read the list of features the account loses, then click I understand. Continue with downgrade.
+      - text: Check the billing page for the pending change; it stays listed there until the next billing date.
+      - text: Cancel Sponsors, Marketplace apps and Copilot separately from the same billing page if they are not wanted.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      GitHub states that downgrades and cancellations take effect only after the current billing
+      cycle ends, so the paid features stay available until then and the period already paid for
+      is not refunded.
+    gotchas:
+      - Copilot, Sponsors, Marketplace apps, Actions minutes and extra storage are billed on top of the plan and keep charging after the downgrade.
+      - The downgrade only takes effect at the end of the billing cycle and can be reversed from the pending-changes screen until then.
+      - An annual plan drops to Free at its anniversary, not at the end of the month it was cancelled in.
+      - If a GitHub Pages site in a private repository uses a custom domain, update the DNS before downgrading — GitHub warns of a domain takeover risk once the site stops being served.
+      - Private repositories stay, but the advanced review tooling on them stops at the next billing date.
+    evidenceHint: Screenshot the billing page showing the pending downgrade and its effective date.
+    sourceUrl: https://docs.github.com/en/billing/managing-the-plan-for-your-github-account/downgrading-your-accounts-plan
+    lastVerifiedAt: "2026-07-25"

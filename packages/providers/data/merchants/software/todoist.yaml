@@ -1,0 +1,82 @@
+slug: todoist
+name: Todoist
+legalName: Doist Inc.
+category: software
+domains:
+  - todoist.com
+  - doist.com
+aliases:
+  - Todoist Pro
+  - Todoist Business
+  - Doist
+descriptorPatterns:
+  - TODOIST
+  - TODOIST PRO
+  - TODOIST BUSINESS
+  - DOIST
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: year
+    count: 1
+notes: >-
+  The company bills as Doist, so a statement line reading DOIST with no product name is still
+  Todoist. Annual is the default option at checkout, which makes a once-a-year charge the common
+  case rather than the exception.
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 1
+    cancelUrl: https://app.todoist.com/app/settings/subscription
+    steps:
+      - text: Open Todoist in a browser and click your avatar in the top-left corner, then Settings.
+      - text: Open the Subscription tab and click Go to billing.
+        detail: >-
+          This opens the payment provider's portal in a new tab. If a pop-up blocker stops it,
+          nothing appears to happen and the subscription stays active.
+      - text: Click Cancel subscription, choose a reason, then click Cancel subscription again to confirm.
+      - text: Return to the Subscription tab and check it shows Pro ending on a date rather than renewing.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      Doist describes a full refund on a yearly plan cancelled within 30 days of purchase or
+      renewal; monthly payments are not refunded and access runs to the end of the cycle.
+    retentionOfferNotes: The cancellation form asks for a reason and offers help before completing.
+    gotchas:
+      - Cancelling Pro leaves the account on the free Beginner plan, and projects over the free limit become read-only rather than being deleted.
+      - A Business (team) subscription is billed separately from a personal Pro plan — one login can be paying for both.
+      - A subscription bought inside the iOS or Android app is not cancellable in these settings.
+    evidenceHint: Screenshot the Subscription tab showing the end date, plus the cancellation email.
+    sourceUrl: https://www.todoist.com/help/articles/cancel-a-todoist-subscription-08AmJLVkC
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: apple
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://apps.apple.com/account/subscriptions
+    steps:
+      - text: On iPhone or iPad, open Settings and tap your name at the top.
+      - text: Tap Subscriptions, then tap Todoist.
+      - text: Tap Cancel Subscription and confirm.
+    noticePeriodDays: 0
+    gotchas:
+      - todoist.com shows the Pro badge but has no billing controls for an Apple-billed subscription.
+      - Deleting the app leaves the billing running.
+    evidenceHint: Screenshot the Subscriptions screen showing Todoist expiring on a date.
+    sourceUrl: https://support.apple.com/en-us/118428
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: google
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://play.google.com/store/account/subscriptions
+    steps:
+      - text: Open the Google Play Store app, tap your profile icon, then Payments & subscriptions, then Subscriptions.
+      - text: Tap Todoist, then Cancel subscription, and pick a reason.
+      - text: Confirm and check the entry shows an expiry date.
+    noticePeriodDays: 0
+    gotchas:
+      - The subscription belongs to the Google account that bought it, which may differ from the Todoist login.
+      - Uninstalling the app does not stop the billing.
+    evidenceHint: Screenshot the Play subscriptions entry showing the expiry date.
+    sourceUrl: https://support.google.com/googleplay/answer/7018481
+    lastVerifiedAt: "2026-07-25"

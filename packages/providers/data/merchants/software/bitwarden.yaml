@@ -1,0 +1,53 @@
+slug: bitwarden
+name: Bitwarden
+legalName: Bitwarden, Inc.
+category: security_vpn
+domains:
+  - bitwarden.com
+aliases:
+  - Bitwarden Premium
+  - Bitwarden Families
+  - 8bit Solutions
+descriptorPatterns:
+  - BITWARDEN
+  - BITWARDEN.COM
+  - BITWARDEN PREMIUM
+  - 8BIT SOLUTIONS
+typicalIntervals:
+  - unit: year
+    count: 1
+notes: >-
+  Premium and Families are annual, and the amounts are small enough that a yearly charge is easy
+  to mistake for a one-off purchase — worth detecting from a single occurrence. Personal Premium
+  and a Families organisation are two separate subscriptions on the same login, so someone who
+  upgraded from one to the other may still be paying for both.
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 1
+    cancelUrl: https://vault.bitwarden.com/#/settings/subscription
+    steps:
+      - text: Sign in to the Bitwarden web vault at vault.bitwarden.com.
+        detail: >-
+          A self-hosted or EU-region account signs in at its own address; the billing screens are
+          in the same place once signed in.
+      - text: For personal Premium, open Settings, then Subscription.
+      - text: For a Families or Teams organisation, open the organisation from the product switcher, then Billing, then Subscription.
+        detail: >-
+          The two subscriptions are billed separately. Cancelling one has no effect on the other,
+          and both are easy to miss because they look almost identical.
+      - text: Select Cancel subscription and confirm.
+      - text: Check the page now shows Pending cancellation with the next charge date, and keep the confirmation email.
+        detail: The same screen offers Reinstate subscription, so the state is easy to verify later.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      Bitwarden asks people to contact support for a refund on a subscription less than 30 days
+      old; otherwise the account keeps its paid features until the end of the paid year.
+    gotchas:
+      - The account moves to the free plan on the next charge date rather than immediately, so the paid badge stays visible after cancelling.
+      - Cancelling a Families organisation returns every member to a free individual account and makes shared collections inactive, though they come back if the organisation is resubscribed.
+      - Premium features tied to the account, such as the built-in authenticator and file attachments, stop when the plan lapses while the vault items stay.
+      - Deleting the mobile app or the browser extension has no effect on the billing.
+    evidenceHint: Screenshot the Subscription page showing Pending cancellation and the end date, plus the confirmation email.
+    sourceUrl: https://bitwarden.com/help/cancel-a-subscription/
+    lastVerifiedAt: "2026-07-25"

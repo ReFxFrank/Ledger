@@ -1,0 +1,141 @@
+slug: masterclass
+name: MasterClass
+legalName: Yanka Industries, Inc.
+category: education
+domains:
+  - masterclass.com
+aliases:
+  - Master Class
+  - MasterClass Annual
+  - Yanka Industries
+descriptorPatterns:
+  - MASTERCLASS
+  - MASTERCLASS.COM
+  - YANKA INDUSTRIES
+  - MASTERCLASS ANNUAL
+typicalIntervals:
+  - unit: year
+    count: 1
+  - unit: month
+    count: 1
+
+notes: >-
+  The classic annual-charge trap. MasterClass sells mainly a twelve-month membership taken in one
+  payment, so the second charge lands a year after the first, long after anyone remembers signing
+  up. A renewal notice goes out 30 days ahead to the email on the account — that email is the
+  earliest warning the product can act on. Cancellation cannot be done inside the mobile app even
+  for a web-billed membership.
+
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 2
+    cancelUrl: https://www.masterclass.com/settings
+    steps:
+      - text: >-
+          Open masterclass.com in a browser and sign in. The apps have no cancel control at all,
+          web-billed or not.
+      - text: Click your profile or account menu in the top right and choose Settings.
+      - text: >-
+          Find the Membership section and choose Cancel Membership, then Cancel Now on the
+          confirmation screen.
+        warning: >-
+          The screen before the last one offers to keep the membership; stopping there leaves it
+          renewing on schedule.
+      - text: >-
+          Check that Settings now shows the membership as cancelling at the end of the current
+          term, and keep the confirmation email.
+        detail: >-
+          Access continues to the renewal date. Settings will offer Reactivate from that point,
+          which is how you can tell the cancellation registered.
+      - text: >-
+          If the Membership section says the subscription is managed elsewhere, it was bought
+          through Apple, Google or Amazon — use the matching playbook.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      The membership runs to the end of the term already paid for. An annual term is taken in one
+      payment up front and cancelling part-way through stops the renewal rather than the term.
+    retentionOfferNotes: >-
+      The flow offers a discounted renewal or a downgrade to a cheaper tier before the final
+      confirmation.
+    gotchas:
+      - >-
+        Cancellation is web only — there is no cancel control in the iOS, Android or TV apps even
+        for a membership bought on the website.
+      - >-
+        The annual membership is charged in one payment twelve months ahead, so the renewal
+        arrives a full year after the last charge anyone remembers.
+      - >-
+        The renewal notice is emailed 30 days before the charge to the address on the account; if
+        that address is stale there is no warning at all.
+      - >-
+        A membership bought through the App Store, Play Store or as an Amazon channel is not
+        cancellable in MasterClass settings.
+    evidenceHint: >-
+      Screenshot the Settings page showing the membership as cancelled with its end date, plus the
+      cancellation confirmation email.
+    sourceUrl: https://www.masterclass.com/help-center/masterclass/answers/cancelling-your-subscription-renewal--id--M2McWBvNTh-WNRR6llmkAw
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: apple
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://apps.apple.com/account/subscriptions
+    steps:
+      - text: On iPhone or iPad, open Settings and tap your name at the top of the screen.
+      - text: Tap Subscriptions, then tap MasterClass in the list.
+      - text: Tap Cancel Subscription and confirm.
+        detail: >-
+          If MasterClass is not listed, the membership was bought on the website and is cancelled
+          in masterclass.com settings instead.
+    noticePeriodDays: 0
+    gotchas:
+      - Deleting the MasterClass app does not stop an App Store subscription.
+      - >-
+        An Apple-billed membership cannot be cancelled in MasterClass account settings, and
+        MasterClass support cannot stop the charge either.
+    evidenceHint: Screenshot the App Store Subscriptions screen showing the expiry date.
+    sourceUrl: https://support.apple.com/en-us/118428
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: google
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://play.google.com/store/account/subscriptions
+    steps:
+      - text: Open the Google Play Store app and tap your profile icon in the top right.
+      - text: Tap Payments & subscriptions, then Subscriptions, and select MasterClass.
+      - text: Tap Cancel subscription, choose a reason, and confirm on the final screen.
+    noticePeriodDays: 0
+    gotchas:
+      - Uninstalling the app leaves the Google Play subscription running.
+      - A Play-billed membership cannot be stopped from masterclass.com settings.
+    evidenceHint: Screenshot the Play Subscriptions screen showing the cancellation and end date.
+    sourceUrl: https://support.google.com/googleplay/answer/7018481
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: amazon
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://www.amazon.com/yourmembershipsandsubscriptions
+    steps:
+      - text: >-
+          Sign in to Amazon and open Account & Lists, then Memberships & Subscriptions.
+      - text: Find MasterClass in the list and choose Manage Subscription.
+      - text: >-
+          Choose the option to end the subscription and confirm; the entry should then show a
+          final access date.
+        detail: >-
+          Prime Video Channel subscriptions can also be managed under Account & Settings, then
+          Channels, on the Prime Video site.
+    noticePeriodDays: 0
+    gotchas:
+      - >-
+        An Amazon-billed MasterClass subscription cannot be cancelled on masterclass.com — the
+        charge belongs to Amazon.
+      - >-
+        Cancelling Amazon Prime itself does not automatically end a Prime Video Channel
+        subscription; the channel is cancelled separately.
+    evidenceHint: Screenshot the Amazon Memberships & Subscriptions entry showing the end date.
+    sourceUrl: https://www.masterclass.com/help-center/masterclass/answers/amazon-subscription-management--id--B8r_D_VlQuGNWUk3KPDsnQ
+    lastVerifiedAt: "2026-07-25"

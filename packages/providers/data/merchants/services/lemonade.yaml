@@ -1,0 +1,77 @@
+slug: lemonade
+name: Lemonade
+legalName: Lemonade Insurance Company
+category: insurance
+domains:
+  - lemonade.com
+aliases:
+  - Lemonade Insurance
+  - Lemonade Renters
+  - Lemonade Pet
+descriptorPatterns:
+  - LEMONADE INSURANCE
+  - LEMONADE INS
+  - LEMONADE
+  - LEMONADE INSURANCE AGENCY
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: year
+    count: 1
+
+notes: >-
+  Unusually for insurance, Lemonade can be cancelled from inside the app in a few taps — no phone
+  call, no retention queue. Renters, homeowners, pet, car and life sit on one login as separate
+  policies, each with its own charge and its own cancel action, so cancelling one leaves the
+  others billing.
+
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 2
+    cancelUrl: https://www.lemonade.com/login
+    steps:
+      - text: >-
+          Check whether a landlord, lender or mortgage servicer is listed as an interested party
+          on the policy before cancelling, and line up the replacement first.
+      - text: >-
+          In the Lemonade app, open the home screen and select the specific policy you are ending
+          — renters, pet and car are separate policies.
+      - text: >-
+          Tap the three dots in the top right of that policy and choose the cancel option, then
+          pick the date cover should end.
+        detail: >-
+          On the web, sign in at lemonade.com, open My Account, select the policy, and use the
+          cancel link near the bottom of the policy page.
+      - text: >-
+          If the flow will not complete, email help@lemonade.com or call 844-733-8666 and ask
+          for the policy to be cancelled on a stated date.
+      - text: >-
+          Save the cancellation confirmation email, which carries the end date and any refund
+          amount.
+      - text: Repeat for every other Lemonade policy on the account that you also want to end.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      Cancelling mid-term normally returns the premium for the remaining period. Lemonade states
+      it does not charge a cancellation fee.
+    retentionOfferNotes: >-
+      The in-app flow asks for a reason and may suggest lowering coverage or raising the
+      deductible instead, but it does not block the cancellation.
+    gotchas:
+      - >-
+        Each policy on the account cancels separately — ending renters cover leaves pet or car
+        cover running under the same brand on the statement.
+      - >-
+        Deleting the app does not cancel anything; the policy stays in force and the premium keeps
+        being taken.
+      - >-
+        Where a landlord or mortgage servicer requires cover to be in place, cancelling without a
+        replacement can trigger a policy being bought on your behalf at a higher price.
+      - >-
+        The Lemonade Giveback donation is calculated from the premium already paid and is not
+        returned as part of a refund.
+    evidenceHint: >-
+      Screenshot the in-app confirmation showing the policy end date, and keep the cancellation
+      confirmation email with the refund amount.
+    sourceUrl: https://www.lemonade.com/faq
+    lastVerifiedAt: "2026-07-25"

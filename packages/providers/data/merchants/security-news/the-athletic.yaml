@@ -1,0 +1,103 @@
+slug: the-athletic
+name: The Athletic
+legalName: The Athletic Media Company
+category: news_publishing
+domains:
+  - theathletic.com
+aliases:
+  - Athletic
+  - The Athletic Subscription
+descriptorPatterns:
+  - THE ATHLETIC
+  - THEATHLETIC.COM
+  - THEATHLETIC
+  - ATHLETIC MEDIA
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: year
+    count: 1
+notes: >-
+  The Athletic is owned by The New York Times and can be billed either on its own or as part of
+  an NYT bundle. When it is part of the bundle there is nothing to cancel on theathletic.com and
+  the charge is a New York Times charge; see new-york-times. Annual plans are sold at a heavy
+  discount for the first year and renew at the standard rate.
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 2
+    cancelUrl: https://theathletic.com/account
+    steps:
+      - text: >-
+          Sign in at theathletic.com in a browser and open your profile menu at the top right,
+          then Account or Settings.
+      - text: >-
+          Open the Subscription or Plan section and check who bills it. If it says the plan comes
+          from a New York Times subscription, stop here and cancel through the NYT account.
+      - text: Choose Manage plan, then Cancel subscription.
+        detail: >-
+          The cancel link sits under the plan summary, below the renewal date and the payment
+          card, rather than beside the plan name.
+      - text: Answer the reason question and continue past the offer to the final confirmation.
+        warning: >-
+          A discounted year is offered before the last step. Accepting it starts a new term
+          instead of ending the current one.
+      - text: >-
+          Reload the account page and check the plan now shows an end date rather than a renewal
+          date.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      Access continues to the end of the period already paid for; annual plans are not credited
+      for the unused months.
+    retentionOfferNotes: >-
+      Expect a discounted annual rate, and sometimes a free month, before the cancel confirmation
+      appears.
+    gotchas:
+      - A first-year discount renews at the standard annual price with no second confirmation.
+      - When The Athletic came bundled with an NYT subscription, cancelling on theathletic.com does not stop the charge; the NYT account owns it.
+      - A subscription bought in the iOS or Android app is billed by the store and the website shows it as managed there.
+      - Push alerts keep arriving until the access period ends, which is not a sign that the cancellation failed.
+    evidenceHint: Screenshot the account page showing the plan ending on a date, and keep the confirmation email.
+    sourceUrl: https://theathletic.com/faq/
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: apple
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://apps.apple.com/account/subscriptions
+    steps:
+      - text: On iPhone or iPad, open Settings and tap your name at the very top of the list.
+      - text: Tap Subscriptions, then tap The Athletic.
+        detail: >-
+          On a Mac, open App Store, click your name at the bottom left, then Account Settings,
+          then Manage next to Subscriptions.
+      - text: Tap Cancel Subscription and confirm on the sheet that appears.
+        detail: If the only button offered is Resubscribe, the subscription is already set to expire.
+      - text: Note the expiry date shown under the entry.
+    noticePeriodDays: 0
+    gotchas:
+      - Deleting the app leaves the billing running.
+      - theathletic.com cannot cancel an Apple-billed subscription and shows it as managed by Apple.
+      - Refunds for Apple-billed plans go through reportaproblem.apple.com.
+    evidenceHint: Screenshot the Subscriptions screen showing The Athletic expiring on a date.
+    sourceUrl: https://support.apple.com/en-us/118428
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: google
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://play.google.com/store/account/subscriptions
+    steps:
+      - text: >-
+          Open the Google Play Store app, tap your profile picture, then Payments and
+          subscriptions, then Subscriptions.
+      - text: Tap The Athletic, then Cancel subscription, and pick a reason when prompted.
+      - text: Continue to the end until the entry shows an expiry date instead of a renewal date.
+    noticePeriodDays: 0
+    gotchas:
+      - The subscription belongs to the Google account that bought it, which may not be the one signed in on the phone now.
+      - Uninstalling the app leaves the subscription running.
+      - theathletic.com cannot stop a Play-billed subscription.
+    evidenceHint: Screenshot the Play subscriptions entry showing the expiry date.
+    sourceUrl: https://support.google.com/googleplay/answer/7018481
+    lastVerifiedAt: "2026-07-25"

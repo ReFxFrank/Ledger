@@ -1,0 +1,88 @@
+slug: chatgpt-plus
+name: ChatGPT Plus
+legalName: OpenAI, LLC
+category: ai
+domains:
+  - chatgpt.com
+  - openai.com
+aliases:
+  - ChatGPT
+  - ChatGPT Pro
+  - OpenAI
+  - ChatGPT Go
+descriptorPatterns:
+  - OPENAI
+  - OPENAI LLC
+  - OPENAI CHATGPT
+  - OPENAI CHATGPT SUBSCR
+  - CHATGPT SUBSCRIPTION
+  - CHATGPT PLUS
+typicalIntervals:
+  - unit: month
+    count: 1
+notes: >-
+  Plus, Pro and Go all bill from the same OpenAI descriptors and are handled by the same flow.
+  Pay-as-you-go API usage prints the same OPENAI descriptor, so a line that changes size every
+  month is probably API spend rather than a plan.
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 1
+    steps:
+      - text: Sign in at chatgpt.com and click your profile icon in the top right, then Settings.
+      - text: Open Billing, and under Cancel plan click Cancel.
+        detail: >-
+          Some accounts route this through a hosted billing portal — the page that opens carries
+          the plan, the renewal date and a Cancel plan button in the same panel.
+        warning: The page confirms the cancellation on screen; closing it early leaves the plan renewing.
+      - text: Re-open Billing and check it now shows the plan ending on the next billing date.
+      - text: Keep the confirmation email as the record of the end date.
+    noticePeriodDays: 1
+    refundPolicy: >-
+      OpenAI states the plan stays usable until the end of the paid period and asks for the
+      cancellation at least 24 hours before the next billing date to avoid the following charge.
+    gotchas:
+      - Cancelling inside 24 hours of the renewal date does not stop that renewal.
+      - Subscribing on the web, on iOS and on Android creates three separate subscriptions — cancelling one leaves the others charging.
+      - A subscription bought in the iOS or Android app is not listed in the web Billing screen at all.
+      - ChatGPT Pro sits in the same Billing panel at roughly ten times the Plus price; check which plan the button is acting on.
+    evidenceHint: Screenshot the Billing panel showing the end date, and keep the cancellation email.
+    sourceUrl: https://help.openai.com/en/articles/7232927-how-do-i-cancel-my-chatgpt-plus-subscription
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: apple
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://apps.apple.com/account/subscriptions
+    steps:
+      - text: On iPhone or iPad open Settings, tap your name at the top, then tap Subscriptions.
+      - text: Tap ChatGPT, then Cancel Subscription and confirm.
+        detail: >-
+          The same screen is reachable from the App Store app — profile picture in the top right,
+          then Subscriptions.
+      - text: Check the entry now reads Expires rather than Renews.
+    noticePeriodDays: 1
+    gotchas:
+      - Deleting the ChatGPT app does not stop the Apple charge.
+      - Cancelling here has no effect on a separate subscription bought on chatgpt.com.
+      - Refunds for an Apple-billed subscription are requested from Apple, not from OpenAI.
+    evidenceHint: Screenshot the Subscriptions screen showing the expiry date.
+    sourceUrl: https://help.openai.com/en/articles/7905690-how-do-i-cancel-my-apple-subscription-for-chatgpt-plus-in-the-chatgpt-ios-app
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: google
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://play.google.com/store/account/subscriptions
+    steps:
+      - text: Open the Google Play Store app and tap your profile icon in the top right.
+      - text: Tap Payments & subscriptions, then Subscriptions, then ChatGPT.
+      - text: Tap Cancel subscription, pick a reason and confirm.
+    noticePeriodDays: 1
+    gotchas:
+      - Uninstalling the app leaves the Play subscription running.
+      - Access continues to the end of the period already paid for.
+      - A web subscription on the same email address is a different subscription and keeps charging.
+    evidenceHint: Screenshot the Play subscription entry showing the cancelled state and end date.
+    sourceUrl: https://help.openai.com/en/articles/8258076-how-to-cancel-a-subscription-in-the-chatgpt-android-app
+    lastVerifiedAt: "2026-07-25"

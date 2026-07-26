@@ -1,0 +1,79 @@
+slug: equinox
+name: Equinox
+legalName: Equinox Holdings, Inc.
+category: fitness
+domains:
+  - equinox.com
+aliases:
+  - Equinox Fitness
+  - Equinox Gym
+  - Equinox Plus
+descriptorPatterns:
+  - EQUINOX
+  - EQUINOX FITNESS
+  - EQUINOX HOLDINGS
+  - EQUINOX.COM
+  - EQUINOX MEMBERSHIP
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: year
+    count: 1
+notes: >-
+  The terms that matter are in the signed Membership Agreement rather than on the website — the
+  notice window, the initial commitment, and which cancellation routes the home club accepts all
+  vary by state and by plan. Personal training packages are billed separately from dues and are
+  not ended by cancelling the membership.
+playbooks:
+  - channel: direct
+    method: email
+    difficulty: 4
+    steps:
+      - text: Find the Membership Agreement signed at joining and read the cancellation clause — it names the notice window and the routes the home club accepts.
+        detail: >-
+          A copy can be requested from the club concierge. Everything below depends on what that
+          document says, because Equinox varies the terms by state and by membership type.
+      - text: Send the written notice below to Cancellations@Equinox.com from the email address on the account, copying the home club manager.
+        detail: >-
+          Equinox also lists cancelling in club with a manager, by post as described in the
+          agreement, and through the account on equinox.com. Email leaves a timestamped record,
+          which the in-person route does not.
+      - text: Ask for a written acknowledgement that states the last billing date and the date access ends.
+        warning: >-
+          Without that acknowledgement there is nothing to point at when dues continue, and dues
+          usually do continue through the notice window.
+      - text: If nothing arrives within a few days, follow up by phone through the home club and ask for the acknowledgement to be sent in writing.
+      - text: Keep watching the statement until one full billing cycle after the stated end date.
+    noticePeriodDays: 45
+    refundPolicy: >-
+      Dues covering the notice window are normally still charged, and Equinox does not generally
+      prorate a partial month. Initiation fees are not returned.
+    retentionOfferNotes: >-
+      A freeze is offered first for travel, injury or a break, and it keeps the membership and the
+      commitment alive rather than ending them.
+    gotchas:
+      - The notice window is set by the signed agreement and differs by state and plan, so the 45 days used here is a planning figure and not a promise — read the agreement for the number that applies.
+      - Cancelling inside an initial commitment period usually means paying out the rest of it.
+      - Personal training, Pilates and other packages bill on separate agreements and keep running after the membership ends.
+      - A verbal cancellation at the front desk is easy to lose; ask for it in writing every time.
+    letterTemplate: |
+      {{date}}
+
+      Equinox Membership Services
+
+      Member name: {{fullName}}
+      Membership number: {{accountReference}}
+
+      I am writing to end my Equinox membership at my home club. Please treat this email as my
+      written notice as of today's date and close the membership at the earliest date my
+      Membership Agreement allows.
+
+      Please confirm in writing the date my membership ends, the date of my final payment, and
+      that no further dues or fees will be charged after that date. Please also confirm that any
+      separate personal training or other package agreements on my account are handled as I have
+      instructed separately.
+
+      {{fullName}}
+    evidenceHint: Keep the sent email with its timestamp, the written acknowledgement naming the end date, and a copy of the Membership Agreement page that sets the notice window.
+    sourceUrl: https://www.equinox.com/faq
+    lastVerifiedAt: "2026-07-25"

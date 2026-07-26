@@ -1,0 +1,119 @@
+slug: spotify
+name: Spotify
+legalName: Spotify AB
+category: music_audio
+domains:
+  - spotify.com
+aliases:
+  - Spotify Premium
+  - Spotify Duo
+  - Spotify Family
+  - Spotify Student
+descriptorPatterns:
+  - SPOTIFY
+  - SPOTIFY USA
+  - SPOTIFY UK
+  - SPOTIFY AB
+  - SPOTIFY.COM
+  - SPOTIFY PREMIUM
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: year
+    count: 1
+notes: >-
+  Spotify sells prepaid 12-month Premium cards alongside the monthly plans, so a single yearly
+  Spotify charge is worth treating as a subscription. Premium bought as part of a mobile
+  operator bundle, a Hulu bundle, or through a partner such as Google or Samsung is billed by
+  that partner and cannot be ended in the Spotify account page.
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 2
+    cancelUrl: https://www.spotify.com/account/subscription/
+    steps:
+      - text: Sign in at spotify.com in a browser and open Account from the menu under your name.
+        detail: >-
+          The Spotify app has no cancel control on any platform. Tapping Premium inside the app
+          opens the same web page in a browser.
+      - text: Open Your plan, then choose Change plan, and scroll to the Cancel Premium panel at the bottom of the page.
+        detail: >-
+          The page leads with the other plans available. The cancellation panel sits under all of
+          them, past the plan comparison grid, and is easy to scroll past.
+      - text: Choose Cancel Premium, then confirm with Yes, cancel on the next screen.
+        warning: >-
+          The confirmation step offers a discounted or paused period first, and its button is
+          the prominent one. Only the plain cancel option ends the plan.
+      - text: Check Your plan now shows the date Premium ends and keep the confirmation email.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      Spotify does not prorate the unused part of a paid period; Premium keeps working until
+      that period ends and the account then reverts to the free tier rather than closing.
+    retentionOfferNotes: >-
+      A discounted period is commonly offered inside the cancel flow, and accepting it restarts
+      the billing cycle from that day.
+    gotchas:
+      - The account drops to the free tier rather than closing, so playlists survive but downloads stop playing.
+      - Only the plan manager can cancel a Duo or Family plan; a member can only leave it, which does not stop the charge.
+      - Premium bought through a mobile operator, Hulu or another partner shows that partner's name on Your plan and has to be cancelled there.
+      - Paying through PayPal does not change any of this, but the PayPal billing agreement stays listed until it expires and looks like a live subscription.
+    evidenceHint: Screenshot Your plan showing the date Premium ends, and keep the confirmation email.
+    sourceUrl: https://support.spotify.com/us/article/cancel-premium/
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: apple
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://apps.apple.com/account/subscriptions
+    steps:
+      - text: On iPhone or iPad, open Settings and tap your name at the very top of the list.
+      - text: Tap Subscriptions, then tap Spotify.
+        detail: On a Mac, open App Store, click your name at the bottom left, then Account Settings, then Manage next to Subscriptions.
+      - text: Tap Cancel Subscription and confirm on the sheet that appears.
+      - text: Note the expiry date shown under the Spotify entry.
+    noticePeriodDays: 0
+    gotchas:
+      - Spotify stopped selling Premium through Apple in 2016, so an Apple-billed Spotify subscription is a long-running legacy one.
+      - spotify.com cannot cancel it; Your plan there names Apple as the biller.
+      - Deleting the app does not stop the billing.
+    evidenceHint: Screenshot the Subscriptions screen showing Spotify expiring on a date.
+    sourceUrl: https://support.apple.com/en-us/118428
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: google
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://play.google.com/store/account/subscriptions
+    steps:
+      - text: Open the Google Play Store app, tap your profile picture, then Payments and subscriptions, then Subscriptions.
+      - text: Tap Spotify, then Cancel subscription, and pick a reason when prompted.
+      - text: Tap through to the end until the entry shows an expiry date instead of a renewal date.
+    noticePeriodDays: 0
+    gotchas:
+      - The subscription belongs to the Google account that bought it, which may not be the profile signed in on the phone today.
+      - Uninstalling the app leaves the subscription running.
+    evidenceHint: Screenshot the Play subscriptions entry showing the expiry date.
+    sourceUrl: https://support.google.com/googleplay/answer/7018481
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: carrier
+    method: account_settings
+    difficulty: 3
+    steps:
+      - text: Open Your plan at spotify.com and read the name of the biller shown there.
+        detail: >-
+          A bundled Premium shows the operator's name instead of a payment card, and no cancel
+          control appears anywhere in the Spotify account.
+      - text: Sign in to that operator's own account or app and open its add-ons or subscriptions section.
+        detail: >-
+          The entry is usually filed under extras, add-ons or entertainment rather than under
+          anything named Spotify.
+      - text: Remove the Spotify add-on there and ask the operator for written confirmation of the date it stops.
+      - text: Check the following mobile bill to confirm the line item is gone.
+    noticePeriodDays: 0
+    gotchas:
+      - The charge appears on the mobile bill rather than as a separate Spotify line, so it is invisible in a bank statement search for Spotify.
+      - Removing the add-on usually returns the account to the free tier at the end of the current bill period, not immediately.
+    evidenceHint: Screenshot the operator's confirmation of the removed add-on and keep the next bill showing the charge gone.
+    sourceUrl: https://support.spotify.com/us/article/cancel-premium/
+    lastVerifiedAt: "2026-07-25"

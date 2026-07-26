@@ -1,0 +1,153 @@
+slug: patreon
+name: Patreon
+legalName: Patreon, Inc.
+category: creator_support
+domains:
+  - patreon.com
+aliases:
+  - Patreon Membership
+  - Patreon Pledge
+descriptorPatterns:
+  - PATREON
+  - PATREON.COM
+  - PATREON* MEMBERSHIP
+  - PATREON MEMBERSHIP
+  - PATREON* PLEDGE
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: year
+    count: 1
+
+notes: >-
+  One Patreon account can hold a dozen memberships to different creators, each a separate charge
+  on the same descriptor, often on different dates and different amounts. Detection will see
+  several independent cadences that all say PATREON. Where the membership was started matters as
+  much as what it costs — memberships begun in the iOS app after 4 November 2024 are billed by
+  Apple, and the Patreon website cannot stop those.
+
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 2
+    cancelUrl: https://www.patreon.com/settings/memberships
+    steps:
+      - text: >-
+          Sign in at patreon.com, click your avatar in the top right, and open Settings, then the
+          Memberships tab.
+        detail: >-
+          Every active membership is listed here with its creator, tier, amount and next charge
+          date. Go through the whole list — most people have more than they remember.
+      - text: >-
+          Find the creator you are leaving and choose Edit or the three-dot menu next to that
+          membership, then Cancel membership.
+      - text: >-
+          Confirm on the following screen. The Memberships tab should then show that membership
+          ending on a date rather than renewing.
+        warning: >-
+          Closing the tab before that confirmation leaves the membership active and it charges
+          again on schedule.
+      - text: >-
+          Repeat for every other membership you want to end — cancelling one creator does nothing
+          to the rest.
+      - text: >-
+          If a membership shows "Managed by Apple" or "Managed by Google", it is billed by the
+          store and has to be cancelled there instead.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      Cancelling stops the next charge; access to the tier normally runs to the end of the period
+      already paid for. Refunds are decided by the individual creator.
+    retentionOfferNotes: >-
+      The cancel flow offers to pause the membership for a month or to drop to a cheaper tier. A
+      paused membership restarts on its own at the end of the pause.
+    gotchas:
+      - >-
+        Each creator is a separate membership with its own charge date — cancelling one leaves the
+        others billing under the same PATREON descriptor.
+      - >-
+        Memberships started in the iOS app after 4 November 2024 are billed by Apple; the Patreon
+        website cannot stop those charges.
+      - >-
+        Annual memberships take twelve months up front, so cancelling mid-year stops the renewal
+        rather than the current term.
+      - >-
+        Pause is offered in the same place as cancel and looks like an exit — it is not, and
+        billing resumes automatically.
+      - >-
+        A membership paid through PayPal still has to be cancelled inside Patreon; killing the
+        PayPal agreement alone leaves the membership in a failed-payment state.
+    evidenceHint: >-
+      Screenshot the Memberships tab showing the membership as ending, with the date, plus the
+      cancellation email from Patreon.
+    sourceUrl: https://support.patreon.com/hc/en-us/articles/360005502572-Canceling-a-paid-membership
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: apple
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://apps.apple.com/account/subscriptions
+    steps:
+      - text: On iPhone or iPad, open Settings and tap your name at the top of the screen.
+      - text: Tap Subscriptions and look for Patreon in the list.
+      - text: Tap Patreon, then Cancel Subscription, and confirm.
+        detail: >-
+          Patreon memberships bought in the iOS app appear as one App Store subscription per
+          creator tier. If Patreon is not listed at all, the membership was started on the web and
+          the direct playbook applies.
+      - text: Check the Patreon app afterwards — the membership should show as ending on a date.
+    noticePeriodDays: 0
+    gotchas:
+      - Deleting the Patreon app does not stop an App Store subscription.
+      - >-
+        Cancelling inside patreon.com does not stop an Apple-billed membership; it has to be done
+        in Apple's subscription settings.
+      - Access continues to the end of the period already paid for, and Apple decides any refund.
+    evidenceHint: Screenshot the App Store Subscriptions screen showing the expiry date.
+    sourceUrl: https://support.apple.com/en-us/118428
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: google
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://play.google.com/store/account/subscriptions
+    steps:
+      - text: Open the Google Play Store app and tap your profile icon in the top right.
+      - text: Tap Payments & subscriptions, then Subscriptions, and select Patreon.
+      - text: Tap Cancel subscription, pick a reason, and confirm on the final screen.
+    noticePeriodDays: 0
+    gotchas:
+      - Uninstalling the Patreon app leaves the Google Play subscription running.
+      - >-
+        A Play-billed membership cannot be stopped from patreon.com — the cancellation has to
+        happen in Play's subscription settings.
+    evidenceHint: Screenshot the Play Subscriptions screen showing the cancellation and end date.
+    sourceUrl: https://support.google.com/googleplay/answer/7018481
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: paypal
+    method: account_settings
+    difficulty: 2
+    cancelUrl: https://www.paypal.com/myaccount/autopay/
+    steps:
+      - text: >-
+          Cancel the membership inside Patreon first, at patreon.com/settings/memberships — this
+          is what actually ends the pledge.
+      - text: >-
+          Then sign in to PayPal and open Settings, Payments, Automatic payments to confirm the
+          Patreon billing agreement is no longer active.
+      - text: >-
+          If an active Patreon agreement is still listed there after the Patreon cancellation,
+          cancel it in PayPal as a backstop.
+    noticePeriodDays: 0
+    gotchas:
+      - >-
+        Cancelling only the PayPal billing agreement leaves the Patreon membership listed as
+        active with a failed payment, which can lock the account rather than close it.
+      - >-
+        One PayPal agreement can cover several Patreon memberships, so removing it stops payments
+        to creators you meant to keep.
+    evidenceHint: >-
+      Screenshot both the Patreon Memberships tab showing the membership ending and the PayPal
+      automatic payments list.
+    sourceUrl: https://support.patreon.com/hc/en-us/articles/360005502572-Canceling-a-paid-membership
+    lastVerifiedAt: "2026-07-25"

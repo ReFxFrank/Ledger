@@ -1,0 +1,122 @@
+slug: curiosity-stream
+name: CuriosityStream
+legalName: CuriosityStream Inc.
+category: streaming_video
+domains:
+  - curiositystream.com
+aliases:
+  - Curiosity Stream
+  - Curiosity Stream Smart Bundle
+  - Nebula Bundle
+descriptorPatterns:
+  - CURIOSITYSTREAM
+  - CURIOSITY STREAM
+  - CURIOSITYSTREAM.COM
+  - CURIOSITYSTREAM INC
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: year
+    count: 1
+notes: >-
+  Almost all CuriosityStream sales are annual, usually through a discount code from a podcast or
+  a YouTube channel, so a once-a-year charge here is the normal case rather than the exception.
+  Lifetime passes exist and do not renew at all. The Nebula bundle is sold by CuriosityStream but
+  the Nebula account it creates is managed separately.
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 2
+    cancelUrl: https://curiositystream.com/settings/subscription
+    steps:
+      - text: Sign in at curiositystream.com in a browser and open the profile menu at the top right, then Settings.
+        detail: The phone and TV apps have no billing screen; the flow only exists in a browser.
+      - text: Open the Subscription or Plan section and read who the plan is billed by.
+        warning: If it names Apple, Google, Amazon or Roku, the charge cannot be stopped on curiositystream.com.
+      - text: Choose Cancel Subscription, then confirm on the screen that follows.
+      - text: Check the Subscription section now shows the date access ends and keep the confirmation email.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      CuriosityStream does not prorate the unused part of an annual term; the account keeps
+      streaming until the term ends.
+    retentionOfferNotes: >-
+      A discounted renewal is usually offered on the way out, and promotional annual pricing does
+      not carry into the following year.
+    gotchas:
+      - An annual plan bought with a promotional code renews at the standard price, which is often several times the first-year price.
+      - An annual plan cancelled a month in still runs, and stays paid for, until the anniversary date.
+      - The Nebula account included in a bundle keeps its own billing once the bundle lapses and has to be checked separately.
+    evidenceHint: Screenshot the Subscription section showing the end date, and keep the confirmation email.
+    sourceUrl: https://help.curiositystream.com/hc/en-us
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: apple
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://apps.apple.com/account/subscriptions
+    steps:
+      - text: On iPhone or iPad, open Settings and tap your name at the very top of the list.
+      - text: Tap Subscriptions, then tap CuriosityStream.
+        detail: On a Mac, open App Store, click your name at the bottom left, then Account Settings, then Manage next to Subscriptions.
+      - text: Tap Cancel Subscription and confirm on the sheet that appears.
+      - text: Note the expiry date shown under the CuriosityStream entry.
+    noticePeriodDays: 0
+    gotchas:
+      - curiositystream.com cannot cancel an Apple-billed subscription.
+      - An annual plan bought through Apple renews on the anniversary with no warning beyond Apple's own reminder email.
+    evidenceHint: Screenshot the Subscriptions screen showing CuriosityStream expiring on a date.
+    sourceUrl: https://support.apple.com/en-us/118428
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: google
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://play.google.com/store/account/subscriptions
+    steps:
+      - text: Open the Google Play Store app, tap your profile picture, then Payments and subscriptions, then Subscriptions.
+      - text: Tap CuriosityStream, then Cancel subscription, and pick a reason when prompted.
+      - text: Tap through to the end until the entry shows an expiry date instead of a renewal date.
+    noticePeriodDays: 0
+    gotchas:
+      - The subscription belongs to the Google account that bought it, which may not be the profile signed in on the phone today.
+      - Uninstalling the app leaves the subscription running.
+    evidenceHint: Screenshot the Play subscriptions entry showing the expiry date.
+    sourceUrl: https://support.google.com/googleplay/answer/7018481
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: amazon
+    method: app_store
+    difficulty: 2
+    cancelUrl: https://www.amazon.com/gp/video/settings
+    steps:
+      - text: Sign in at amazon.com and open Account and Lists, then Memberships and Subscriptions.
+      - text: Open Prime Video Channels and find the CuriosityStream row.
+        detail: The same list appears in the Prime Video web player under the gear icon, then Channels.
+      - text: Choose Cancel Channel and confirm on the End Subscription screen.
+      - text: Check the row now shows the date the channel stops rather than a renewal date.
+    noticePeriodDays: 0
+    gotchas:
+      - The Amazon channel is billed by Amazon and is a different subscription from a curiositystream.com account with the same email.
+      - curiositystream.com cannot cancel an Amazon-billed channel.
+    evidenceHint: Screenshot the Channels page showing CuriosityStream ending on a date.
+    sourceUrl: https://www.amazon.com/yourmembershipsandsubscriptions
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: roku
+    method: app_store
+    difficulty: 2
+    cancelUrl: https://my.roku.com/account
+    steps:
+      - text: Sign in at my.roku.com and open Manage your subscriptions.
+      - text: Find CuriosityStream in the list and choose Unsubscribe, then confirm.
+        detail: >-
+          On the device, highlight the CuriosityStream tile on the Roku home screen, press the
+          star (Options) button, choose Manage subscription, then Cancel subscription.
+      - text: Check the entry now shows the date the subscription ends.
+    noticePeriodDays: 0
+    gotchas:
+      - Removing the channel from the Roku home screen does not cancel the billing.
+      - curiositystream.com cannot cancel a Roku-billed subscription.
+    evidenceHint: Screenshot the Roku subscriptions page showing CuriosityStream ending on a date.
+    sourceUrl: https://support.roku.com/article/208756478
+    lastVerifiedAt: "2026-07-25"

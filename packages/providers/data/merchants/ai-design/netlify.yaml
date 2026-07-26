@@ -1,0 +1,46 @@
+slug: netlify
+name: Netlify
+legalName: Netlify, Inc.
+category: software
+domains:
+  - netlify.com
+aliases:
+  - Netlify Pro
+  - Netlify Team
+descriptorPatterns:
+  - NETLIFY
+  - NETLIFY INC
+  - NETLIFY.COM
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: year
+    count: 1
+notes: >-
+  Plans are per team, so one person with several teams pays several times from the same
+  descriptor. Add-ons and credit packs are billed as their own lines and survive a plan
+  downgrade, which is why a Netlify charge can continue after the plan is dropped to Starter.
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 2
+    cancelUrl: https://app.netlify.com
+    steps:
+      - text: Sign in at app.netlify.com and switch to the team that holds the paid plan.
+        detail: Each team is billed separately, so check every team you own before assuming the charge has stopped.
+      - text: Open Usage & billing, then Plan details.
+      - text: Select the free Starter plan and confirm the downgrade.
+      - text: Check the scheduled change on the same screen — it can be reversed there until it takes effect.
+      - text: Review the add-ons list and cancel anything billed separately, such as extra bandwidth or a paid Identity tier.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      Netlify schedules the downgrade for the start of the next billing cycle and keeps the paid
+      features until then; the current period is not refunded.
+    gotchas:
+      - The downgrade is scheduled for the next billing cycle rather than applied now, so one more invoice can still arrive.
+      - Unused monthly and rollover credits are removed once the downgrade takes effect; credits bought as packs are kept.
+      - Add-ons are separate line items and keep billing after the plan change.
+      - Only a Team Owner sees the plan controls; a team member cannot stop the charge.
+    evidenceHint: Screenshot Plan details showing the scheduled downgrade to Starter and the date it takes effect.
+    sourceUrl: https://docs.netlify.com/manage/accounts-and-billing/billing/change-your-pricing-plan/
+    lastVerifiedAt: "2026-07-25"

@@ -1,0 +1,62 @@
+slug: apple-arcade
+name: Apple Arcade
+legalName: Apple Inc.
+category: gaming
+domains:
+  - apple.com
+
+aliases:
+  - Arcade
+  - Apple Arcade Subscription
+
+# Apple bills every service through one generic descriptor (APPLE.COM/BILL, ITUNES.COM/BILL), which
+# cannot tell Arcade apart from Music, iCloud or a one-off app purchase. Those generic fragments are
+# deliberately left unclaimed here. What is claimed is the itemised form that Apple Card statements
+# and some card issuers print, which does name the service.
+descriptorPatterns:
+  - APPLE ARCADE
+  - APL APPLE ARCADE
+
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: year
+    count: 1
+
+notes: >-
+  Arcade is sold only through Apple, so there is no direct playbook and never will be. Where a
+  statement shows only a generic Apple descriptor, the amount and the Subscriptions screen on the
+  device are the only way to attribute the charge.
+
+playbooks:
+  - channel: apple
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://apps.apple.com/account/subscriptions
+    steps:
+      - text: On an iPhone or iPad, open Settings and tap your name at the very top of the list.
+        detail: >-
+          From a Mac, open the App Store, click your name at the bottom of the sidebar, then Account
+          Settings, then Manage beside Subscriptions. From a browser, apps.apple.com/account/subscriptions
+          shows the same list.
+      - text: Tap Subscriptions, then Apple Arcade.
+        detail: >-
+          If Arcade is not listed, the subscription belongs to a different Apple Account - check the
+          one used on the device that started the trial, which is often a child's account in a Family
+          Sharing group.
+      - text: Tap Cancel Subscription and confirm.
+        warning: When no Cancel button is shown, the subscription is already set to expire on the date printed above it.
+      - text: Re-open Subscriptions and check Arcade now shows an expiry date rather than a renewal date.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      Apple does not prorate a cancelled month; access runs to the end of the paid period. Refund
+      requests go through reportaproblem.apple.com and are decided case by case.
+    gotchas:
+      - Deleting the Arcade games does not stop the billing.
+      - Arcade bought inside an Apple One bundle has no separate cancel control - the bundle is what has to be changed or cancelled.
+      - A free Arcade trial that came bundled with a new iPhone, iPad or Mac converts to a paid month on the trial end date unless it is cancelled first.
+      - In a Family Sharing group the organiser pays, so cancelling from a member's device shows nothing to cancel.
+      - Progress and save data in Arcade titles stops syncing once access ends, and some games will not open at all.
+    evidenceHint: Screenshot the Subscriptions screen showing the expiry date, and keep Apple's cancellation confirmation email.
+    sourceUrl: https://support.apple.com/en-us/118428
+    lastVerifiedAt: "2026-07-25"

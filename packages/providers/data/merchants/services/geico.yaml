@@ -1,0 +1,117 @@
+slug: geico
+name: GEICO
+legalName: Government Employees Insurance Company
+category: insurance
+domains:
+  - geico.com
+aliases:
+  - Geico Insurance
+  - Geico Auto
+  - Government Employees Insurance Company
+descriptorPatterns:
+  - GEICO
+  - GEICO *AUTO
+  - GEICO AUTO
+  - GEICO PREM COLL
+  - GEICO INSURANCE
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: month
+    count: 6
+  - unit: year
+    count: 1
+
+notes: >-
+  Auto policies usually run in six-month terms, so a "monthly" GEICO charge is often an
+  installment against a six-month premium rather than a monthly subscription. Detection should
+  expect both patterns from the same descriptor. Paying in full for the term and then cancelling
+  early produces a refund cheque rather than a stopped payment.
+
+playbooks:
+  - channel: direct
+    method: phone
+    difficulty: 4
+    phone: "1-800-841-1587"
+    hours: Mon-Fri 8am-11pm ET, Sat-Sun 8am-9pm ET
+    steps:
+      - text: >-
+          Have the replacement policy in place first, with its start date, before you make the
+          call — a gap between policies is the expensive mistake here.
+      - text: >-
+          Call 1-800-841-1587. At the voice prompt say "cancel insurance policy", then the policy
+          type, for example "auto".
+        detail: >-
+          There is no cancel button in the GEICO web account or the mobile app. Chat and the app
+          can start the request but it is completed by a representative.
+      - text: >-
+          Give your policy number and the exact date you want cover to end. Ask the representative
+          to read the effective date back to you.
+      - text: >-
+          Ask for the cancellation to be confirmed in writing or by email, and for the refund
+          amount and how it will be paid.
+      - text: >-
+          If you prefer to put it in writing, GEICO publishes a policy cancellation letter form —
+          complete it, sign it, and send it in as directed.
+      - text: >-
+          Cancel the recurring payment only after the account shows the policy inactive, so a
+          genuine final installment is not missed.
+      - text: Check the next two statements for a stopped premium and for the refund arriving.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      Unused premium on a term paid in advance is normally returned pro rata by cheque or card
+      credit after the policy ends. Some states apply a cancellation charge on a mid-term
+      cancellation.
+    retentionOfferNotes: >-
+      Representatives commonly offer to re-rate the policy, add discounts, or raise the deductible
+      to lower the premium before processing the cancellation.
+    gotchas:
+      - >-
+        There is no self-serve cancel in the account or the app — the request is finished by a
+        representative on the phone.
+      - >-
+        Cancelling before a new policy starts leaves a gap in cover, which usually raises the
+        price of the next policy you buy.
+      - >-
+        Cancelling mid-term can attract a short-rate or cancellation charge depending on the
+        state; ask for the figure before you agree to the date.
+      - >-
+        Stopping the payment at the bank instead of cancelling the policy leaves the policy live
+        and generates a non-payment cancellation on your record.
+      - >-
+        A leased or financed vehicle usually requires the lender to be told; cancelling without
+        replacement cover can trigger force-placed insurance at a much higher cost.
+    letterTemplate: |
+      {{fullName}}
+      {{postalAddress}}
+
+      {{date}}
+
+      GEICO
+      Policy Services
+
+      Policy number: {{accountReference}}
+
+      To whom it may concern,
+
+      I am writing to request cancellation of my GEICO policy shown above. Please cancel it with
+      an effective date of {{date}}, or the earliest date after that which my policy allows.
+
+      Please confirm to me in writing at the address above:
+
+        - the date cover on this policy ends,
+        - the amount of any return premium and how it will be paid,
+        - the amount of any cancellation or short-rate charge that applies,
+        - that no further premium payments will be taken from my card or bank account.
+
+      Please treat this letter as my written request to end the policy.
+
+      Sincerely,
+
+      {{fullName}}
+    evidenceHint: >-
+      Note the representative's name, the call date and the confirmation number; keep the written
+      cancellation confirmation showing the effective date, and the declaration page of the
+      replacement policy.
+    sourceUrl: https://www.geico.com/information/faq/cancel-insurance/
+    lastVerifiedAt: "2026-07-25"

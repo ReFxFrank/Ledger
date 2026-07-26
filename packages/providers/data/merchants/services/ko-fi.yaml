@@ -1,0 +1,108 @@
+slug: ko-fi
+name: Ko-fi
+legalName: Ko-fi Labs Ltd
+category: creator_support
+domains:
+  - ko-fi.com
+aliases:
+  - Kofi
+  - Ko-fi Gold
+  - Ko fi
+descriptorPatterns:
+  - KO-FI
+  - KOFI
+  - KO-FI.COM
+  - KO-FI LABS
+  - KOFI.COM
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: year
+    count: 1
+
+notes: >-
+  Two different things bill under this name. A monthly membership supports one creator; Ko-fi Gold
+  is the platform's own subscription for people running a Ko-fi page, and it is cancelled in a
+  different place. Payments can run through either Stripe or PayPal depending on how the creator
+  set the page up, and PayPal-funded memberships sometimes show the creator's own name on the
+  statement instead of Ko-fi, which makes them hard to trace back.
+
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 2
+    cancelUrl: https://ko-fi.com/cancellation
+    steps:
+      - text: >-
+          Sign in at ko-fi.com and open More, then Account and Billing. Active memberships are
+          listed under Subscriptions.
+      - text: >-
+          Click Don't Renew next to the membership you are ending, and confirm.
+        detail: >-
+          The membership stays usable until the end of the period already paid for, then stops.
+          Cancelled memberships cannot be restarted in place — rejoining is a new subscription.
+      - text: >-
+          Repeat for each creator you support; every membership renews on its own date.
+      - text: >-
+          For Ko-fi Gold, go to Settings, then the Gold or Billing section, and cancel there — it
+          is not in the Subscriptions list with creator memberships.
+      - text: >-
+          If the membership was set up through PayPal, also check PayPal automatic payments; see
+          the PayPal playbook.
+      - text: >-
+          If nothing appears under Subscriptions but the charge is real, use ko-fi.com/cancellation
+          to raise it with Ko-fi support, quoting the transaction reference.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      Cancelling stops the next renewal; the period already paid for runs to its end. Refunds for
+      a creator membership are a matter for the creator.
+    retentionOfferNotes: >-
+      Ko-fi does not run a retention flow on creator memberships — Don't Renew takes effect
+      directly.
+    gotchas:
+      - >-
+        Ko-fi Gold and creator memberships are cancelled in different places; ending one leaves
+        the other billing.
+      - >-
+        A membership paid through PayPal may print the creator's or PayPal's name on the
+        statement rather than Ko-fi, which is why it goes unrecognised for months.
+      - >-
+        A cancelled membership cannot be reinstated — rejoining depends on the tier still having
+        space.
+      - >-
+        Some Ko-fi support is a one-off payment, not a subscription; a repeated charge is only a
+        membership if it appears under Subscriptions.
+    evidenceHint: >-
+      Screenshot the Account and Billing page showing the membership as not renewing, plus the
+      Ko-fi confirmation email.
+    sourceUrl: https://help.ko-fi.com/hc/en-us/articles/4405488403473-How-do-I-Cancel-or-Manage-My-Membership-to-a-Creator-
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: paypal
+    method: account_settings
+    difficulty: 2
+    cancelUrl: https://www.paypal.com/myaccount/autopay/
+    steps:
+      - text: >-
+          Cancel inside Ko-fi first if the membership shows there, under More, Account and
+          Billing, Don't Renew.
+      - text: >-
+          Sign in to PayPal and open Settings, then Payments, then Automatic payments.
+      - text: >-
+          Find Ko-fi (or the creator's own merchant name) in the list and cancel that automatic
+          payment.
+        detail: >-
+          PayPal-funded Ko-fi memberships are often the ones that do not appear in Ko-fi's own
+          Subscriptions list, so this is the only place they can be stopped.
+      - text: Check the automatic payments list shows the agreement as cancelled before leaving.
+    noticePeriodDays: 0
+    gotchas:
+      - >-
+        Cancelling the PayPal agreement stops the money but does not always update the membership
+        status on Ko-fi, so the creator's page may still show you as a member for a while.
+      - >-
+        The merchant name in PayPal can be the creator's business name rather than Ko-fi, so
+        search on the amount and date as well as the name.
+    evidenceHint: Screenshot the PayPal automatic payments entry showing the agreement as cancelled.
+    sourceUrl: https://help.ko-fi.com/hc/en-us/articles/4405488403473-How-do-I-Cancel-or-Manage-My-Membership-to-a-Creator-
+    lastVerifiedAt: "2026-07-25"

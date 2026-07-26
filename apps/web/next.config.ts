@@ -1,4 +1,23 @@
+import { fileURLToPath } from 'node:url';
+import { dirname, resolve } from 'node:path';
+import { loadEnvConfig } from '@next/env';
 import type { NextConfig } from 'next';
+
+/**
+ * Configuration lives in a single `.env` at the monorepo root (README, "cp .env.example .env"),
+ * but Next only looks in the app directory. Without this, `loadServerEnv()` — which runs at
+ * module scope in `src/server/auth.ts` and `src/server/trpc/init.ts` — throws during both
+ * `next dev` and the page-data collection pass of `next build`.
+ *
+ * `loadEnvConfig` is the same loader Next uses internally, so precedence (`.env.local` over
+ * `.env`, `NODE_ENV`-specific files) matches what the framework does for the app directory.
+ * Values already present in the real environment win, which keeps deployed builds authoritative.
+ *
+ * `forceReload` is required: Next runs its own `loadEnvConfig` against `apps/web` before it
+ * evaluates this file, and the loader is a no-op on every subsequent call unless forced.
+ */
+const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
+loadEnvConfig(repoRoot, process.env['NODE_ENV'] !== 'production', undefined, true);
 
 /**
  * Workspace packages are consumed as TypeScript source rather than built to `dist` first.

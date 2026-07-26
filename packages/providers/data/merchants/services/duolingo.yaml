@@ -1,0 +1,109 @@
+slug: duolingo
+name: Duolingo
+legalName: Duolingo, Inc.
+category: education
+domains:
+  - duolingo.com
+aliases:
+  - Super Duolingo
+  - Duolingo Super
+  - Duolingo Plus
+  - Duolingo Max
+descriptorPatterns:
+  - DUOLINGO
+  - DUOLINGO.COM
+  - DUOLINGO SUPER
+  - DUOLINGO INC
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: year
+    count: 1
+
+notes: >-
+  Most Super and Max subscriptions are bought inside the mobile app, which means the App Store or
+  Google Play is the biller and duolingo.com cannot stop the charge. The annual plan is the common
+  one — a single yearly charge that looks like a one-off until it repeats twelve months later, so
+  the year interval matters more here than the month. Family Plan bills one payer for up to six
+  people; the other five see nothing on their own statements.
+
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 1
+    cancelUrl: https://www.duolingo.com/settings
+    steps:
+      - text: >-
+          Sign in at duolingo.com in a browser — the subscription bought on the web cannot be
+          managed from inside the mobile app.
+      - text: >-
+          Open the More menu or your profile icon, choose Settings, then the Super Duolingo (or
+          Duolingo Max) section.
+      - text: >-
+          Choose Cancel subscription or Turn off automatic renewal, and confirm on the following
+          screen.
+        detail: >-
+          If the section says the subscription is managed by Apple or Google, it was bought in the
+          app and has to be cancelled in the store instead.
+      - text: >-
+          Check that the settings page now shows an end date rather than a renewal date, and keep
+          the confirmation email.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      Access continues to the end of the period already paid for. Cancelling part-way through an
+      annual term does not release the remainder.
+    retentionOfferNotes: >-
+      The cancel flow commonly offers a discounted renewal or a reminder to come back before the
+      period ends; it does not block the cancellation.
+    gotchas:
+      - >-
+        Deleting the app or the Duolingo account does not stop a store-billed subscription.
+      - >-
+        The annual plan charges twelve months up front, so cancelling in month two stops the next
+        renewal rather than the current year.
+      - >-
+        On a Family Plan only the organiser is billed — removing yourself from the plan does not
+        stop that person's charge.
+    evidenceHint: Screenshot the Settings page showing the subscription ending on a date, plus the confirmation email.
+    sourceUrl: https://www.duolingo.com/help/cancel-my-super-duolingo-subscription
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: apple
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://apps.apple.com/account/subscriptions
+    steps:
+      - text: On iPhone or iPad, open Settings and tap your name at the top of the screen.
+      - text: Tap Subscriptions, then tap Duolingo in the list.
+      - text: Tap Cancel Subscription and confirm.
+        detail: >-
+          If Duolingo is not listed, the subscription was bought on the web or on Android and the
+          direct or Google playbook applies instead.
+    noticePeriodDays: 0
+    gotchas:
+      - Deleting the Duolingo app does not stop the billing.
+      - >-
+        Cancelling inside duolingo.com has no effect on an Apple-billed subscription; it has to be
+        done in Apple's subscription settings.
+      - Super continues to the end of the period already paid for, and Apple decides any refund.
+    evidenceHint: Screenshot the App Store Subscriptions screen showing the expiry date.
+    sourceUrl: https://support.apple.com/en-us/118428
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: google
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://play.google.com/store/account/subscriptions
+    steps:
+      - text: Open the Google Play Store app and tap your profile icon in the top right.
+      - text: Tap Payments & subscriptions, then Subscriptions, and select Duolingo.
+      - text: Tap Cancel subscription, choose a reason, and confirm on the final screen.
+    noticePeriodDays: 0
+    gotchas:
+      - Uninstalling the app leaves the Google Play subscription running.
+      - >-
+        A Play-billed subscription cannot be cancelled from duolingo.com — it has to be done in
+        Play's subscription settings.
+    evidenceHint: Screenshot the Play Subscriptions screen showing the cancellation and end date.
+    sourceUrl: https://support.google.com/googleplay/answer/7018481
+    lastVerifiedAt: "2026-07-25"

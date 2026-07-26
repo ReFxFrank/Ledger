@@ -124,23 +124,27 @@ playbooks:
   # A postal playbook must carry a letterTemplate, written in the user's own voice, with no
   # statutory citations. The user sends it; Ledger only drafts it.
   #
+  # Placeholders are a shared vocabulary — the renderer fills the same five names everywhere, so
+  # invent a sixth only if none of these fit: {{fullName}}, {{postalAddress}}, {{email}},
+  # {{accountReference}}, {{date}}.
+  #
   # - channel: direct
   #   method: post
   #   difficulty: 5
   #   letterTemplate: |
-  #     {{customerName}}
-  #     {{customerAddress}}
+  #     {{fullName}}
+  #     {{postalAddress}}
   #
   #     {{date}}
   #
   #     Example Merchant, Membership Services, PO Box 1, Anytown
   #
-  #     Account number: {{accountNumber}}
+  #     Account number: {{accountReference}}
   #
   #     I am writing to end my membership. Please close it at the earliest date my agreement
   #     allows and confirm that date in writing to the address above.
   #
-  #     {{customerName}}
+  #     {{fullName}}
   #   noticePeriodDays: 30
   #   steps:
   #     - text: Post the signed letter to Membership Services.

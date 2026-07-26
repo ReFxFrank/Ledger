@@ -1,0 +1,49 @@
+slug: github-copilot
+name: GitHub Copilot
+legalName: GitHub, Inc.
+category: ai
+domains:
+  - github.com
+aliases:
+  - GitHub Copilot Pro
+  - Copilot Individual
+  - Copilot Pro Plus
+descriptorPatterns:
+  - GITHUB COPILOT
+  - GITHUB COPILOT PRO
+  - GITHUB COPILOT BUSINESS
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: year
+    count: 1
+notes: >-
+  Most Copilot charges print the generic GITHUB.COM descriptor, which the github entry claims —
+  a bare GitHub descriptor cannot tell a Copilot seat apart from a Pro plan, Sponsors or Actions
+  overage, so only descriptors that name Copilot explicitly live here. The bare alias "Copilot"
+  is left out on purpose: Microsoft sells an unrelated product under that name.
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 2
+    cancelUrl: https://github.com/settings/copilot
+    steps:
+      - text: Click your profile photo in the upper-right corner of any GitHub page, then Settings.
+      - text: In the Access section of the sidebar click Billing and licensing, then Plans and usage.
+      - text: Under Add-ons find the GitHub Copilot section, open the Manage subscription dropdown on the right and click Cancel.
+        detail: >-
+          The control is an add-on row rather than a plan, so it is below the account plan summary
+          and easy to miss. github.com/settings/copilot reaches the same subscription.
+      - text: Confirm, then check the row shows Copilot ending at the end of the current cycle.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      GitHub states the cancellation takes effect at the end of the current billing cycle and the
+      seat keeps working until then.
+    gotchas:
+      - A free Copilot grant for verified students, teachers or popular open-source maintainers has no cancel control, because nothing is being charged.
+      - Copilot supplied through an organization or enterprise cannot be stopped from a personal account — that seat has to be removed by the organization admin.
+      - Premium request overages are billed on top of the plan, so cancelling does not clear usage already run up this cycle.
+      - An annual Copilot plan only ends at its anniversary; cancelling mid-year stops the renewal, not the current term.
+    evidenceHint: Screenshot the Plans and usage page showing Copilot marked as ending, and keep the GitHub confirmation email.
+    sourceUrl: https://docs.github.com/en/copilot/how-tos/manage-your-account/view-and-change-your-copilot-plan
+    lastVerifiedAt: "2026-07-25"

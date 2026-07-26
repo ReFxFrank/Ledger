@@ -1,0 +1,55 @@
+slug: jetbrains
+name: JetBrains
+legalName: JetBrains s.r.o.
+category: software
+domains:
+  - jetbrains.com
+aliases:
+  - IntelliJ IDEA
+  - PyCharm
+  - WebStorm
+  - Rider
+  - DataGrip
+  - All Products Pack
+descriptorPatterns:
+  - JETBRAINS
+  - JETBRAINS SRO
+  - JETBRAINS.COM
+  - JETBRAINS AMERICAS
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: year
+    count: 1
+notes: >-
+  Personal subscriptions renew yearly by default and the price steps down after the first and
+  second consecutive years, so the amount falling is normal rather than a partial refund. US
+  customers are billed by JetBrains Americas and everyone else by the Czech entity, which is why
+  two different descriptors exist for the same product.
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 2
+    cancelUrl: https://account.jetbrains.com/licenses
+    steps:
+      - text: Sign in at account.jetbrains.com and open Licenses, then find the subscription.
+      - text: Click Disable auto-renewal to stop the next charge while keeping the licence to its paid-through date.
+        detail: >-
+          Cancel subscription and Disable auto-renewal sit next to each other and are different
+          actions. Disabling renewal is the one that stops future money without giving up the
+          licence you have already paid for.
+      - text: Use Cancel subscription instead only if the licence itself should end.
+      - text: Check the subscription now shows auto-renewal switched off, and note the paid-through date.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      JetBrains states that cancelling does not automatically produce a refund and that a refund
+      request has to be made separately within its published window. The licence stays usable to
+      the paid-through date.
+    gotchas:
+      - The continuity discount is lost once the subscription lapses, so resubscribing later starts again at the first-year price.
+      - A perpetual fallback licence only accrues after twelve consecutive paid months; cancelling before the anniversary forfeits that year's fallback version.
+      - A licence supplied by an employer or bought through a reseller is administered by that account and cannot be stopped from a personal JetBrains account.
+      - Toolbox and the IDEs keep working after cancellation until the paid-through date, so nothing visibly changes on the day you cancel.
+    evidenceHint: Screenshot the Licenses page showing auto-renewal off and the paid-through date, and keep JetBrains' confirmation email.
+    sourceUrl: https://sales.jetbrains.com/hc/en-gb/articles/16269809436690-Cancel-a-personal-subscription
+    lastVerifiedAt: "2026-07-25"

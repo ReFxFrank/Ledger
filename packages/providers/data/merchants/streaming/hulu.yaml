@@ -1,0 +1,113 @@
+slug: hulu
+name: Hulu
+legalName: Hulu, LLC
+category: streaming_video
+domains:
+  - hulu.com
+aliases:
+  - Hulu Plus
+  - Hulu No Ads
+  - Hulu Live TV
+  - Hulu Plus Live TV
+descriptorPatterns:
+  - HULU
+  - HULU.COM
+  - HULUPLUS
+  - HULU LLC
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: year
+    count: 1
+notes: >-
+  Hulu sells an annual ad-supported plan alongside the monthly ones, so a single yearly Hulu
+  charge is a live subscription rather than a one-off. A Hulu account that came with the Disney
+  Bundle is billed by Disney and has no cancel control on hulu.com; Hulu and Hulu + Live TV are
+  the same account but very different exit flows, and add-ons such as Max or Paramount+ bought
+  inside Hulu keep billing after the base plan ends unless they are removed too.
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 2
+    cancelUrl: https://secure.hulu.com/account
+    steps:
+      - text: Sign in at hulu.com in a browser and open the profile icon at the top right, then Account.
+      - text: In the Your Subscription block, choose Cancel.
+        detail: >-
+          Cancel is a small text link on the right of the Your Subscription block, set well below
+          the larger Manage Your Plan button. If the block says the account is billed through
+          Disney+, Apple, Amazon, Roku or Spotify, use that biller's playbook instead.
+      - text: On the offer screen, choose Continue to Cancel, then Cancel Subscription on the screen after it.
+        warning: >-
+          The first screen offers to pause billing for up to 12 weeks and puts Pause where the
+          eye expects Cancel. A paused account resumes billing on its own.
+      - text: Remove any premium add-ons listed under Your Add-ons, because each is a separate charge.
+      - text: Check the account page now shows the date access ends and keep the confirmation email.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      Hulu does not refund the unused part of a billing period; the account keeps streaming until
+      that period ends and then switches to a signed-out state.
+    retentionOfferNotes: >-
+      A pause of up to 12 weeks, and sometimes a discounted month, are offered before the
+      cancellation confirmation is reachable.
+    gotchas:
+      - Pausing is offered first and is not a cancellation; billing restarts automatically at the end of the pause.
+      - Add-on channels bought inside Hulu are billed separately and survive the cancellation of the base plan.
+      - Hulu + Live TV keeps its recordings only while the subscription is live, and the cloud DVR library is removed after the plan ends.
+      - A Hulu account obtained through the Disney Bundle cannot be cancelled on hulu.com.
+    evidenceHint: Screenshot the Account page showing the date access ends, and keep the cancellation email.
+    sourceUrl: https://help.hulu.com/article/hulu-cancel-subscription
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: apple
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://apps.apple.com/account/subscriptions
+    steps:
+      - text: On iPhone or iPad, open Settings and tap your name at the very top of the list.
+      - text: Tap Subscriptions, then tap Hulu.
+        detail: On a Mac, open App Store, click your name at the bottom left, then Account Settings, then Manage next to Subscriptions.
+      - text: Tap Cancel Subscription and confirm on the sheet that appears.
+      - text: Note the expiry date shown under the Hulu entry.
+    noticePeriodDays: 0
+    gotchas:
+      - hulu.com cannot cancel an Apple-billed subscription; the account page there names Apple as the biller instead of offering a cancel link.
+      - Deleting the Hulu app does not stop the billing.
+    evidenceHint: Screenshot the Subscriptions screen showing Hulu expiring on a date.
+    sourceUrl: https://support.apple.com/en-us/118428
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: google
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://play.google.com/store/account/subscriptions
+    steps:
+      - text: Open the Google Play Store app, tap your profile picture, then Payments and subscriptions, then Subscriptions.
+      - text: Tap Hulu, then Cancel subscription, and pick a reason when prompted.
+      - text: Tap through to the end until the entry shows an expiry date instead of a renewal date.
+    noticePeriodDays: 0
+    gotchas:
+      - The subscription belongs to the Google account that bought it, which may not be the profile signed in on the phone today.
+      - Uninstalling the app leaves the subscription running.
+    evidenceHint: Screenshot the Play subscriptions entry showing the expiry date.
+    sourceUrl: https://support.google.com/googleplay/answer/7018481
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: roku
+    method: app_store
+    difficulty: 2
+    cancelUrl: https://my.roku.com/account
+    steps:
+      - text: Sign in at my.roku.com and open Manage your subscriptions.
+      - text: Find Hulu in the list and choose Unsubscribe, then confirm.
+        detail: >-
+          On the device, highlight the Hulu tile on the Roku home screen, press the star
+          (Options) button, choose Manage subscription, then Cancel subscription.
+      - text: Check the entry now shows the date the subscription ends.
+    noticePeriodDays: 0
+    gotchas:
+      - Removing the Hulu channel from the Roku home screen does not cancel the billing.
+      - hulu.com cannot cancel a Roku-billed subscription.
+    evidenceHint: Screenshot the Roku subscriptions page showing Hulu ending on a date.
+    sourceUrl: https://support.roku.com/article/208756478
+    lastVerifiedAt: "2026-07-25"

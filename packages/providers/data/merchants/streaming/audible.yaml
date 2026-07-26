@@ -1,0 +1,90 @@
+slug: audible
+name: Audible
+legalName: Audible, Inc.
+category: music_audio
+domains:
+  - audible.com
+  - audible.co.uk
+aliases:
+  - Audible Premium Plus
+  - Audible Plus
+  - Audible Membership
+  - Audible Gold
+descriptorPatterns:
+  - AUDIBLE
+  - AUDIBLE.COM
+  - AUDIBLE US
+  - AUDIBLEUS
+  - AUDIBLE UK
+  - AUDIBLEUK
+  - AUDIBLE LTD
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: year
+    count: 1
+notes: >-
+  Audible sells annual memberships as well as monthly ones, and the annual plans are the main
+  source of once-a-year Audible charges. Credits are the thing that makes a badly timed
+  cancellation expensive: unused credits are removed when the membership ends, so the credit
+  balance should be spent before the exit flow is started, not after.
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 3
+    cancelUrl: https://www.audible.com/account/membership
+    steps:
+      - text: Spend any unused credits first, because the balance is removed when the membership ends.
+        detail: >-
+          The credit balance is shown at the top of the Account Details page. Titles already
+          bought with credits stay in the library afterwards; the credits themselves do not.
+      - text: Open audible.com in a desktop browser and sign in, then open Account Details from the menu under your name.
+        warning: >-
+          The Audible phone apps have no cancellation control at all, and the mobile website
+          redirects the flow back into the app, so this needs a desktop browser.
+      - text: Scroll to the Membership Details block and choose Cancel membership.
+        detail: >-
+          The link sits under the plan name and next billing date, below the credit balance and
+          the payment method, near the bottom of the page.
+      - text: Work through the retention screens, picking Continue cancelling each time, then confirm on the final screen.
+        warning: >-
+          Audible offers a pause of up to three months, a cheaper plan and a discounted period
+          across several screens. Each offer button is the prominent one, and taking any of them
+          keeps the membership.
+      - text: Check for the cancellation email and note the date the membership ends.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      Audible bills the period up front and does not prorate the remainder; the membership and
+      its Plus catalogue access continue until the paid period ends.
+    retentionOfferNotes: >-
+      A three-month pause is offered first, then a cheaper tier, then a discounted period, across
+      three separate screens before cancellation is reachable.
+    gotchas:
+      - Unused credits are removed when the membership ends, so an unspent balance is money lost.
+      - Titles from the Plus catalogue disappear from the library at the end of the membership, while titles bought with credits or cash stay.
+      - Pausing is offered before cancelling and restarts billing automatically when the pause runs out.
+      - The membership cannot be cancelled in the Audible app on any platform, which is where most people look first.
+    evidenceHint: Screenshot the Membership Details block showing the end date, and keep the cancellation email.
+    sourceUrl: https://help.audible.com/s/article/how-do-i-cancel-my-membership
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: amazon
+    method: account_settings
+    difficulty: 3
+    cancelUrl: https://www.amazon.com/yourmembershipsandsubscriptions
+    steps:
+      - text: Sign in at amazon.com and open Account and Lists, then Memberships and Subscriptions.
+      - text: Find the Audible row and choose Manage subscription.
+        detail: >-
+          The Amazon page holds the membership record but hands the cancellation itself to
+          Audible; the button opens audible.com in the same browser session.
+      - text: Spend any unused credits on the Audible page before going further, then choose Cancel membership.
+      - text: Work through the retention screens to the final confirmation and keep the cancellation email.
+    noticePeriodDays: 0
+    gotchas:
+      - Amazon lists the membership but does not cancel it; the flow always ends on audible.com.
+      - Unused credits are removed when the membership ends.
+      - An Audible membership and Kindle Unlimited are separate rows on this page with separate charges.
+    evidenceHint: Screenshot the Memberships and Subscriptions row showing Audible ending on a date.
+    sourceUrl: https://www.amazon.com/yourmembershipsandsubscriptions
+    lastVerifiedAt: "2026-07-25"

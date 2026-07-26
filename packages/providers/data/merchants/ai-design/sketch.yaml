@@ -1,0 +1,51 @@
+slug: sketch
+name: Sketch
+legalName: Sketch B.V.
+category: design
+domains:
+  - sketch.com
+aliases:
+  - Sketch App
+  - Sketch Workspace
+  - Bohemian Coding
+descriptorPatterns:
+  - SKETCH
+  - SKETCH BV
+  - SKETCH.COM
+  - BOHEMIAN CODING
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: year
+    count: 1
+notes: >-
+  Billing is per Workspace and per Editor seat, so the amount tracks the number of editors rather
+  than a fixed plan price. Older licences bought before the subscription model print the legacy
+  BOHEMIAN CODING descriptor. Sketch is a Dutch company, so European customers see a euro amount
+  converted by their bank.
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 2
+    steps:
+      - text: Sign in to the Sketch web app at sketch.com and click the Switch Workspace icon in the top-left corner.
+      - text: Choose Settings, then open the Billing tab.
+      - text: Click Cancel Subscription and read the date on the confirmation prompt before confirming.
+        detail: >-
+          The prompt states the exact day the Workspace stops being editable. That date, not the
+          cancellation day, is when the billing relationship ends.
+      - text: Check the Billing tab afterwards for the scheduled end date, and clear any scheduled seat change.
+        detail: Seat additions and removals are queued for the next billing date and are listed separately under Next Billing Date.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      Sketch states that monthly billing is not refunded and that an annual subscription can be
+      refunded in full within 30 days of the initial purchase. Later charges, including added
+      seats and renewals, are not refunded.
+    gotchas:
+      - Only the Workspace Admin can cancel; if nobody can sign in to the admin email address, Sketch's support team has to do it.
+      - Documents become read-only when the subscription ends and can be downloaded for 90 days, after which that window closes.
+      - Removing Editor seats does not take effect immediately — the change is scheduled for the next billing date and is still charged this cycle.
+      - Editors lose the ability to open, edit or upload documents as soon as the period ends, which surprises teams mid-project.
+    evidenceHint: Screenshot the cancellation prompt showing the end date, and download the documents you need before the 90-day window runs out.
+    sourceUrl: https://www.sketch.com/support/subscriptions/manage/account/cancel-trial-or-subscription/
+    lastVerifiedAt: "2026-07-25"

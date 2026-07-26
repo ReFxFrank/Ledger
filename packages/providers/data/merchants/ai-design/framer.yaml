@@ -1,0 +1,50 @@
+slug: framer
+name: Framer
+legalName: Framer B.V.
+category: design
+domains:
+  - framer.com
+aliases:
+  - Framer Sites
+  - Framer Web
+  - Framer Workspace
+descriptorPatterns:
+  - FRAMER
+  - FRAMER BV
+  - FRAMER.COM
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: year
+    count: 1
+notes: >-
+  Framer bills per published site, plus a separate Workspace plan for the team. Two Framer
+  charges on the same statement are normal and are two different subscriptions — cancelling one
+  leaves the other running. Unused value from a downgrade comes back as account credit, so the
+  money stays inside Framer rather than returning to the card.
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 2
+    steps:
+      - text: Sign in at framer.com and open the project whose plan you want to stop from the dashboard.
+      - text: Click the menu in the top-left corner, choose Site Settings, then Open Settings.
+      - text: Open the Plans tab and click Cancel Plan, then confirm.
+        detail: >-
+          The plan belongs to that one site. The dashboard lists each published site separately,
+          and each carries its own renewal date.
+      - text: Repeat for every other site with a paid plan, then check the Workspace settings for a separate team plan.
+        warning: A cancelled site plan unpublishes the site and drops its custom domain at the end of the period.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      Framer's published policy covers a refund when the subscription is cancelled within 7 days
+      of the initial purchase. After that the term runs out without a refund, and a downgrade
+      returns unused value as account credit rather than money.
+    gotchas:
+      - Framer bills each published site separately, so cancelling one site's plan leaves the others renewing.
+      - A paid Workspace plan is a separate subscription from the site plans and is cancelled in Workspace settings.
+      - Downgrading credits the unused value to the Framer account instead of refunding it.
+      - The site goes offline and loses its custom domain when the plan ends, so move the domain before the end date if it is still needed.
+    evidenceHint: Screenshot the Plans tab for each site showing the plan as cancelled with its end date.
+    sourceUrl: https://www.framer.com/help/articles/cancel-your-framer-plan/
+    lastVerifiedAt: "2026-07-25"

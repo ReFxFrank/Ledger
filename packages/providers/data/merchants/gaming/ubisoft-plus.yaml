@@ -1,0 +1,94 @@
+slug: ubisoft-plus
+name: Ubisoft+
+legalName: Ubisoft Entertainment SA
+category: gaming
+domains:
+  - ubisoft.com
+  - ubisoftconnect.com
+
+aliases:
+  - Ubisoft Plus
+  - Uplay Plus
+  - Ubisoft Plus Premium
+  - Ubisoft Plus Classics
+  - Ubisoft Plus Multi Access
+
+descriptorPatterns:
+  - UBISOFT
+  - UBISOFT.COM
+  - UBISOFT ENTERTAINMENT
+  - UBISOFT PLUS
+  - UBISOFT EMEA
+
+typicalIntervals:
+  - unit: month
+    count: 1
+
+notes: >-
+  Ubisoft+ is month-to-month everywhere, so a yearly cadence on this descriptor is almost always a
+  game purchase rather than the subscription. Ubisoft+ Classics arrives as part of PlayStation Plus
+  Premium and is not a separate charge to stop.
+
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 2
+    cancelUrl: https://account.ubisoft.com/
+    steps:
+      - text: Sign in at account.ubisoft.com with the Ubisoft account that owns the subscription.
+        detail: >-
+          The same account is used by Ubisoft Connect on PC. A console-linked account that was
+          created separately will not show the subscription.
+      - text: Open the Subscription section of account information, then select Ubisoft+.
+      - text: Choose Cancel Subscription and complete the confirmation step.
+        warning: The flow ends on a survey screen; the cancellation is only recorded once the confirmation after it is accepted.
+      - text: Check the Subscription page shows an end date, and keep the confirmation email from Ubisoft.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      Ubisoft does not credit the remainder of a month that has started; the games stay playable
+      until the end of the paid period.
+    gotchas:
+      - Games from the catalogue stop launching the moment the period ends; saves stay in Ubisoft Connect and return if the subscription restarts.
+      - Ubisoft+ Classics included with PlayStation Plus Premium is billed by Sony as part of that membership and has no separate cancel control here.
+      - A subscription bought through Amazon Luna or on an Xbox console is billed by that store and does not appear in the Ubisoft account.
+      - Games bought outright at the member discount stay owned after the subscription ends.
+    evidenceHint: Screenshot the Ubisoft subscription page showing the end date.
+    sourceUrl: https://www.ubisoft.com/en-us/help/ubisoft-plus
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: amazon
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://luna.amazon.com/settings/subscriptions
+    steps:
+      - text: Sign in at luna.amazon.com with the Amazon account used on Luna, then open Settings and Subscriptions.
+        detail: >-
+          The same channel also appears on amazon.com under Account, then Memberships and
+          Subscriptions, where it is listed as a Luna channel rather than as Ubisoft.
+      - text: Select the Ubisoft+ channel and choose to cancel it.
+      - text: Confirm, then check the channel shows the date access ends.
+    noticePeriodDays: 0
+    gotchas:
+      - Cancelling on ubisoft.com does not stop a payment that Amazon is taking for a Luna channel.
+      - The Luna channel and a Luna base subscription are billed separately; stopping one leaves the other running.
+      - Access to the channel continues until the end of the period Amazon has already charged for.
+    evidenceHint: Screenshot the Luna subscriptions page showing the channel end date.
+    sourceUrl: https://www.amazon.com/gp/help/customer/display.html
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: microsoft
+    method: app_store
+    difficulty: 2
+    cancelUrl: https://account.microsoft.com/services
+    steps:
+      - text: Sign in at account.microsoft.com/services with the Microsoft account used on the console.
+      - text: Find Ubisoft+ under Subscriptions and choose Manage, then Cancel subscription.
+      - text: Confirm, then check the entry reads Expires on with a date rather than Renews on.
+    noticePeriodDays: 0
+    gotchas:
+      - A subscription bought on an Xbox console is billed by Microsoft, and the Ubisoft account page shows no cancel control for it.
+      - Access runs to the end of the period Microsoft has already charged for.
+      - The console version and the PC version are separate subscriptions that can both be running at once.
+    evidenceHint: Screenshot the Microsoft Subscriptions page showing the expiry date.
+    sourceUrl: https://support.xbox.com/en-US/help/subscriptions-billing/manage-subscriptions/cancel-xbox-subscription
+    lastVerifiedAt: "2026-07-25"

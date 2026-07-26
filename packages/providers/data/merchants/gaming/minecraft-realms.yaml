@@ -1,0 +1,116 @@
+slug: minecraft-realms
+name: Minecraft Realms
+legalName: Mojang AB
+category: gaming
+domains:
+  - minecraft.net
+  - mojang.com
+
+aliases:
+  - Realms
+  - Realms Plus
+  - Minecraft Realms Plus
+  - Java Realms
+  - Minecraft Server Subscription
+
+descriptorPatterns:
+  - MINECRAFT
+  - MOJANG
+  - MINECRAFT REALMS
+  - REALMS PLUS
+  - MINECRAFT.NET
+
+typicalIntervals:
+  - unit: month
+    count: 1
+
+notes: >-
+  Realms is billed to whoever created the Realm, which in a household is often a child's account
+  paying from a parent's card. Java Realms and Bedrock Realms Plus are two separate subscriptions
+  that can run at the same time on the same Microsoft account, and the descriptor does not
+  distinguish them.
+
+playbooks:
+  - channel: direct
+    method: account_settings
+    difficulty: 2
+    cancelUrl: https://www.minecraft.net/realms
+    steps:
+      - text: Sign in at minecraft.net with the Microsoft account that created the Realm, then open the Realms page.
+        detail: >-
+          The subscription also appears at account.microsoft.com/services under Subscriptions, which
+          is the more reliable place to look when the Realms page does not list it.
+      - text: Choose Manage beside the Realm, then Subscription.
+      - text: Turn off recurring billing, or choose Cancel subscription, and confirm on the screen that follows.
+        warning: The Realm keeps running until the paid period ends, so the page will still show it as active afterwards.
+      - text: Download the world from the Realm before the end date, using Download World on the same Manage screen.
+    noticePeriodDays: 0
+    refundPolicy: >-
+      Mojang does not credit the unused part of a month; the Realm stays online to the end of the
+      paid period and then closes.
+    gotchas:
+      - A Realms subscription bought inside Minecraft on a PlayStation or a Nintendo Switch is billed by that console store and is cancelled there, not on minecraft.net.
+      - Mojang keeps an expired Realm's worlds for a limited period before deleting them, so download the world rather than relying on that window.
+      - Java Realms and Bedrock Realms Plus are separate subscriptions; cancelling one leaves the other charging.
+      - Only the Realm owner is billed, and members simply lose access when the owner's subscription ends.
+      - The included free trial converts to a paid subscription on the trial end date when a payment method is attached.
+    evidenceHint: Screenshot the Realms subscription page showing the end date, and keep the confirmation email.
+    sourceUrl: https://help.minecraft.net/hc/en-us/search?query=cancel%20realms
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: microsoft
+    method: app_store
+    difficulty: 2
+    cancelUrl: https://account.microsoft.com/services
+    steps:
+      - text: Sign in at account.microsoft.com/services with the Microsoft account used on the console or PC.
+      - text: Find Realms Plus or Minecraft Realms under Subscriptions and choose Manage, then Cancel subscription.
+      - text: Confirm, then check the entry reads Expires on with a date rather than Renews on.
+    noticePeriodDays: 0
+    gotchas:
+      - A Realm bought through the Microsoft Store or on an Xbox console is billed by Microsoft, and minecraft.net may show no cancel control for it.
+      - The Realm stays online until the end of the period Microsoft has already charged for.
+      - Download the world before the end date; access to it goes when the Realm closes.
+    evidenceHint: Screenshot the Microsoft Subscriptions page showing the expiry date.
+    sourceUrl: https://support.xbox.com/en-US/help/subscriptions-billing/manage-subscriptions/cancel-xbox-subscription
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: apple
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://apps.apple.com/account/subscriptions
+    steps:
+      - text: On an iPhone or iPad, open Settings and tap your name at the very top of the list.
+        detail: >-
+          From a Mac, open the App Store, click your name at the bottom of the sidebar, then Account
+          Settings, then Manage beside Subscriptions.
+      - text: Tap Subscriptions, then the Minecraft or Realms Plus entry, then Cancel Subscription and confirm.
+        warning: When no Cancel button is shown, the subscription is already set to expire on the date printed above it.
+      - text: Download the Realm's world from inside Minecraft before the expiry date.
+    noticePeriodDays: 0
+    gotchas:
+      - Deleting Minecraft does not stop the billing.
+      - The Realm keeps running to the end of the period Apple has already charged for and then closes.
+      - Buying Minecraft itself is a one-off purchase; only the Realm is a subscription.
+    evidenceHint: Screenshot the Subscriptions screen showing the expiry date.
+    sourceUrl: https://support.apple.com/en-us/118428
+    lastVerifiedAt: "2026-07-25"
+
+  - channel: google
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://play.google.com/store/account/subscriptions
+    steps:
+      - text: Open the Google Play Store app, tap the profile icon, then Payments and subscriptions, then Subscriptions.
+        detail: From a browser, play.google.com/store/account/subscriptions shows the same list.
+      - text: Select the Minecraft or Realms Plus entry, tap Cancel subscription, choose a reason, then tap Cancel subscription again.
+        warning: The reason screen is not the confirmation; the list has to read Expires on afterwards.
+      - text: Download the Realm's world from inside Minecraft before the expiry date.
+    noticePeriodDays: 0
+    gotchas:
+      - Uninstalling the app does not stop the billing.
+      - The Realm stays online to the end of the period Google has already charged for.
+      - Check the account switcher if the subscription is not listed - it is billed to whichever Google account bought it.
+    evidenceHint: Screenshot the Play Subscriptions screen showing Expires on with the date.
+    sourceUrl: https://support.google.com/googleplay/answer/7018481
+    lastVerifiedAt: "2026-07-25"
