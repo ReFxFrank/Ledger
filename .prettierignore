@@ -1,0 +1,11 @@
+node_modules
+dist
+.next
+.turbo
+coverage
+pnpm-lock.yaml
+playwright-report
+test-results
+storybook-static
+*.min.js
+packages/db/drizzle/**
