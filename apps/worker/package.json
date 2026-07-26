@@ -1,0 +1,35 @@
+{
+  "name": "@ledger/worker",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsup src/index.ts --format esm --target node22 --clean",
+    "start": "node dist/index.js",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src",
+    "test": "vitest run --passWithNoTests",
+    "clean": "rimraf .turbo dist coverage *.tsbuildinfo"
+  },
+  "dependencies": {
+    "@ledger/banking": "workspace:*",
+    "@ledger/core": "workspace:*",
+    "@ledger/crypto": "workspace:*",
+    "@ledger/db": "workspace:*",
+    "@ledger/detection": "workspace:*",
+    "@ledger/env": "workspace:*",
+    "@ledger/logger": "workspace:*",
+    "@ledger/notify": "workspace:*",
+    "@ledger/providers": "workspace:*",
+    "bullmq": "^5.34.10",
+    "drizzle-orm": "^0.38.4",
+    "ioredis": "^5.4.2"
+  },
+  "devDependencies": {
+    "tsup": "^8.3.5",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3",
+    "vitest": "^2.1.8"
+  }
+}

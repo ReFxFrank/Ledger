@@ -1,0 +1,5 @@
+@import 'tailwindcss';
+@import '@ledger/ui/tokens.css';
+
+@source '../../src';
+@source '../../../../packages/ui/src';

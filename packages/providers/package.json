@@ -1,0 +1,29 @@
+{
+  "name": "@ledger/providers",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "validate": "tsx src/cli/validate.ts",
+    "audit": "tsx src/cli/audit.ts",
+    "clean": "rimraf .turbo coverage *.tsbuildinfo"
+  },
+  "dependencies": {
+    "@ledger/core": "workspace:*",
+    "yaml": "^2.7.0",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@vitest/coverage-v8": "^2.1.8",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3",
+    "vitest": "^2.1.8"
+  }
+}

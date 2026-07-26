@@ -1,0 +1,199 @@
+/**
+ * Design tokens. FROZEN — brief §6.2.
+ *
+ * No component may hardcode a colour. If a value is needed that is not here, it gets added here
+ * first, deliberately, and only by the person who owns this file.
+ *
+ * The palette is built around one idea: money leaving an account on a schedule. Amber is the
+ * colour of an outflow, and red is reserved for problems. A subscription charging you the amount
+ * it agreed to charge you is not a problem, and painting it red is how an alert colour stops
+ * meaning anything.
+ */
+
+:root {
+  /* ── surfaces ──────────────────────────────────────────────────────────────────────── */
+  --ink-900: #070a0f; /* page */
+  --ink-800: #0c1119; /* panel */
+  --ink-700: #121a25; /* raised card */
+  --ink-600: #18222f; /* hover on a raised card */
+  --ink-500: #1f2b3a; /* pressed / selected row */
+
+  --line: rgba(255, 255, 255, 0.06);
+  --line-hot: rgba(90, 150, 255, 0.18);
+  --line-strong: rgba(255, 255, 255, 0.12);
+
+  /* ── text ──────────────────────────────────────────────────────────────────────────── */
+  --text: #e8f0fa;
+  --text-2: rgba(214, 230, 250, 0.66);
+  --text-3: rgba(176, 202, 236, 0.44);
+
+  /* ── semantic ──────────────────────────────────────────────────────────────────────── */
+  --control: #2e7cf6; /* interactive / focus / selection */
+  --control-2: #7fb2ff;
+  --control-dim: rgba(46, 124, 246, 0.14);
+
+  --outflow: #e4a340; /* money leaving: charges, upcoming ticks, totals */
+  --outflow-dim: rgba(228, 163, 64, 0.14);
+
+  --reclaim: #35c79a; /* money recovered: the cancelled-savings counter, and nothing else */
+  --reclaim-dim: rgba(53, 199, 154, 0.14);
+
+  --alert: #f0555f; /* price hikes, trial expiry, a missed cancel-by */
+  --alert-dim: rgba(240, 85, 95, 0.14);
+
+  /* ── difficulty scale (brief §3.2) ─────────────────────────────────────────────────── */
+  /* Deliberately not a red gradient: difficulty 5 is honest information, not an error. */
+  --difficulty-1: #35c79a;
+  --difficulty-2: #8fc46a;
+  --difficulty-3: #e4a340;
+  --difficulty-4: #e07a3c;
+  --difficulty-5: #d95a54;
+
+  /* ── typography ────────────────────────────────────────────────────────────────────── */
+  --font-sans:
+    'Geist Sans', 'Inter Tight', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'Geist Mono', ui-monospace, 'SF Mono', 'Cascadia Mono', 'Roboto Mono', monospace;
+
+  --text-eyebrow: 0.6875rem; /* 11px */
+  --tracking-eyebrow: 0.08em;
+
+  /* ── spacing (dense control-panel register, §6.5) ──────────────────────────────────── */
+  --pad-panel: 1.125rem; /* 18px — panels sit at 16–20 */
+  --pad-card: 0.875rem; /* 14px — cards sit at 12–16 */
+  --gap-tight: 0.5rem;
+  --gap: 0.625rem;
+  --gap-loose: 0.75rem;
+
+  --radius-sm: 4px;
+  --radius: 6px;
+  --radius-lg: 10px; /* nothing is toy-rounded */
+
+  /* ── elevation ─────────────────────────────────────────────────────────────────────── */
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-raised: 0 4px 16px rgba(0, 0, 0, 0.45);
+  --shadow-overlay: 0 16px 48px rgba(0, 0, 0, 0.6);
+
+  /* ── motion (§6.5: 120–200ms, hover lift and border-brighten only) ─────────────────── */
+  --ease: cubic-bezier(0.2, 0, 0.1, 1);
+  --duration-fast: 120ms;
+  --duration: 160ms;
+  --duration-slow: 200ms;
+
+  /* ── focus ─────────────────────────────────────────────────────────────────────────── */
+  --focus-ring: 0 0 0 2px var(--ink-900), 0 0 0 4px var(--control);
+}
+
+/**
+ * Reduced motion. Brief quality floor: honoured, not approximated.
+ * Durations collapse to near-zero rather than to zero so transitionend still fires and no
+ * state machine that waits on it deadlocks.
+ */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-fast: 1ms;
+    --duration: 1ms;
+    --duration-slow: 1ms;
+  }
+}
+
+/**
+ * Tailwind v4 theme mapping.
+ *
+ * Every token above becomes a utility. Anything not listed here is not available as a class,
+ * which is the point — `bg-red-500` should not typecheck as a design decision.
+ */
+@theme {
+  --color-ink-900: var(--ink-900);
+  --color-ink-800: var(--ink-800);
+  --color-ink-700: var(--ink-700);
+  --color-ink-600: var(--ink-600);
+  --color-ink-500: var(--ink-500);
+
+  --color-line: var(--line);
+  --color-line-hot: var(--line-hot);
+  --color-line-strong: var(--line-strong);
+
+  --color-text: var(--text);
+  --color-text-2: var(--text-2);
+  --color-text-3: var(--text-3);
+
+  --color-control: var(--control);
+  --color-control-2: var(--control-2);
+  --color-control-dim: var(--control-dim);
+
+  --color-outflow: var(--outflow);
+  --color-outflow-dim: var(--outflow-dim);
+  --color-reclaim: var(--reclaim);
+  --color-reclaim-dim: var(--reclaim-dim);
+  --color-alert: var(--alert);
+  --color-alert-dim: var(--alert-dim);
+
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius);
+  --radius-lg: var(--radius-lg);
+
+  --shadow-card: var(--shadow-card);
+  --shadow-raised: var(--shadow-raised);
+  --shadow-overlay: var(--shadow-overlay);
+
+  --ease-standard: var(--ease);
+}
+
+/**
+ * Global base.
+ *
+ * `tabular-nums` is applied to the whole document rather than to a `.money` class, because
+ * brief §6.3 says every numeral in the app, no exceptions — and a rule you have to remember to
+ * apply is a rule that gets forgotten in the one table where misalignment is most obvious.
+ */
+@layer base {
+  html {
+    font-variant-numeric: tabular-nums;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background: var(--ink-900);
+    color: var(--text);
+    font-family: var(--font-sans);
+    font-feature-settings: 'cv11', 'ss01';
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Keyboard focus is visible everywhere. Never removed, only restyled. */
+  :focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+    border-radius: var(--radius-sm);
+  }
+
+  ::selection {
+    background: var(--control-dim);
+    color: var(--text);
+  }
+
+  /* Money and bank descriptors are mono, always. */
+  .font-numeric,
+  code,
+  kbd,
+  samp,
+  pre {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+@layer components {
+  /* The 11px uppercase label that titles every panel section. */
+  .eyebrow {
+    font-size: var(--text-eyebrow);
+    line-height: 1.2;
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-eyebrow);
+    color: var(--text-3);
+    font-weight: 500;
+  }
+}

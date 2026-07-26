@@ -1,0 +1,33 @@
+import 'server-only';
+
+import { router } from '../init';
+import { analyticsRouter } from './analytics';
+import { cancellationsRouter } from './cancellations';
+import { connectionsRouter } from './connections';
+import { dashboardRouter } from './dashboard';
+import { meRouter } from './me';
+import { notificationsRouter } from './notifications';
+import { paymentMethodsRouter } from './payment-methods';
+import { reviewRouter } from './review';
+import { subscriptionsRouter } from './subscriptions';
+
+/**
+ * The API surface.
+ *
+ * One file per domain, and this file never changes shape once a domain exists — that is what
+ * lets the interface workstream build against stable signatures while the implementations are
+ * still being written.
+ */
+export const appRouter = router({
+  me: meRouter,
+  dashboard: dashboardRouter,
+  subscriptions: subscriptionsRouter,
+  paymentMethods: paymentMethodsRouter,
+  review: reviewRouter,
+  connections: connectionsRouter,
+  cancellations: cancellationsRouter,
+  analytics: analyticsRouter,
+  notifications: notificationsRouter,
+});
+
+export type AppRouter = typeof appRouter;

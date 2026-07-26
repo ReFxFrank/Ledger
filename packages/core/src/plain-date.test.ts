@@ -1159,15 +1159,24 @@ describe('toInstant', () => {
     expect(mismatches).toEqual([]);
   });
 
-  it('round-trips across every DST transition weekend from 1970 to 2100', () => {
+  it('round-trips across every DST transition window from 1918 to 2100', () => {
+    // Every zone in the round-trip set (not just the ones that currently observe DST — a zone
+    // that abolished DST still has historical transitions), every year from the wartime DST era
+    // forward, and every window in which any of them schedules a transition: the US second
+    // Sunday of March / first Sunday of November, the EU last Sunday of March and October, and
+    // the southern-hemisphere first Sunday of April and October. March and October are swept
+    // whole because their transition day has moved around inside the month across eras.
+    const windows: readonly (readonly [number, number, number])[] = [
+      [3, 1, 31],
+      [4, 1, 7],
+      [9, 24, 30],
+      [10, 1, 31],
+      [11, 1, 7],
+    ];
     const mismatches: string[] = [];
     for (const zone of ROUND_TRIP_ZONES) {
-      for (let year = 1970; year <= 2100; year += 1) {
-        // Sweep the two windows in which essentially every zone schedules a transition.
-        for (const [month, from, to] of [
-          [3, 1, 31],
-          [10, 1, 31],
-        ] as const) {
+      for (let year = 1918; year <= 2100; year += 1) {
+        for (const [month, from, to] of windows) {
           for (let day = from; day <= to; day += 1) {
             const date = plainDate(year, month, day);
             const actual = S(fromInstant(toInstant(date, zone), zone));
@@ -1184,7 +1193,7 @@ describe('toInstant', () => {
       fc.property(arbPlainDate(1900, 2100), fc.constantFrom(...ROUND_TRIP_ZONES), (date, zone) => {
         expect(fromInstant(toInstant(date, zone), zone)).toEqual(date);
       }),
-      { numRuns: 1500 },
+      { numRuns: 3000 },
     );
   });
 

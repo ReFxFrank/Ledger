@@ -4,22 +4,25 @@
  * Two classes of quiet wrongness are pinned down here, because both produce a number that looks
  * plausible on a dashboard:
  *
- *  1. **Exponent mismatch.** ¥1,000 is `amountMinor: 1000` at exponent 0; $10.00 is
- *     `amountMinor: 1000` at exponent 2. "amountMinor × rate" is therefore a factor-of-100 error
- *     in either direction. Every exponent combination (0→2, 2→0, 3→2, 2→3) has a hand-computed
+ *  1. **Exponent mismatch.** JPY 1,000 is `amountMinor: 1000` at exponent 0; USD 10.00 is
+ *     `amountMinor: 1000` at exponent 2. So "amountMinor * rate" is a factor-of-100 error in
+ *     either direction. Every exponent combination (0->2, 2->0, 3->2, 2->3) has a hand-computed
  *     expected value below.
- *  2. **"4-weekly is basically monthly."** It is 365/28 ≈ 13.04 charges a year. £8.99 every four
- *     weeks annualises to £117.19, not £107.88.
+ *  2. **"4-weekly is basically monthly."** It is 365/28 = 13.04 charges a year. GBP 8.99 every
+ *     four weeks annualises to GBP 117.19, not GBP 107.88.
  *
  * Every expected minor-unit figure is worked out by hand in the comment beside it. None of them
  * is a snapshot of whatever the implementation happened to return.
+ *
+ * ASCII only on purpose: this file is read for its exact integer values, and a mangled currency
+ * symbol in a comment is a distraction nobody needs.
  */
 
 import { describe, expect, it } from 'vitest';
 import fc from 'fast-check';
 
-import { currency } from './currency';
-import { InvalidArgumentError, UnsupportedCurrencyError, isLedgerError } from './errors';
+import { currency } from './currency.js';
+import { InvalidArgumentError, UnsupportedCurrencyError, isLedgerError } from './errors.js';
 import {
   FX_SCALE,
   type FxRate,
@@ -29,10 +32,10 @@ import {
   invertRate,
   staticRateTable,
   sumConverted,
-} from './fx';
-import { ANNUAL, FOUR_WEEKLY, MONTHLY, QUARTERLY, WEEKLY, interval } from './interval';
-import { type Money, money, negate, scale } from './money';
-import { annualEquivalent, costPerUse, monthlyEquivalent, reclaimFrom } from './commitment';
+} from './fx.js';
+import { ANNUAL, FOUR_WEEKLY, MONTHLY, QUARTERLY, WEEKLY, interval } from './interval.js';
+import { type Money, money, negate, scale } from './money.js';
+import { annualEquivalent, costPerUse, monthlyEquivalent, reclaimFrom } from './commitment.js';
 
 const ASOF = '2026-03-01';
 
@@ -56,16 +59,16 @@ function absDelta(a: bigint, b: bigint): bigint {
   return a > b ? a - b : b - a;
 }
 
-// ────────────────────────────────────────────────────────────────────────────────────────
+// ---------------------------------------------------------------------------------------
 // fx
-// ────────────────────────────────────────────────────────────────────────────────────────
+// ---------------------------------------------------------------------------------------
 
 describe('fx', () => {
   describe('fxRate()', () => {
     it('parses a four-decimal quote into an exact scaled integer', () => {
       const rate = fxRate('USD', 'EUR', '1.2734', ASOF);
       expect(FX_SCALE).toBe(9);
-      expect(rate.scaledRate).toBe(1_273_400_000n); // 1.2734 × 10^9
+      expect(rate.scaledRate).toBe(1_273_400_000n); // 1.2734 * 10^9
       expect(rate.from).toBe(USD);
       expect(rate.to).toBe(EUR);
       expect(rate.asOf).toBe(ASOF);
@@ -90,7 +93,9 @@ describe('fx', () => {
 
     it('rejects a tenth decimal place rather than silently truncating it', () => {
       expect(() => fxRate('USD', 'EUR', '1.1234567891', ASOF)).toThrow(InvalidArgumentError);
-      expect(() => fxRate('USD', 'EUR', '1.1234567891', ASOF)).toThrow(/more than 9 decimal places/);
+      expect(() => fxRate('USD', 'EUR', '1.1234567891', ASOF)).toThrow(
+        /more than 9 decimal places/,
+      );
       expect(thrownCode(() => fxRate('USD', 'EUR', '0.0000000001', ASOF))).toBe('INVALID_ARGUMENT');
     });
 
@@ -155,7 +160,7 @@ describe('fx', () => {
       expect(identityRate('usd', ASOF).from).toBe(USD);
     });
 
-    it('converts an amount to itself — the identical object, not a copy', () => {
+    it('converts an amount to itself - the identical object, not a copy', () => {
       const dollars = money(1234, 'USD');
       expect(convert(dollars, identityRate('USD', ASOF))).toBe(dollars);
     });
@@ -180,9 +185,10 @@ describe('fx', () => {
     });
 
     it('computes the reciprocal to nine places, half-even', () => {
-      // 10^18 / 1_273_400_000 = 785_299_198 + 12_668/12_734; 12_668/12_734 > ½ ⇒ 785_299_199.
+      // 10^18 / 1_273_400_000 = 785_299_198 + 12_668/12_734; that remainder is over a half, so
+      // half-even rounds up to 785_299_199.
       expect(invertRate(fxRate('USD', 'EUR', '1.2734', ASOF)).scaledRate).toBe(785_299_199n);
-      // 10^18 / 920_000_000 = 1_086_956_521 + 17/23; 17/23 > ½ ⇒ 1_086_956_522.
+      // 10^18 / 920_000_000 = 1_086_956_521 + 17/23; over a half, so 1_086_956_522.
       expect(invertRate(fxRate('USD', 'EUR', '0.92', ASOF)).scaledRate).toBe(1_086_956_522n);
       // Exact reciprocals need no rounding at all.
       expect(invertRate(fxRate('USD', 'EUR', '0.5', ASOF)).scaledRate).toBe(2_000_000_000n);
@@ -213,9 +219,9 @@ describe('fx', () => {
       );
     });
 
-    it('loses precision on a large rate — nine decimal places is the entire budget', () => {
-      // 10^18 / 147_250_000_000 = 6_791_171.47… ⇒ 0.006791171, and inverting that does not land
-      // back on 147.25 exactly. Documented so nobody assumes invertRate is lossless.
+    it('loses precision on a large rate - nine decimal places is the entire budget', () => {
+      // 10^18 / 147_250_000_000 = 6_791_171.47..., i.e. 0.006791171, and inverting that does not
+      // land back on 147.25. Documented so nobody assumes invertRate is lossless.
       const usdJpy = fxRate('USD', 'JPY', '147.25', ASOF);
       const roundTrip = invertRate(invertRate(usdJpy));
       expect(invertRate(usdJpy).scaledRate).toBe(6_791_171n);
@@ -233,56 +239,56 @@ describe('fx', () => {
 
   describe('convert()', () => {
     it('converts USD to EUR at a known rate, exactly', () => {
-      // $19.99 = 1_999 minor. 1_999 × 0.9237 = 1_846.4763 ⇒ half-up ⇒ 1_846 (€18.46).
+      // USD 19.99 = 1_999 minor. 1_999 * 0.9237 = 1_846.4763, half-up to 1_846 (EUR 18.46).
       const result = convert(money(1999, 'USD'), fxRate('USD', 'EUR', '0.9237', ASOF));
       expect(result.amountMinor).toBe(1846);
       expect(result.currency).toBe(EUR);
     });
 
     it('converts a round amount with no rounding at all', () => {
-      // $100.00 × 0.92 = €92.00 exactly.
+      // USD 100.00 * 0.92 = EUR 92.00 exactly.
       const rate = fxRate('USD', 'EUR', '0.92', ASOF);
       expect(convert(money(10_000, 'USD'), rate).amountMinor).toBe(9200);
     });
 
-    it('JPY→USD crosses a two-digit exponent gap (0 → 2)', () => {
-      // ¥10,000 is amountMinor 10_000. × 0.0068 USD/JPY = $68.00 = 6_800 minor units.
-      // "amountMinor × rate" would give 68 — one hundredth of the right answer.
+    it('JPY to USD crosses a two-digit exponent gap (0 -> 2)', () => {
+      // JPY 10,000 is amountMinor 10_000. * 0.0068 USD/JPY = USD 68.00 = 6_800 minor units.
+      // "amountMinor * rate" would give 68 - one hundredth of the right answer.
       const result = convert(money(10_000, 'JPY'), fxRate('JPY', 'USD', '0.0068', ASOF));
       expect(result.amountMinor).toBe(6800);
       expect(result.currency).toBe(USD);
       expect(result.amountMinor).not.toBe(68);
     });
 
-    it('USD→JPY crosses the same gap the other way (2 → 0)', () => {
-      // $25.00 = 2_500 minor. × 147.25 = ¥3,681.25 ⇒ half-up ⇒ ¥3,681 = 3_681 minor units.
-      // "amountMinor × rate" would give 368_125 — a hundred times too much.
+    it('USD to JPY crosses the same gap the other way (2 -> 0)', () => {
+      // USD 25.00 = 2_500 minor. * 147.25 = JPY 3,681.25, half-up to JPY 3,681 = 3_681 minor.
+      // "amountMinor * rate" would give 368_125 - a hundred times too much.
       const result = convert(money(2500, 'USD'), fxRate('USD', 'JPY', '147.25', ASOF));
       expect(result.amountMinor).toBe(3681);
       expect(result.currency).toBe(JPY);
       expect(result.amountMinor).not.toBe(368_125);
     });
 
-    it('KWD→USD steps down one exponent (3 → 2)', () => {
-      // 1.500 KWD = 1_500 fils. × 3.26 = $4.89 = 489 minor units.
+    it('KWD to USD steps down one exponent (3 -> 2)', () => {
+      // KWD 1.500 = 1_500 fils. * 3.26 = USD 4.89 = 489 minor units.
       const result = convert(money(1500, 'KWD'), fxRate('KWD', 'USD', '3.26', ASOF));
       expect(result.amountMinor).toBe(489);
       expect(result.currency).toBe(USD);
       expect(result.amountMinor).not.toBe(4890);
     });
 
-    it('USD→KWD steps up one exponent (2 → 3)', () => {
-      // $10.00 = 1_000 minor. × 0.3067 = 3.067 KWD = 3_067 fils.
+    it('USD to KWD steps up one exponent (2 -> 3)', () => {
+      // USD 10.00 = 1_000 minor. * 0.3067 = KWD 3.067 = 3_067 fils.
       const result = convert(money(1000, 'USD'), fxRate('USD', 'KWD', '0.3067', ASOF));
       expect(result.amountMinor).toBe(3067);
       expect(result.currency).toBe(KWD);
       expect(result.amountMinor).not.toBe(307);
     });
 
-    it('KWD→USD→KWD lands back on the original three-decimal amount', () => {
+    it('KWD to USD and back lands on the original three-decimal amount', () => {
       const kwdUsd = fxRate('KWD', 'USD', '3.26', ASOF);
       const dollars = convert(money(1500, 'KWD'), kwdUsd);
-      // 489 × 306_748_466 × 10 / 10^9 = 1_499.99999874 ⇒ half-up ⇒ 1_500.
+      // 489 * 306_748_466 * 10 / 10^9 = 1_499.99999874, half-up to 1_500.
       const back = convert(dollars, invertRate(kwdUsd));
       expect(dollars.amountMinor).toBe(489);
       expect(back.amountMinor).toBe(1500);
@@ -292,9 +298,14 @@ describe('fx', () => {
     it('refuses a rate that does not start from the amount currency', () => {
       const usdEur = fxRate('USD', 'EUR', '0.92', ASOF);
       expect(() => convert(money(100, 'GBP'), usdEur)).toThrow(InvalidArgumentError);
-      expect(() => convert(money(100, 'EUR'), usdEur)).toThrow(/Rate converts USD→EUR/);
+      // The message names both ends of the rate and the offending amount, so the reader can see
+      // which of the three currencies is the odd one out. (Matched in two pieces rather than one
+      // regex because the source separates the pair with a non-ASCII arrow.)
+      expect(() => convert(money(100, 'GBP'), usdEur)).toThrow(/Rate converts USD/);
+      expect(() => convert(money(100, 'GBP'), usdEur)).toThrow(/EUR but the amount is GBP/);
       expect(thrownCode(() => convert(money(100, 'GBP'), usdEur))).toBe('INVALID_ARGUMENT');
-      // Even the reverse pair is refused — the caller has to invert deliberately.
+      // Even the reverse pair is refused - the caller has to invert deliberately.
+      expect(() => convert(money(100, 'EUR'), usdEur)).toThrow(/EUR but the amount is EUR/);
       expect(thrownCode(() => convert(money(100, 'EUR'), usdEur))).toBe('INVALID_ARGUMENT');
     });
 
@@ -305,7 +316,7 @@ describe('fx', () => {
     });
 
     it('ignores the scale of a same-currency rate entirely', () => {
-      // Characterisation: from === to short-circuits before the rate is read, so a USD→USD
+      // Characterisation: from === to short-circuits before the rate is read, so a USD->USD
       // rate of 2 is a silent no-op rather than an error.
       const doubling = fxRate('USD', 'USD', '2', ASOF);
       expect(convert(money(100, 'USD'), doubling).amountMinor).toBe(100);
@@ -325,7 +336,7 @@ describe('fx', () => {
     });
 
     it('rounding mode changes the result at an exact .5 boundary', () => {
-      // 2 minor × 1.25 = 2.5 exactly — the only place the mode can possibly matter.
+      // 2 minor * 1.25 = 2.5 exactly - the only place the mode can possibly matter.
       const rate = fxRate('USD', 'EUR', '1.25', ASOF);
       const two = money(2, 'USD');
       expect(convert(two, rate).amountMinor).toBe(3); // default is half-up
@@ -336,7 +347,7 @@ describe('fx', () => {
     });
 
     it('half-even rounds an odd quotient up at the same boundary', () => {
-      // 1 minor × 1.5 = 1.5; quotient 1 is odd, so half-even goes to 2.
+      // 1 minor * 1.5 = 1.5; quotient 1 is odd, so half-even goes to 2.
       const rate = fxRate('USD', 'EUR', '1.5', ASOF);
       const one = money(1, 'USD');
       expect(convert(one, rate, 'half-even').amountMinor).toBe(2);
@@ -351,12 +362,12 @@ describe('fx', () => {
       expect(convert(money(-2, 'USD'), rate, 'half-even').amountMinor).toBe(-2);
       expect(convert(money(-2, 'USD'), rate, 'down').amountMinor).toBe(-2);
       expect(convert(money(-2, 'USD'), rate, 'up').amountMinor).toBe(-3);
-      // The float route would not agree: Math.round(-2.5) is -2, breaking the symmetry.
+      // The float route would not agree: Math.round(-2.5) is -2, which breaks the symmetry.
       expect(Math.round(-2.5)).toBe(-2);
     });
 
-    it('never lets a float touch a monetary value — the 1.005 case', () => {
-      // 1.005 is stored as 1.00499999999999989…, so the float route rounds $1.00 × 1.005 down
+    it('never lets a float touch a monetary value - the 1.005 case', () => {
+      // 1.005 is stored as 1.00499999999999989..., so the float route rounds 1.00 * 1.005 down
       // to 100 minor units. The bigint route gets exactly 100.5 and rounds it half-up to 101.
       expect(Math.round(100 * 1.005)).toBe(100);
       const rate = fxRate('USD', 'EUR', '1.005', ASOF);
@@ -381,7 +392,7 @@ describe('fx', () => {
     });
 
     it('refuses to produce an amount outside the safe integer range', () => {
-      // 9e15 minor USD × 147.25 ÷ 100 = 1.325e16 minor JPY, past Number.MAX_SAFE_INTEGER.
+      // 9e15 minor USD * 147.25 / 100 = 1.325e16 minor JPY, past Number.MAX_SAFE_INTEGER.
       const usdJpy = fxRate('USD', 'JPY', '147.25', ASOF);
       expect(thrownCode(() => convert(money(9_000_000_000_000_000, 'USD'), usdJpy))).toBe(
         'MONEY_OVERFLOW',
@@ -401,17 +412,17 @@ describe('fx', () => {
 
     it('derives the inverse when only the opposite direction is stored', () => {
       const found = table.find(EUR, USD, ASOF);
-      if (found === null) throw new Error('expected an inverse rate for EUR→USD');
+      if (found === null) throw new Error('expected an inverse rate for EUR to USD');
       expect(found.from).toBe(EUR);
       expect(found.to).toBe(USD);
       expect(found.scaledRate).toBe(1_086_956_522n); // 10^18 / 920_000_000, half-even
-      // And it actually converts: €100.00 ÷ 0.92 = $108.6956… ⇒ half-up ⇒ $108.70.
+      // And it actually converts: EUR 100.00 / 0.92 = USD 108.6956..., half-up to USD 108.70.
       expect(convert(money(10_000, 'EUR'), found).amountMinor).toBe(10_870);
     });
 
     it('returns identity for a pair that is the same currency on both sides', () => {
       const found = table.find(GBP, GBP, ASOF);
-      if (found === null) throw new Error('expected an identity rate for GBP→GBP');
+      if (found === null) throw new Error('expected an identity rate for GBP to GBP');
       expect(found.scaledRate).toBe(1_000_000_000n);
       expect(found.from).toBe(GBP);
       expect(found.to).toBe(GBP);
@@ -426,7 +437,7 @@ describe('fx', () => {
     });
 
     it('does not triangulate through a shared currency', () => {
-      // JPY→USD and USD→EUR are both present; JPY→EUR is deliberately not derived.
+      // JPY->USD and USD->EUR are both present; JPY->EUR is deliberately not derived.
       expect(table.find(JPY, EUR, ASOF)).toBeNull();
     });
 
@@ -451,7 +462,8 @@ describe('fx', () => {
     const table = staticRateTable([eurUsd, jpyUsd]);
 
     it('totals three currencies into one display currency', () => {
-      // $10.00 stays 1_000 · €20.00 × 1.10 = $22.00 = 2_200 · ¥5,000 × 0.0068 = $34.00 = 3_400.
+      // USD 10.00 stays 1_000; EUR 20.00 * 1.10 = USD 22.00 = 2_200; JPY 5,000 * 0.0068 =
+      // USD 34.00 = 3_400. Total 6_600.
       const { total, unconvertible } = sumConverted(
         [money(1000, 'USD'), money(2000, 'EUR'), money(5000, 'JPY')],
         'USD',
@@ -471,18 +483,23 @@ describe('fx', () => {
         table,
         ASOF,
       );
-      expect(total.amountMinor).toBe(6600); // excluded from the total…
-      expect(unconvertible).toHaveLength(1); // …but handed back, not swallowed
+      expect(total.amountMinor).toBe(6600); // excluded from the total...
+      expect(unconvertible).toHaveLength(1); // ...but handed back, not swallowed
       expect(unconvertible[0]).toBe(gym);
       expect(unconvertible).not.toEqual([]);
-      // The other way this goes wrong: coercing £9.00 to $9.00 at 1:1 and reporting $75.00.
+      // The other way this goes wrong: coercing GBP 9.00 to USD 9.00 at 1:1 and reporting 75.00.
       expect(total.amountMinor).not.toBe(7500);
     });
 
     it('collects every unratable amount, in order', () => {
       const gym = money(900, 'GBP');
       const dinar = money(1500, 'KWD');
-      const { total, unconvertible } = sumConverted([gym, money(1000, 'USD'), dinar], 'USD', table, ASOF);
+      const { total, unconvertible } = sumConverted(
+        [gym, money(1000, 'USD'), dinar],
+        'USD',
+        table,
+        ASOF,
+      );
       expect(total.amountMinor).toBe(1000);
       expect(unconvertible).toEqual([gym, dinar]);
     });
@@ -494,15 +511,15 @@ describe('fx', () => {
     });
 
     it('converts through an inverse rate when that is all the table holds', () => {
-      // Only EUR→USD 1.10 is stored, so USD→EUR is 10^18 / 1_100_000_000 = 909_090_909.09… ⇒
-      // 909_090_909, and $22.00 × that = 1_999.9999998 ⇒ half-up ⇒ €20.00.
+      // Only EUR->USD 1.10 is stored, so USD->EUR is 10^18 / 1_100_000_000 = 909_090_909.09...,
+      // rounded to 909_090_909; USD 22.00 * that = 1_999.9999998, half-up to EUR 20.00.
       const { total, unconvertible } = sumConverted([money(2200, 'USD')], 'EUR', table, ASOF);
       expect(total.amountMinor).toBe(2000);
       expect(unconvertible).toEqual([]);
     });
 
     it('nets a refund against the charges it belongs to', () => {
-      // €20.00 → $22.00 and −€10.00 → −$11.00.
+      // EUR 20.00 becomes USD 22.00 and EUR -10.00 becomes USD -11.00.
       const { total } = sumConverted([money(2000, 'EUR'), money(-1000, 'EUR')], 'USD', table, ASOF);
       expect(total.amountMinor).toBe(1100);
     });
@@ -520,49 +537,49 @@ describe('fx', () => {
   });
 });
 
-// ────────────────────────────────────────────────────────────────────────────────────────
+// ---------------------------------------------------------------------------------------
 // commitment
-// ────────────────────────────────────────────────────────────────────────────────────────
+// ---------------------------------------------------------------------------------------
 
 describe('commitment', () => {
   const gbp = (minor: number): Money => money(minor, 'GBP');
 
   describe('monthlyEquivalent() / annualEquivalent()', () => {
-    it('monthly £9.99 is £9.99 a month and £119.88 a year', () => {
+    it('monthly 9.99 is 9.99 a month and 119.88 a year', () => {
       expect(monthlyEquivalent(gbp(999), MONTHLY).amountMinor).toBe(999);
-      expect(annualEquivalent(gbp(999), MONTHLY).amountMinor).toBe(11_988); // 999 × 12
+      expect(annualEquivalent(gbp(999), MONTHLY).amountMinor).toBe(11_988); // 999 * 12
       expect(annualEquivalent(gbp(999), MONTHLY).currency).toBe(GBP);
     });
 
-    it('annual £119.88 is £9.99 a month, exactly', () => {
-      expect(monthlyEquivalent(gbp(11_988), ANNUAL).amountMinor).toBe(999); // 11_988 ÷ 12
+    it('annual 119.88 is 9.99 a month, exactly', () => {
+      expect(monthlyEquivalent(gbp(11_988), ANNUAL).amountMinor).toBe(999); // 11_988 / 12
       expect(annualEquivalent(gbp(11_988), ANNUAL).amountMinor).toBe(11_988);
     });
 
-    it('quarterly £29.97 is £9.99 a month and £119.88 a year', () => {
-      expect(monthlyEquivalent(gbp(2997), QUARTERLY).amountMinor).toBe(999); // 2_997 × 12 ÷ 36
-      expect(annualEquivalent(gbp(2997), QUARTERLY).amountMinor).toBe(11_988); // 2_997 × 12 ÷ 3
+    it('quarterly 29.97 is 9.99 a month and 119.88 a year', () => {
+      expect(monthlyEquivalent(gbp(2997), QUARTERLY).amountMinor).toBe(999); // 2_997 * 12 / 36
+      expect(annualEquivalent(gbp(2997), QUARTERLY).amountMinor).toBe(11_988); // 2_997 * 12 / 3
     });
 
-    it('weekly £2.50 annualises at 365/7 charges, not 52', () => {
-      // 250 × 365 = 91_250. ÷ 7 = 13_035.71 ⇒ half-even ⇒ 13_036 (£130.36).
+    it('weekly 2.50 annualises at 365/7 charges, not 52', () => {
+      // 250 * 365 = 91_250. / 7 = 13_035.71, half-even to 13_036 (130.36).
       expect(annualEquivalent(gbp(250), WEEKLY).amountMinor).toBe(13_036);
       expect(annualEquivalent(gbp(250), WEEKLY).amountMinor).not.toBe(52 * 250);
-      // ÷ 84 = 1_086.31 ⇒ 1_086 (£10.86 a month).
+      // / 84 = 1_086.31, so 1_086 (10.86 a month).
       expect(monthlyEquivalent(gbp(250), WEEKLY).amountMinor).toBe(1086);
     });
 
-    it('£8.99 every 4 weeks is about 13 charges a year, not 12', () => {
-      // 365/28 = 13.0357 charges. 899 × 365 = 328_135; ÷ 28 = 11_719.107 ⇒ 11_719 (£117.19).
+    it('8.99 every 4 weeks is about 13 charges a year, not 12', () => {
+      // 365/28 = 13.0357 charges. 899 * 365 = 328_135; / 28 = 11_719.107, so 11_719 (117.19).
       const annual = annualEquivalent(gbp(899), FOUR_WEEKLY);
       expect(annual.amountMinor).toBe(11_719);
-      // Treating 4-weekly as monthly gives £107.88 — £9.31 light, very nearly one whole extra
-      // charge the user was never shown.
+      // Treating 4-weekly as monthly gives 107.88 - short by 9.31, which is very nearly one
+      // whole extra charge the user was never shown.
       expect(annual.amountMinor).not.toBe(12 * 899);
       expect(annual.amountMinor - 12 * 899).toBe(931);
       expect(annual.amountMinor).toBeGreaterThan(13 * 899); // 11_687
       expect(annual.amountMinor).toBeLessThan(14 * 899); // 12_586
-      // 328_135 ÷ 336 = 976.59 ⇒ half-even ⇒ 977 (£9.77 a month).
+      // 328_135 / 336 = 976.59, half-even to 977 (9.77 a month).
       expect(monthlyEquivalent(gbp(899), FOUR_WEEKLY).amountMinor).toBe(977);
     });
 
@@ -574,7 +591,8 @@ describe('commitment', () => {
     });
 
     it('works in a currency with no minor unit at all', () => {
-      // ¥500 every 4 weeks: 500 × 365 = 182_500; ÷ 28 = 6_517.86 ⇒ ¥6_518; ÷ 336 = 543.15 ⇒ ¥543.
+      // JPY 500 every 4 weeks: 500 * 365 = 182_500; / 28 = 6_517.86 -> 6_518; / 336 = 543.15 ->
+      // 543. Both stay whole yen.
       expect(annualEquivalent(money(500, 'JPY'), FOUR_WEEKLY).amountMinor).toBe(6518);
       expect(monthlyEquivalent(money(500, 'JPY'), FOUR_WEEKLY).amountMinor).toBe(543);
       expect(annualEquivalent(money(1200, 'JPY'), MONTHLY).amountMinor).toBe(14_400);
@@ -582,7 +600,7 @@ describe('commitment', () => {
     });
 
     it('defaults to half-even so summed rows do not drift upward', () => {
-      // £0.30 a year ÷ 12 = 2.5 minor units. half-even keeps the even 2; half-up would say 3.
+      // 0.30 a year / 12 = 2.5 minor units. half-even keeps the even 2; half-up would say 3.
       expect(monthlyEquivalent(gbp(30), ANNUAL).amountMinor).toBe(2);
       expect(monthlyEquivalent(gbp(30), ANNUAL, 'half-up').amountMinor).toBe(3);
       expect(monthlyEquivalent(gbp(30), ANNUAL, 'down').amountMinor).toBe(2);
@@ -590,14 +608,14 @@ describe('commitment', () => {
     });
 
     it('half-even still rounds an odd quotient up', () => {
-      // £0.18 ÷ 12 = 1.5 minor units; quotient 1 is odd ⇒ 2.
+      // 0.18 / 12 = 1.5 minor units; quotient 1 is odd, so it goes to 2.
       expect(monthlyEquivalent(gbp(18), ANNUAL).amountMinor).toBe(2);
       expect(monthlyEquivalent(gbp(18), ANNUAL, 'down').amountMinor).toBe(1);
       expect(monthlyEquivalent(gbp(18), ANNUAL, 'up').amountMinor).toBe(2);
     });
 
     it('honours an explicit mode when annualising', () => {
-      // 91_250 ÷ 7 = 13_035.71.
+      // 91_250 / 7 = 13_035.71.
       expect(annualEquivalent(gbp(250), WEEKLY, 'down').amountMinor).toBe(13_035);
       expect(annualEquivalent(gbp(250), WEEKLY, 'up').amountMinor).toBe(13_036);
       expect(annualEquivalent(gbp(250), WEEKLY, 'half-up').amountMinor).toBe(13_036);
@@ -613,12 +631,12 @@ describe('commitment', () => {
     });
 
     it('handles an arbitrary interval, not just the presets', () => {
-      // Every 5 months: 12/5 charges a year. £50.00 ⇒ 5_000 × 12 ÷ 5 = 12_000 (£120.00) a year,
-      // and 5_000 × 12 ÷ 60 = 1_000 (£10.00) a month.
+      // Every 5 months: 12/5 charges a year. 50.00 gives 5_000 * 12 / 5 = 12_000 a year and
+      // 5_000 * 12 / 60 = 1_000 a month.
       const everyFiveMonths = interval('month', 5);
       expect(annualEquivalent(gbp(5000), everyFiveMonths).amountMinor).toBe(12_000);
       expect(monthlyEquivalent(gbp(5000), everyFiveMonths).amountMinor).toBe(1000);
-      // Daily £1.00: 365 charges a year, 365/12 = 30.42 a month ⇒ 100 × 365 ÷ 12 = 3_041.67 ⇒ 3_042.
+      // Daily 1.00: 365 charges a year; 100 * 365 / 12 = 3_041.67, half-even to 3_042 a month.
       expect(annualEquivalent(gbp(100), interval('day', 1)).amountMinor).toBe(36_500);
       expect(monthlyEquivalent(gbp(100), interval('day', 1)).amountMinor).toBe(3042);
       // Every 2 years: half a charge a year.
@@ -628,16 +646,16 @@ describe('commitment', () => {
 
   describe('costPerUse()', () => {
     it('divides the spend across the uses', () => {
-      // £17.99 opened twice: 1_799 ÷ 2 = 899.5 ⇒ half-up ⇒ 900 (£9.00 a session).
+      // 17.99 opened twice: 1_799 / 2 = 899.5, half-up to 900 (9.00 a session).
       const result = costPerUse(gbp(1799), 2);
       expect(result?.amountMinor).toBe(900);
       expect(result?.currency).toBe(GBP);
     });
 
     it('divides exactly when it can', () => {
-      expect(costPerUse(gbp(1799), 7)?.amountMinor).toBe(257); // 7 × 257 = 1_799
+      expect(costPerUse(gbp(1799), 7)?.amountMinor).toBe(257); // 7 * 257 = 1_799
       expect(costPerUse(gbp(1799), 1)?.amountMinor).toBe(1799);
-      expect(costPerUse(gbp(1799), 3)?.amountMinor).toBe(600); // 599.67 ⇒ 600
+      expect(costPerUse(gbp(1799), 3)?.amountMinor).toBe(600); // 599.67 rounds to 600
       expect(costPerUse(gbp(1000), 4)?.amountMinor).toBe(250);
     });
 
@@ -666,7 +684,7 @@ describe('commitment', () => {
     });
 
     it('works in a currency with no minor unit', () => {
-      // ¥1,000 over 3 uses: 333.33 ⇒ half-up ⇒ ¥333.
+      // JPY 1,000 over 3 uses: 333.33, half-up to 333.
       expect(costPerUse(money(1000, 'JPY'), 3)?.amountMinor).toBe(333);
       expect(costPerUse(money(1000, 'JPY'), 3)?.currency).toBe(JPY);
     });
@@ -684,7 +702,7 @@ describe('commitment', () => {
 
     it('uses the half-even default for both figures', () => {
       const reclaim = reclaimFrom(gbp(30), ANNUAL);
-      expect(reclaim.monthly.amountMinor).toBe(2); // 2.5 ⇒ half-even ⇒ 2
+      expect(reclaim.monthly.amountMinor).toBe(2); // 2.5, half-even, stays 2
       expect(reclaim.annual.amountMinor).toBe(30);
     });
 

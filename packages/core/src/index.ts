@@ -12,6 +12,7 @@ export * from './fx';
 export * from './plain-date';
 export * from './interval';
 export * from './commitment';
+export * from './aggregate';
 export * from './clock';
 export * from './ids';
 export * from './domain';
