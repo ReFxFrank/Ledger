@@ -9,7 +9,7 @@
  * Pure: takes rows in, returns numbers out. No database, no clock, no locale.
  */
 
-import type { CurrencyCode } from './currency';
+import { type CurrencyCode, currency } from './currency';
 import { type Money, add, money, subtract, zero } from './money';
 import { type RecurrenceInterval } from './interval';
 import { annualEquivalent, monthlyEquivalent } from './commitment';
@@ -48,8 +48,21 @@ export interface AggregateOptions {
   readonly includeStatus?: (status: SubscriptionStatus) => boolean;
 }
 
-function convertOrNull(amount: Money, options: AggregateOptions): Money | null {
-  const target = options.displayCurrency as CurrencyCode;
+/**
+ * Normalises the display currency once, up front.
+ *
+ * This was a cast — `options.displayCurrency as CurrencyCode` — and the cast was a real bug.
+ * `zero()` and `money()` both run the code through `currency()`, which uppercases it, so a
+ * caller passing `'usd'` produced totals branded `'USD'` while the comparison here still tested
+ * against `'usd'`. Nothing threw: every row simply failed to match, fell through to a rate
+ * lookup that could not succeed, and landed in `unconvertible` — a dashboard reporting zero
+ * committed spend for a user who has forty subscriptions. Validate at the boundary instead.
+ */
+function targetCurrency(options: AggregateOptions): CurrencyCode {
+  return currency(options.displayCurrency);
+}
+
+function convertOrNull(amount: Money, target: CurrencyCode, options: AggregateOptions): Money | null {
   if (amount.currency === target) return amount;
   const rate = options.rates.find(amount.currency, target, options.asOf);
   return rate === null ? null : convert(amount, rate);
@@ -66,7 +79,7 @@ export function aggregateCommitments(
   rows: readonly CommitmentInput[],
   options: AggregateOptions,
 ): CommitmentTotals {
-  const target = options.displayCurrency;
+  const target = targetCurrency(options);
   const include = options.includeStatus ?? isCommitted;
 
   let monthly = zero(target);
@@ -82,10 +95,10 @@ export function aggregateCommitments(
     const charge = money(row.amountMinor, row.currency);
     const selfCharge = money(row.selfShareMinor ?? row.amountMinor, row.currency);
 
-    const rowMonthly = convertOrNull(monthlyEquivalent(charge, row.interval), options);
-    const rowAnnual = convertOrNull(annualEquivalent(charge, row.interval), options);
-    const rowMonthlySelf = convertOrNull(monthlyEquivalent(selfCharge, row.interval), options);
-    const rowAnnualSelf = convertOrNull(annualEquivalent(selfCharge, row.interval), options);
+    const rowMonthly = convertOrNull(monthlyEquivalent(charge, row.interval), target, options);
+    const rowAnnual = convertOrNull(annualEquivalent(charge, row.interval), target, options);
+    const rowMonthlySelf = convertOrNull(monthlyEquivalent(selfCharge, row.interval), target, options);
+    const rowAnnualSelf = convertOrNull(annualEquivalent(selfCharge, row.interval), target, options);
 
     if (
       rowMonthly === null ||

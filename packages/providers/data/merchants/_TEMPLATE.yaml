@@ -1,0 +1,150 @@
+# Merchant template. Copy this file, rename it to <slug>.yaml, and delete what you do not use.
+#
+# Files beginning with "_" are validated but never registered, so this one is safe to keep here.
+# Run `pnpm providers:validate` after editing; it reports every problem in the dataset at once.
+#
+# Two rules are worth reading before you start:
+#   - Every playbook needs a sourceUrl and a lastVerifiedAt. An unsourced playbook is worse than
+#     no playbook, because the UI presents it with the same confidence as a verified one.
+#   - No legal claims anywhere in the prose. Not "you have the right to", not "they are legally
+#     required to", not "guaranteed refund", not "we will cancel it". Describe what the provider
+#     does. See docs/legal-notes.md.
+
+# kebab-case, unique across the dataset, and stable — it appears in URLs.
+slug: example-merchant
+
+# What a person calls it.
+name: Example Merchant
+
+# The entity on the contract, when it differs from the brand. Optional.
+legalName: Example Merchant Holdings, Inc.
+
+# One of the categories in @ledger/core CATEGORIES.
+category: streaming_video
+
+# Bare lowercase hostnames. No scheme, no path.
+domains:
+  - example.com
+  - examplemerchant.com
+
+# Names a human might type in search. The slug is already an alias; do not repeat it.
+aliases:
+  - Example
+  - Example TV
+
+# Fragments of a *normalized* bank descriptor: UPPERCASE, single-spaced, trimmed. Detection
+# normalizes the incoming descriptor and looks for an exact match on one of these, so give the
+# distinctive part ("EXAMPLE MERCHANT"), not the noise around it ("SQ *", "AUTOPAY 0421").
+# Two merchants may not claim the same fragment — validation rejects the collision.
+descriptorPatterns:
+  - EXAMPLE MERCHANT
+  - EXAMPLEMERCH.COM
+  - EXAMPLE TV PREMIUM
+
+# How this merchant usually bills. Used as a prior when detection scores a cadence; it does not
+# constrain what a user's actual subscription may be.
+typicalIntervals:
+  - unit: month
+    count: 1
+  - unit: year
+    count: 1
+
+# Set only when the brand no longer exists under this name. Must point at a slug in the dataset.
+# supersededBy: example-merchant-rebranded
+
+# Anything a maintainer needs to know that is not a playbook step. Optional.
+notes: Annual plans renew on the anniversary of the first charge, not at the start of the year.
+
+# At least one playbook, at most one per channel.
+playbooks:
+  # ── direct: the provider takes the money, so the provider's own flow is the right advice ──
+  - channel: direct
+    # One of @ledger/core CANCELLATION_METHODS.
+    method: account_settings
+    # 1 = one click in settings … 5 = post, notice period, or an in-person visit. Be honest.
+    # Difficulty 4 or 5 requires at least one gotcha explaining why it is that hard.
+    difficulty: 2
+    # Deep-link straight to the cancel screen when one exists, not to the homepage.
+    cancelUrl: https://example.com/account/cancel
+    steps:
+      - text: Sign in at example.com and open Account, then Membership.
+      - text: Choose Cancel Membership and confirm on the following screen.
+        detail: The button sits under the plan summary, below the billing history table.
+        warning: Closing the tab before the confirmation screen leaves the plan active.
+      - text: Save the confirmation email — it carries the date access ends.
+    # Days of notice the provider says it needs. 0 when cancellation takes effect at once.
+    noticePeriodDays: 0
+    refundPolicy: Partial months are not refunded; access continues to the end of the paid period.
+    retentionOfferNotes: Offers a discounted month before the final confirmation step.
+    # Anything that surprises a user mid-flow. Required at difficulty 4+.
+    gotchas:
+      - Cancelling on the mobile site drops you into the app store flow instead.
+      - Profiles are deleted 30 days after access ends.
+    evidenceHint: Screenshot the "Your membership ends on …" confirmation screen.
+    # Both required. lastVerifiedAt is quoted so YAML keeps it a string.
+    sourceUrl: https://help.example.com/en/article/cancel-membership
+    lastVerifiedAt: "2026-07-25"
+
+  # ── apple: billed by the App Store, so the provider's site CANNOT cancel it ───────────────
+  # This is the rule the dataset exists to protect (brief §3.1). On apple / google / amazon /
+  # roku / microsoft / carrier, cancelUrl must be absent or point at the store itself — never at
+  # the provider. Validation rejects anything else, and method must be app_store.
+  - channel: apple
+    method: app_store
+    difficulty: 1
+    cancelUrl: https://apps.apple.com/account/subscriptions
+    steps:
+      - text: On iPhone or iPad, open Settings and tap your name at the top.
+      - text: Tap Subscriptions, then Example Merchant.
+      - text: Tap Cancel Subscription and confirm.
+        detail: If no Cancel button appears, the subscription is already set to expire.
+    noticePeriodDays: 0
+    gotchas:
+      - Deleting the app does not stop the billing.
+      - The charge continues until the end of the period already paid for.
+    evidenceHint: Screenshot the Subscriptions screen showing the expiry date.
+    sourceUrl: https://support.apple.com/en-us/118428
+    lastVerifiedAt: "2026-07-25"
+
+  # ── other fields, shown here rather than used ─────────────────────────────────────────────
+  # A phone playbook must carry a phone number:
+  #
+  # - channel: direct
+  #   method: phone
+  #   difficulty: 4
+  #   phone: "+1-800-555-0100"
+  #   hours: Mon-Fri 9am-6pm ET
+  #   steps:
+  #     - text: Call and ask for the cancellations team.
+  #   gotchas:
+  #     - Hold times run past 20 minutes at the end of the month.
+  #   sourceUrl: https://help.example.com/en/article/phone-support
+  #   lastVerifiedAt: "2026-07-25"
+  #
+  # A postal playbook must carry a letterTemplate, written in the user's own voice, with no
+  # statutory citations. The user sends it; Ledger only drafts it.
+  #
+  # - channel: direct
+  #   method: post
+  #   difficulty: 5
+  #   letterTemplate: |
+  #     {{customerName}}
+  #     {{customerAddress}}
+  #
+  #     {{date}}
+  #
+  #     Example Merchant, Membership Services, PO Box 1, Anytown
+  #
+  #     Account number: {{accountNumber}}
+  #
+  #     I am writing to end my membership. Please close it at the earliest date my agreement
+  #     allows and confirm that date in writing to the address above.
+  #
+  #     {{customerName}}
+  #   noticePeriodDays: 30
+  #   steps:
+  #     - text: Post the signed letter to Membership Services.
+  #   gotchas:
+  #     - The notice period runs from the day the letter arrives, not the day it is posted.
+  #   sourceUrl: https://help.example.com/en/article/cancel-by-post
+  #   lastVerifiedAt: "2026-07-25"
