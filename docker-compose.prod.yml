@@ -1,0 +1,109 @@
+# Production overlay. Compose with the base file:
+#   docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
+#
+# The base file provides postgres, redis, and minio. This adds the app, the worker, and Caddy,
+# and closes the database and cache ports that the dev file publishes to the host.
+
+services:
+  postgres:
+    # Nothing outside the compose network needs to reach Postgres. Overriding with an empty
+    # list is the only way to drop a port the base file published.
+    ports: []
+    command:
+      - postgres
+      - '-c'
+      - 'max_connections=100'
+      - '-c'
+      - 'shared_buffers=512MB'
+      - '-c'
+      - 'work_mem=16MB'
+      # Every statement over a second is a query that needs an index; log it rather than
+      # discovering it from a user complaint.
+      - '-c'
+      - 'log_min_duration_statement=1000'
+
+  redis:
+    ports: []
+
+  minio:
+    ports: []
+
+  migrate:
+    build:
+      context: .
+      target: migrate
+    env_file: .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: 'no'
+
+  web:
+    build:
+      context: .
+      target: web
+      args:
+        NEXT_PUBLIC_APP_URL: ${NEXT_PUBLIC_APP_URL}
+        NEXT_PUBLIC_VAPID_PUBLIC_KEY: ${NEXT_PUBLIC_VAPID_PUBLIC_KEY}
+        NEXT_PUBLIC_SENTRY_DSN: ${NEXT_PUBLIC_SENTRY_DSN:-}
+    env_file: .env
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://${POSTGRES_USER:-ledger}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-ledger}
+      REDIS_URL: redis://redis:6379
+      S3_ENDPOINT: http://minio:9000
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    restart: unless-stopped
+    # Not published to the host: Caddy is the only thing that talks to it.
+    expose:
+      - '3000'
+
+  worker:
+    build:
+      context: .
+      target: worker
+    env_file: .env
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://${POSTGRES_USER:-ledger}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-ledger}
+      REDIS_URL: redis://redis:6379
+      S3_ENDPOINT: http://minio:9000
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    restart: unless-stopped
+    # Long enough for an in-flight sync page to finish and commit its cursor. The sync engine is
+    # resumable, so this is about avoiding wasted work rather than about correctness.
+    stop_grace_period: 60s
+    expose:
+      - '3001'
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - '80:80'
+      - '443:443'
+      - '443:443/udp'
+    volumes:
+      - ./infra/caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    environment:
+      LEDGER_DOMAIN: ${LEDGER_DOMAIN:-localhost}
+    depends_on:
+      - web
+
+volumes:
+  caddy-data:
+  caddy-config:

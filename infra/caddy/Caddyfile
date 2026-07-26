@@ -1,0 +1,33 @@
+# Caddy terminates TLS and proxies to the app. Certificates are obtained and renewed
+# automatically from Let's Encrypt for a real domain; `localhost` gets a local CA cert.
+
+{
+	# Set LEDGER_ACME_EMAIL in .env for expiry notices.
+	email {$LEDGER_ACME_EMAIL:admin@example.com}
+}
+
+{$LEDGER_DOMAIN} {
+	encode zstd gzip
+
+	# The app sets its own Content-Security-Policy per request (it carries a nonce), so Caddy
+	# must not add one here — a second CSP header is intersected with the first, and the result
+	# blocks the app's own scripts.
+	header {
+		Strict-Transport-Security "max-age=63072000; includeSubDomains; preload"
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "DENY"
+		Referrer-Policy "same-origin"
+		# A map of someone's finances has no business in a search index.
+		X-Robots-Tag "noindex, nofollow"
+		-Server
+	}
+
+	# Next's immutable build output. Everything else is left to the app's own cache headers.
+	@static path /_next/static/* /icons/* /fonts/*
+	header @static Cache-Control "public, max-age=31536000, immutable"
+
+	reverse_proxy web:3000 {
+		header_up X-Forwarded-For {remote_host}
+		header_up X-Forwarded-Proto {scheme}
+	}
+}
