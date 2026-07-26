@@ -1,3 +1,7 @@
+# Auto-detect text files and normalise to LF in the repository.
+# `eol=lf` is explicit rather than left to `text=auto`: the project is developed on Windows and
+# deployed to Alpine containers, and a CRLF that survives into a shell script or a Caddyfile
+# fails in ways that look like a config error rather than a line-ending one.
 * text=auto eol=lf
 
 *.png binary
@@ -7,4 +11,6 @@
 *.ico binary
 *.woff binary
 *.woff2 binary
+
+# The lockfile is reviewed by what changed in package.json, never line by line.
 pnpm-lock.yaml -diff
