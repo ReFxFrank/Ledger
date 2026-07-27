@@ -27,6 +27,9 @@ export type ConnectionAccount = ConnectionListItem['accounts'][number];
 export type ConnectResult = RouterOutputs['connections']['exchangeToken'];
 export type PaymentMethod = RouterOutputs['paymentMethods']['list'][number];
 
+export type ImportAnalysis = RouterOutputs['import']['analyse'];
+export type ImportedCandidate = ImportAnalysis['candidates'][number];
+
 export type CostPerUseRow = RouterOutputs['analytics']['costPerUse'][number];
 export type CategorySpend = RouterOutputs['analytics']['spendByCategory'][number];
 export type CadenceMixRow = RouterOutputs['analytics']['cadenceMix'][number];

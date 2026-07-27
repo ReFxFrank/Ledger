@@ -117,13 +117,20 @@ function getStore(db: Database): DrizzleSyncStore {
  * `detections.merchant_id` is a foreign key to `merchants.id`, and the detector writes whatever id
  * the registry gave it. A registry keyed by YAML slugs therefore produces detection rows that
  * cannot be inserted. Same reasoning, same shape, as `apps/worker/src/registry.ts`.
+ *
+ * Exported because the CSV import path (`~/server/import/analyse`) runs the same engine over rows
+ * from a file and must match on the same merchant ids — a second loader would be a second place
+ * for the slug-versus-uuid mistake above to come back.
  */
 const REGISTRY_TTL_MS = 15 * 60 * 1000;
 
 let cachedRegistry: MerchantRegistry | null = null;
 let registryLoadedAtMillis = Number.NEGATIVE_INFINITY;
 
-async function getRegistry(db: Database, clock: Clock): Promise<MerchantRegistry | null> {
+export async function getMerchantRegistry(
+  db: Database,
+  clock: Clock,
+): Promise<MerchantRegistry | null> {
   if (cachedRegistry !== null && clock.epochMillis() - registryLoadedAtMillis < REGISTRY_TTL_MS) {
     return cachedRegistry;
   }
@@ -324,7 +331,7 @@ export async function runConnectionSync(
 
   const adapter = getAdapterFor(row.provider);
   const store = getStore(ctx.db);
-  const registry = await getRegistry(ctx.db, ctx.clock);
+  const registry = await getMerchantRegistry(ctx.db, ctx.clock);
 
   if (options.full === true) {
     // Re-reading from the beginning is safe rather than duplicative: every insert is

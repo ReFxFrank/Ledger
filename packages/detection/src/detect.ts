@@ -47,6 +47,16 @@ import {
 
 const NO_MATCH: MerchantMatch = { merchantId: null, matchedVia: 'none', score: 0 };
 
+/**
+ * The share of a cluster's charges the inferred cadence must account for.
+ *
+ * Inclusive at exactly one half, deliberately: a subscription billed twice per period on one
+ * account — two family plans on one card — matches one phase and sits at exactly 0.5, and it is
+ * a real subscription that should surface. A frequent merchant sits far below it: the measured
+ * Uber Eats case matched 12 of 34, coverage 0.35.
+ */
+export const MIN_CADENCE_COVERAGE = 0.5;
+
 /** How many raw descriptors travel with a candidate for the §6.4 decoder view. */
 const SAMPLE_DESCRIPTOR_LIMIT = 3;
 
@@ -181,6 +191,24 @@ function buildCandidate(
     .map((index) => cluster.charges[index])
     .filter((member): member is ClusterMember => member !== undefined);
   if (members.length < minOccurrences) return 'too_few_occurrences';
+
+  /**
+   * The cadence has to explain the cluster, not just a lucky subset of it.
+   *
+   * `inferCadence` tries every charge as an anchor and grows the best-aligned run — which means
+   * that given enough charges, it will find *something*. Thirty-four food-delivery orders over a
+   * year usually contain twelve that sit month-ish apart; before this guard the engine reported
+   * those twelve as a monthly subscription at ~0.55 confidence and silently ignored the other
+   * twenty-two. Measured against a real Chase statement: the false positive appeared in roughly
+   * one generated file in seven, always just over the surfacing floor.
+   *
+   * A genuine subscription's cluster is almost entirely its own charges — a missed cycle is an
+   * absence, not an extra, so it costs nothing here. The one legitimate pattern below the floor
+   * is a subscription billed twice per period on one account (two family Spotify accounts, one
+   * card), which lands at exactly half; the floor is inclusive so it still surfaces.
+   */
+  const coverage = members.length / cluster.charges.length;
+  if (coverage < MIN_CADENCE_COVERAGE) return 'cadence_explains_minority';
 
   return assemble({
     cluster,

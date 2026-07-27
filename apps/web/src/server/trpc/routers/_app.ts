@@ -6,6 +6,7 @@ import { analyticsRouter } from './analytics';
 import { cancellationsRouter } from './cancellations';
 import { connectionsRouter } from './connections';
 import { dashboardRouter } from './dashboard';
+import { importRouter } from './import';
 import { meRouter } from './me';
 import { notificationsRouter } from './notifications';
 import { paymentMethodsRouter } from './payment-methods';
@@ -24,6 +25,7 @@ export const appRouter = router({
   account: accountRouter,
   dashboard: dashboardRouter,
   subscriptions: subscriptionsRouter,
+  import: importRouter,
   paymentMethods: paymentMethodsRouter,
   review: reviewRouter,
   connections: connectionsRouter,

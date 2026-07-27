@@ -18,6 +18,7 @@ import {
   ANNUAL,
   FOUR_WEEKLY,
   MONTHLY,
+  addDays,
   addInterval,
   annualEquivalent,
   formatPlainDate,
@@ -494,5 +495,69 @@ describe('brief §4.4 edge cases', () => {
 
     const laterIds = rows.slice(early.length).map((row) => row.id);
     for (const id of laterIds) expect(candidate.transactionIds).not.toContain(id);
+  });
+});
+
+describe('cadence coverage', () => {
+  /**
+   * The false positive a real Chase statement produced roughly one run in seven: thirty-four
+   * food-delivery orders over a year usually contain twelve that sit month-ish apart, and
+   * `inferCadence` — which tries every charge as an anchor and keeps the best-aligned run —
+   * found them every time. The other twenty-two charges were simply ignored, so a habit was
+   * reported as a $38/month subscription at just over the surfacing floor.
+   */
+  it('34 irregular food orders are not a monthly subscription even when 12 of them align', () => {
+    // Deterministic gaps between 4 and 20 days: ~34 orders across a year, several of which
+    // inevitably land close to month boundaries. Amounts spread but with CV below the 0.4
+    // variable-amount ceiling, mirroring the measured case (CV ≈ 0.37).
+    const gaps = [6, 12, 4, 18, 9, 5, 16, 7, 11, 4, 20, 8, 13, 5, 9, 17, 6, 10, 4, 15, 8, 12, 6, 19, 7, 9, 5, 14, 10, 6, 11, 8, 16];
+    const amounts = [3450, 2210, 4890, 3120, 5230, 2870, 4410, 3690, 2540, 4980, 3310, 2760, 5120, 3880, 2450, 4670, 3230, 2980, 5350, 3540, 2690, 4230, 3760, 2830, 4550, 3170, 2910, 5080, 3420, 2610, 4790, 3650, 2740, 4360];
+
+    let date = parsePlainDate('2025-07-05');
+    const orders: DetectionTransaction[] = [charge(formatPlainDate(date), amounts[0] ?? 3000, { descriptor: 'UBER * EATS SAN FRANCISCO CA' })];
+    for (let index = 0; index < gaps.length; index += 1) {
+      date = addDays(date, gaps[index] ?? 7);
+      orders.push(charge(formatPlainDate(date), amounts[index + 1] ?? 3000, { descriptor: 'UBER * EATS SAN FRANCISCO CA' }));
+    }
+
+    const result = detectSubscriptions(orders, { today: parsePlainDate('2026-07-20') });
+
+    expect(result.candidates).toHaveLength(0);
+    // And the discard is explained, so "why is my Uber Eats not listed" has an answer.
+    expect(
+      result.discarded.some(
+        (entry) => entry.normalizedKey.includes('UBER EATS') && entry.reason === 'cadence_explains_minority',
+      ),
+    ).toBe(true);
+  });
+
+  it('a real subscription with a couple of stray same-key charges still surfaces', () => {
+    // Twelve clean monthly charges plus two one-off extras (a proration, an add-on) on the same
+    // descriptor: coverage 12/14 ≈ 0.86, comfortably above the floor. The guard must not eat it.
+    const rows = [
+      ...series({ from: '2025-08-03', interval: MONTHLY, count: 12, amountAt: () => 1599, descriptor: 'STREAMCO' }),
+      charge('2025-11-19', 1599, { descriptor: 'STREAMCO' }),
+      charge('2026-03-11', 1599, { descriptor: 'STREAMCO' }),
+    ];
+
+    const result = detectSubscriptions(rows, { today: parsePlainDate('2026-07-20') });
+
+    const candidate = result.candidates.find((entry) => entry.normalizedKey === 'STREAMCO');
+    expect(candidate).toBeDefined();
+    expect(candidate?.interval.unit).toBe('month');
+  });
+
+  it('a subscription billed twice per period on one account sits at exactly half and survives', () => {
+    // Two family plans, one card: two interleaved monthly phases of the same amount and key.
+    // The cadence matches one phase — exactly half the cluster — and the floor is inclusive at
+    // 0.5 precisely so this real-subscription shape is not destroyed by the food-delivery guard.
+    const rows = [
+      ...series({ from: '2025-08-03', interval: MONTHLY, count: 12, amountAt: () => 1199, descriptor: 'MUSICCO FAMILY' }),
+      ...series({ from: '2025-08-17', interval: MONTHLY, count: 12, amountAt: () => 1199, descriptor: 'MUSICCO FAMILY' }),
+    ];
+
+    const result = detectSubscriptions(rows, { today: parsePlainDate('2026-07-20') });
+
+    expect(result.candidates.some((entry) => entry.normalizedKey.includes('MUSICCO'))).toBe(true);
   });
 });

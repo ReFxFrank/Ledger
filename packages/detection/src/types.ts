@@ -240,6 +240,13 @@ export const DISCARD_REASONS = [
   'unrecoverable_descriptor',
   'single_account_noise',
   'reversed',
+  /**
+   * A cadence was found, but it only explains a minority of the cluster's charges. Thirty-four
+   * food-delivery orders will usually contain twelve that happen to align month-ish; reporting
+   * those twelve as a subscription is fabrication by selection, and this reason is the answer to
+   * "why is my Uber Eats not listed" — it is listed here, with the honest explanation.
+   */
+  'cadence_explains_minority',
 ] as const;
 
 export type DiscardReason = (typeof DISCARD_REASONS)[number];
