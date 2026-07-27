@@ -149,7 +149,7 @@ reference data the product needs, **not** demo data (`--merchants-only` creates 
 
 ```bash
 docker compose -f docker-compose.yml -f docker-compose.prod.yml run --rm migrate \
-  ../../node_modules/.bin/tsx src/seed/demo.ts --merchants-only
+  node_modules/.bin/tsx src/seed/demo.ts --merchants-only
 ```
 
 Open `https://your-domain` — you should see the sign-in screen with a valid certificate.

@@ -87,4 +87,9 @@ COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/packages ./packages
 COPY --from=build /app/package.json /app/pnpm-workspace.yaml ./
 WORKDIR /app/packages/db
-CMD ["../../node_modules/.bin/tsx", "src/migrate.ts"]
+# `node_modules/.bin` here is the PACKAGE's bin dir, not the repo root's: pnpm links a
+# dependency's binaries into the node_modules of whichever package declares it, and tsx is a
+# dependency of @ledger/db. The root .bin only ever held root-level tooling, so the previous
+# `../../node_modules/.bin/tsx` pointed at a file that never existed — and the node image's
+# entrypoint masked it by prepending `node`, turning a bad path into MODULE_NOT_FOUND.
+CMD ["node_modules/.bin/tsx", "src/migrate.ts"]
