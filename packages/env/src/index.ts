@@ -17,6 +17,30 @@ const booleanish = z
 
 const nonEmpty = z.string().min(1);
 
+/**
+ * A URL restricted to specific schemes.
+ *
+ * `z.string().url()` alone is weaker than it looks: it delegates to the `URL` constructor, which
+ * happily parses `localhost:5432` as a URL whose protocol is `localhost:`. So a `DATABASE_URL`
+ * with the scheme left off passes validation and then fails at connection time with a driver
+ * error that names none of this. Checking the scheme is what makes the boot-time check mean
+ * something.
+ */
+const urlWithScheme = (schemes: readonly string[], example: string) =>
+  z
+    .string()
+    .url()
+    .refine(
+      (value) => {
+        try {
+          return schemes.includes(new URL(value).protocol);
+        } catch {
+          return false;
+        }
+      },
+      { message: `must start with ${schemes.join(' or ')} — for example ${example}` },
+    );
+
 /** 32 bytes, base64. Checked here rather than at first use. */
 const base64Key32 = z
   .string()
@@ -29,10 +53,13 @@ export const serverEnvSchema = z.object({
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
   LOG_LEVEL: z.enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace', 'silent']).default('info'),
 
-  APP_URL: z.string().url(),
+  APP_URL: urlWithScheme(['http:', 'https:'], 'https://ledger.example.com'),
 
-  DATABASE_URL: z.string().url(),
-  REDIS_URL: z.string().url(),
+  DATABASE_URL: urlWithScheme(
+    ['postgresql:', 'postgres:'],
+    'postgresql://ledger:password@localhost:5433/ledger',
+  ),
+  REDIS_URL: urlWithScheme(['redis:', 'rediss:'], 'redis://localhost:6380'),
 
   BETTER_AUTH_SECRET: nonEmpty.min(32, 'needs at least 32 characters of entropy'),
   BETTER_AUTH_URL: z.string().url().optional(),

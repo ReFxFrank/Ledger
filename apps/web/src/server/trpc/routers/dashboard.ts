@@ -177,7 +177,19 @@ export const dashboardRouter = router({
           .where(ctx.scope.where(detections, eq(detections.status, 'pending'))),
 
         ctx.db
-          .select()
+          // Columns listed explicitly, never the whole row: `bank_connections` carries
+          // `access_token_ciphertext` and `key_id`, and a bare `select()` would hand both to the
+          // browser. `authz.test.ts` fails the build if this ever becomes a whole-row read.
+          .select({
+            id: bankConnections.id,
+            provider: bankConnections.provider,
+            institutionName: bankConnections.institutionName,
+            institutionLogo: bankConnections.institutionLogo,
+            status: bankConnections.status,
+            consentExpiresAt: bankConnections.consentExpiresAt,
+            lastSyncedAt: bankConnections.lastSyncedAt,
+            error: bankConnections.error,
+          })
           .from(bankConnections)
           .where(ctx.scope.where(bankConnections, ne(bankConnections.status, 'active'))),
       ]);

@@ -73,6 +73,15 @@ export default tseslint.config(
       '@typescript-eslint/no-floating-promises': 'error',
       '@typescript-eslint/no-misused-promises': 'error',
       '@typescript-eslint/no-unnecessary-condition': 'off', // too noisy with noUncheckedIndexedAccess
+
+      /**
+       * `process.env['KEY']` is deliberate, not a missed simplification. `ProcessEnv` is an index
+       * signature, and bracket access is the form that keeps reading it honest — it stays correct
+       * if `noPropertyAccessFromIndexSignature` is ever turned on, and it makes an env read
+       * visually distinct from a property access on a known object. This option narrows the rule
+       * to exactly that case rather than switching it off.
+       */
+      '@typescript-eslint/dot-notation': ['error', { allowIndexSignaturePropertyAccess: true }],
       '@typescript-eslint/require-await': 'error',
       '@typescript-eslint/switch-exhaustiveness-check': 'error',
       '@typescript-eslint/consistent-type-imports': [
@@ -190,7 +199,17 @@ export default tseslint.config(
 
   // --- scripts and config may write to stdout ------------------------------------------
   {
-    files: ['**/scripts/**/*.ts', '**/*.config.ts', '**/*.config.mjs', '**/seed/**/*.ts', '**/cli/**/*.ts'],
+    files: [
+      '**/scripts/**/*.ts',
+      '**/*.config.ts',
+      '**/*.config.mjs',
+      '**/seed/**/*.ts',
+      '**/cli/**/*.ts',
+      // Invoked as a command (`pnpm db:migrate`), so its output IS its user interface. It runs
+      // before the logger has an environment to configure itself from, which is the other reason
+      // it cannot use one.
+      '**/migrate.ts',
+    ],
     rules: { 'no-console': 'off' },
   },
 

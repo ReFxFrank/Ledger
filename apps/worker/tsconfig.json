@@ -1,5 +1,13 @@
 {
   "extends": "../../tsconfig.base.json",
-  "compilerOptions": { "rootDir": ".", "types": ["node"] },
-  "include": ["src/**/*.ts"]
+  "compilerOptions": {
+    "rootDir": ".",
+    "types": ["node"],
+    // `@ledger/notify`'s barrel re-exports `renderNotification` from a `.tsx` file, so anything
+    // that imports the package at all has to be able to parse JSX — including this process,
+    // which renders every email it sends.
+    "jsx": "react-jsx",
+    "lib": ["ES2023", "DOM"]
+  },
+  "include": ["src/**/*.ts", "vitest.config.ts"]
 }

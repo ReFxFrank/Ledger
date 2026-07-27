@@ -90,7 +90,7 @@ export class Scope {
    * `undefined` entries are dropped, so `scope.where(subscriptions, maybeFilter)` works without
    * the caller building an array conditionally.
    */
-  where<T extends UserScopedTable>(table: T, ...extra: (SQL | undefined)[]): SQL {
+  where(table: UserScopedTable, ...extra: (SQL | undefined)[]): SQL {
     const predicate = and(eq(table.userId, this.userId), ...extra);
     // `and()` only returns undefined when given nothing; the first argument guarantees one.
     if (predicate === undefined) throw new LedgerError('FORBIDDEN', 'Scope predicate collapsed.');
@@ -98,8 +98,8 @@ export class Scope {
   }
 
   /** Same, but also pinned to a row id — the shape almost every detail query wants. */
-  whereId<T extends UserScopedTable & { id: PgColumn }>(
-    table: T,
+  whereId(
+    table: UserScopedTable & { id: PgColumn },
     id: string,
     ...extra: (SQL | undefined)[]
   ): SQL {
@@ -212,8 +212,8 @@ export class Scope {
    * This throws rather than silently operating on the subset that happens to be owned, because a
    * partial bulk action the user did not ask for is its own kind of wrong.
    */
-  async assertOwnsAll<T extends UserScopedTable & { id: PgColumn }>(
-    table: T,
+  async assertOwnsAll(
+    table: UserScopedTable & { id: PgColumn },
     ids: readonly string[],
   ): Promise<void> {
     if (ids.length === 0) return;

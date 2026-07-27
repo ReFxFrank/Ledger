@@ -31,3 +31,6 @@ pnpm-debug.log*
 storybook-static/
 data/minio/
 data/postgres/
+
+# Local email outbox: what @ledger/notify writes when RESEND_API_KEY is absent.
+.mail/

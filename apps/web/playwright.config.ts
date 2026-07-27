@@ -20,7 +20,9 @@ export default defineConfig({
 
   // Every spec creates its own user, so there is no shared fixture to serialise against.
   fullyParallel: true,
-  workers: process.env['CI'] === undefined ? undefined : 2,
+  // Spread rather than assigned `undefined`: `exactOptionalPropertyTypes` treats an explicit
+  // undefined as a value, and Playwright's own default (half the cores) is what we want locally.
+  ...(process.env['CI'] === undefined ? {} : { workers: 2 }),
 
   // A retry in CI masks a flaky test as a passing one. One retry buys tolerance for genuine
   // infrastructure noise; more than that and the suite stops telling the truth.

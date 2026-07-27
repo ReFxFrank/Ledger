@@ -27,6 +27,7 @@
     "@ledger/crypto": "workspace:*",
     "@ledger/env": "workspace:*",
     "@ledger/logger": "workspace:*",
+    "@ledger/providers": "workspace:*",
     "drizzle-orm": "^0.38.4",
     "postgres": "^3.4.5"
   },

@@ -215,7 +215,7 @@ export interface RenderContext {
  * attempts on it is how a sender queue fills with work that can never succeed.
  */
 export type DeliveryResult =
-  | { readonly status: 'sent'; readonly detail?: string }
+  | { readonly status: 'sent'; readonly detail?: string | undefined }
   | { readonly status: 'skipped'; readonly reason: string }
   | { readonly status: 'failed'; readonly reason: string; readonly retryable: boolean };
 
