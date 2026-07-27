@@ -4,7 +4,6 @@ import { LedgerError } from '@ledger/core';
 import {
   Keyring,
   type KeyMaterial,
-  type SealedValue,
   aadFor,
   keyFromBase64,
   keyIdFor,
@@ -216,8 +215,8 @@ describe('key rotation', () => {
 
     const after = reseal(rotating, before, AAD);
     expect(after).not.toBeNull();
-    expect((after as SealedValue).keyId).toBe(newKey.keyId);
-    expect(open(rotating, after as SealedValue, AAD)).toBe(TOKEN);
+    expect(after!.keyId).toBe(newKey.keyId);
+    expect(open(rotating, after!, AAD)).toBe(TOKEN);
   });
 
   it('skips a record already under the primary key, so a rotation is resumable', () => {

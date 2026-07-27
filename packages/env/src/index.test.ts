@@ -214,7 +214,7 @@ describe('loadClientEnv', () => {
       // Passing a server secret in must not smuggle it through the parsed result.
       ENCRYPTION_KEY: KEY_32,
       BETTER_AUTH_SECRET: SECRET,
-    } as Record<string, string>);
+    });
 
     expect(Object.keys(parsed).every((key) => key.startsWith('NEXT_PUBLIC_'))).toBe(true);
     expect(JSON.stringify(parsed)).not.toContain(KEY_32);

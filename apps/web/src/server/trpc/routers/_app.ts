@@ -1,6 +1,7 @@
 import 'server-only';
 
 import { router } from '../init';
+import { accountRouter } from './account';
 import { analyticsRouter } from './analytics';
 import { cancellationsRouter } from './cancellations';
 import { connectionsRouter } from './connections';
@@ -20,6 +21,7 @@ import { subscriptionsRouter } from './subscriptions';
  */
 export const appRouter = router({
   me: meRouter,
+  account: accountRouter,
   dashboard: dashboardRouter,
   subscriptions: subscriptionsRouter,
   paymentMethods: paymentMethodsRouter,
