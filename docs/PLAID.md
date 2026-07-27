@@ -18,7 +18,16 @@ Ledger runs against a fixture bank by default (`AGGREGATOR=fixture`). To run aga
 
 ## Sandbox sign-in
 
-Pick any institution in Link and sign in with Plaid's test credentials:
+**The phone screen comes first, and a real phone number will never work.** Link opens with
+Plaid's "remember me" prompt, and sandbox does not send real SMS — a genuine number just waits
+forever for a text that is not coming. Use Plaid's test values, or the skip link on that screen
+("continue as guest"); the phone step is Plaid's returning-user feature, not part of linking a
+bank.
+
+- phone number: `415-555-0011`
+- SMS code: `123456`
+
+Then pick any institution and sign in with Plaid's test credentials:
 
 - username: `user_good`
 - password: `pass_good`
