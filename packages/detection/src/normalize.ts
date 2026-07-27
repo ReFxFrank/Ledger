@@ -224,7 +224,26 @@ const PROCESSOR_PREFIXES: readonly RegExp[] = [
   /^\s*(?:POS\s+DEBIT|POS\s+PURCHASE|DEBIT\s+CARD\s+PURCHASE|CHECKCARD|CHKCARD|VISA\s+DDA\s+PUR(?:CH)?|ACH\s+DEBIT|DIRECT\s+DEBIT|RECURRING\s+P(?:MT|AYMENT)|CARD\s+PAYMENT\s+TO|PAYMENT\s+TO)\b\s*/,
   /^\s*(?:SQ|SP|TST|IC|WL|EIG|PY)\s*\*\s*/,
   /^\s*DD\s+(?=[A-Z])/,
+  /**
+   * Chase ACH transaction-type words, which sit in front of the merchant rather than being part
+   * of it. Found against a real 1,100-transaction export, where they split six merchants in two:
+   * `PURCHASE PARAMNTPLUS` and `PARAMNTPLUS` were separate clusters, as were `INST XFER SPOTIFY`
+   * and `SPOTIFY`, so one subscription was proposed twice at half its true occurrence count —
+   * which also halves its confidence and can push a genuine subscription under the surfacing
+   * threshold entirely.
+   *
+   * Anchored and followed by a letter, so a merchant genuinely named "Purchase Plus" survives.
+   */
+  /^\s*(?:PURCHASE|INST\s+XFER|POS\s+WITHDRAWAL|ONLINE\s+PMT)\s+(?=[A-Z])/,
 ];
+
+/**
+ * `PENDING` on a card authorisation is a state, not a name.
+ *
+ * Chase writes `UBER * EATS PENDING SAN FRANCISCO CA` while the charge is unsettled and drops the
+ * word once it posts, so the same merchant produced two clusters that never merged.
+ */
+const AUTHORISATION_STATE = /\b(?:PENDING|TEMPORARY\s+AUTH|AUTH\s+HOLD)\b/g;
 
 // ── noise ──────────────────────────────────────────────────────────────────────────────
 
@@ -517,6 +536,58 @@ function dropRepeatedTokens(tokens: readonly Token[]): Token[] {
   return tokens.filter((token, index) => token.value !== tokens[index - 1]?.value);
 }
 
+/**
+ * The foreign-transaction tail Chase appends to a cross-border card charge:
+ *
+ *   AMAZON.CA PRIME MEMB AMAZON.CA/PRI BC   10/29 CA DOLLAR  11.29 X 0.731000 (EXCHG RTE)
+ *
+ * The amount and the rate are different on every single charge, so a descriptor that keeps them
+ * gives one merchant a new normalized key every month — and a genuinely recurring foreign
+ * subscription can never cluster. Found in real Chase data: an Amazon.ca Prime membership
+ * produced two unrelated keys for two consecutive charges.
+ */
+const FX_TAIL =
+  /\s+\d{1,2}\/\d{1,2}\s+[A-Z][A-Z .]{2,20}?\s+[\d,]+\.\d{2}\s*X\s*[\d.]+\s*\(EXCHG\s*RTE\)/g;
+
+/**
+ * Chase's ACH envelope. A PayPal pull, a payroll credit and a direct debit all arrive as:
+ *
+ *   ORIG CO NAME:PAYPAL   CO ENTRY DESCR:PURCHASE SEC:WEB IND ID:STEAM GAMES  ORIG ID:PAYPALSI77
+ *
+ * The merchant is `STEAM GAMES`, in `IND ID` — the *individual* identifier, which for a payment
+ * processor is who the money actually went to. `ORIG CO NAME` is the processor, not the payee.
+ *
+ * Without this pass the label words survive and the merchant does not: every such charge
+ * normalized to `ORIG CO NAME CO ENTRY DESCR PURCHASE SEC WEB IND ID ORIG`, so Steam, Roblox and
+ * Google all collapsed into one meaningless cluster — losing every real subscription among them
+ * and inventing a fake high-frequency one. This was the single worst defect in the engine and it
+ * only surfaced against a real bank export.
+ *
+ * `IND ID` wins when it carries letters. When it is purely numeric it is a customer reference
+ * rather than a name, and `ORIG CO NAME` is the best merchant available.
+ */
+function unwrapAchEnvelope(state: Working): void {
+  if (!/\bORIG CO NAME:|\bCO ENTRY DESCR:/.test(state.text)) return;
+
+  const individual = /\bIND ID:\s*([A-Z][A-Z0-9 &.'-]{1,28}?)\s{2,}|\bIND ID:\s*([A-Z][A-Z0-9 &.'-]{1,28})$/.exec(
+    state.text,
+  );
+  const company = /\bORIG CO NAME:\s*([A-Z][A-Z0-9 &.'-]{1,28}?)\s{2,}/.exec(state.text);
+
+  const candidate = (individual?.[1] ?? individual?.[2] ?? '').trim();
+  const merchant = /[A-Z]/.test(candidate) ? candidate : (company?.[1] ?? '').trim();
+  if (merchant === '') return;
+
+  // Rewritten wholesale rather than stripped piecewise: the envelope is structure, not noise,
+  // and the offsets that matter for the descriptor decoder are the merchant's own.
+  const start = state.text.indexOf(merchant);
+  const origin = start >= 0 ? state.origin.slice(start, start + merchant.length) : state.origin.slice(0, merchant.length);
+
+  state.spans.push({ start: 0, end: state.origin.length, reason: 'processor' });
+  state.text = merchant;
+  state.origin = origin.length === merchant.length ? origin : Array.from({ length: merchant.length }, (_, i) => i);
+}
+
 // ── the pipeline ───────────────────────────────────────────────────────────────────────
 
 /**
@@ -544,6 +615,14 @@ export function normalizeDescriptor(raw: string): NormalizedDescriptor {
     spans: [],
   };
 
+  // Before anything else: an ACH envelope hides the merchant inside a labelled field, and every
+  // later pass would strip the label and keep the boilerplate. Real Chase data, real failure.
+  unwrapAchEnvelope(state);
+
+  // The foreign-transaction tail carries the amount and the FX rate, which differ on every
+  // charge — leaving it in gives the same merchant a different key each month.
+  stripPattern(state, FX_TAIL, 'reference');
+
   const { channel, markerSpan } = stripChannelMarkers(state);
 
   for (let guard = 0; guard < 8; guard += 1) {
@@ -552,6 +631,7 @@ export function normalizeDescriptor(raw: string): NormalizedDescriptor {
     stripPattern(state, prefix, 'processor');
   }
 
+  stripPattern(state, AUTHORISATION_STATE, 'filler');
   stripPattern(state, NOISE_DOMAINS, 'url');
   stripPattern(state, DOMAIN, 'url', (match) => [
     match.index + (match[1] ?? '').length,
