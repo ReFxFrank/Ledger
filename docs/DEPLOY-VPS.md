@@ -8,7 +8,7 @@ minutes. Everything runs in Docker; nothing is installed on the host except Dock
 | Thing | Why |
 |---|---|
 | A VPS with **2 vCPU / 4 GB RAM / 40 GB disk** | The Next.js build is the peak load. 2 GB works only with swap (step 1 adds it anyway). |
-| A **domain name** with an A record pointing at the VPS IP | Caddy gets TLS certificates automatically, and Plaid webhooks need a public HTTPS URL. Set this up first — DNS propagation is the slowest step. |
+| A **domain name** with an A record pointing at the VPS IP | Caddy gets TLS certificates automatically, and Plaid webhooks need a public HTTPS URL. Set this up first — DNS propagation is the slowest step. **No domain yet?** See "Running without a domain" below — a bare IP is not an option, but there is a free workaround. |
 | Ports **80 and 443** reachable | Let's Encrypt validation and the app itself. |
 | A **Resend API key** (resend.com) | Production refuses to boot without it — notifications silently not sending is worse than not starting. |
 | **Plaid credentials** (dashboard.plaid.com) | Optional at first: `AGGREGATOR=fixture` runs the whole product without them. |
@@ -194,6 +194,29 @@ Evidence uploads live in the MinIO volume; mirror them too if users store cancel
 evidence. And repeat the warning from step 4: **a database backup is useless without
 `ENCRYPTION_KEY`, and the two must not live in the same place.** A restore drill is in
 `docs/RUNBOOK.md` — a backup that has never been restored is a hypothesis.
+
+## Running without a domain
+
+A bare IP does not work: production makes session cookies `Secure`-only and requires an https
+`APP_URL` (the boot check enforces it), and certificate authorities do not reliably issue for
+naked IPs — so you would get either broken sign-in or a self-signed certificate that browsers
+warn about and Plaid refuses to deliver webhooks to.
+
+The workaround is **sslip.io**: public wildcard DNS where `<your-ip>.sslip.io` resolves to your
+IP with no signup. It is a real hostname, so Caddy obtains a real certificate for it:
+
+```bash
+cd /opt/ledger
+IP=$(curl -4 -s ifconfig.me)
+sed -i "s|^APP_URL=.*|APP_URL=https://$IP.sslip.io|; s|^NEXT_PUBLIC_APP_URL=.*|NEXT_PUBLIC_APP_URL=https://$IP.sslip.io|; s|^BETTER_AUTH_URL=.*|BETTER_AUTH_URL=https://$IP.sslip.io|" .env
+grep -q '^LEDGER_DOMAIN=' .env && sed -i "s|^LEDGER_DOMAIN=.*|LEDGER_DOMAIN=$IP.sslip.io|" .env || echo "LEDGER_DOMAIN=$IP.sslip.io" >> .env
+```
+
+Caveats, stated plainly: sslip.io is a third-party convenience with Let's Encrypt rate limits
+shared across everyone using it. Caddy falls back to ZeroSSL automatically, so issuance usually
+succeeds; if Caddy's logs show both CAs refusing, a free DuckDNS subdomain (two-minute signup,
+on the public suffix list, so it gets its own rate limit) is the reliable alternative. Moving to
+a real domain later is the same four `.env` lines and one `up -d`.
 
 ## Troubleshooting the first launch
 
