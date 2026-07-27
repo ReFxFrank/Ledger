@@ -593,6 +593,15 @@ async function main(): Promise<void> {
     process.exit(1);
   }
 
+  /**
+   * `--merchants-only` seeds the reference data and nothing else. Production needs the merchant
+   * registry and its cancellation playbooks — detection matching and the whole cancellation
+   * product depend on those tables — but a demo user with twenty fabricated subscriptions on a
+   * real deployment is exactly the "mock data reachable from a production path" the brief
+   * forbids. This flag is what the VPS deploy guide runs.
+   */
+  const merchantsOnly = process.argv.slice(2).includes('--merchants-only');
+
   const asOf = referenceDateFromArgv(process.argv.slice(2));
   const dataset = buildDemoDataset({
     // Midday, so that a timezone offset either side of UTC cannot move the reference date.
@@ -603,17 +612,20 @@ async function main(): Promise<void> {
 
   // Before any writing: if the credential path is going to degrade, say so while the output is
   // still at the top of the terminal rather than under a hundred lines of merchant upserts.
-  const totp = await sealTotpSecret(dataset.credentials.totpSecret);
+  const totp = merchantsOnly ? null : await sealTotpSecret(dataset.credentials.totpSecret);
 
   try {
     console.log('Seeding the merchant registry…');
     const merchantIdBySlug = await seedMerchantRegistry(handle.db);
     console.log(`  ${String(merchantIdBySlug.size)} merchants.`);
 
-    console.log('Seeding the demo user…');
-    await seedDemoUser(handle.db, dataset, merchantIdBySlug, totp.value);
-
-    report(dataset, totp.sealed);
+    if (totp === null) {
+      console.log('Merchant registry only — no demo user was created.');
+    } else {
+      console.log('Seeding the demo user…');
+      await seedDemoUser(handle.db, dataset, merchantIdBySlug, totp.value);
+      report(dataset, totp.sealed);
+    }
   } catch (error) {
     console.error(`Seed failed: ${describe(error)}`);
     process.exitCode = 1;
