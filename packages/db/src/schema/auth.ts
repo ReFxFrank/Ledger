@@ -127,6 +127,20 @@ export const twoFactors = pgTable(
       .references(() => users.id, { onDelete: 'cascade' }),
     secret: text('secret').notNull(),
     backupCodes: text('backup_codes').notNull(),
+
+    /**
+     * The next three are owned by the plugin, and every one of them was missing from the first
+     * cut of this table. `verified` is the one that bit: enabling 2FA writes it, so enrolment
+     * returned a 500 and nobody could finish securing an account.
+     *
+     * `verified` defaults to true rather than false — that is better-auth's own default, and
+     * inverting it here would silently un-verify every enrolment.
+     */
+    verified: boolean('verified').notNull().default(true),
+    /** Drives the plugin's lockout after repeated bad codes. */
+    failedVerificationCount: integer('failed_verification_count').notNull().default(0),
+    lockedUntil: timestamp('locked_until', { withTimezone: true }),
+
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   },
   (table) => [index('two_factor_user_idx').on(table.userId)],

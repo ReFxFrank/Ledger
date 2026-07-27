@@ -81,7 +81,18 @@ export function createLogger(options: CreateLoggerOptions): Logger {
     timestamp: pino.stdTimeFunctions.isoTime,
   };
 
-  if (pretty && level !== 'silent') {
+  /**
+   * `pino-pretty` runs as a worker thread via `thread-stream`, and that does not survive Next's
+   * server bundling: the worker resolves its entrypoint relative to the bundle and dies with
+   * `Cannot find module '.next/server/vendor-chunks/lib/worker.js'`, throwing an uncaught
+   * exception on every boot. Next is detected rather than guessed at — `NEXT_RUNTIME` is set by
+   * the framework in both the node and edge runtimes — and there we log plain JSON instead.
+   *
+   * The worker and the CLIs are unaffected and keep the pretty output.
+   */
+  const underNext = process.env['NEXT_RUNTIME'] !== undefined;
+
+  if (pretty && !underNext && level !== 'silent') {
     return pino({
       ...config,
       transport: {
