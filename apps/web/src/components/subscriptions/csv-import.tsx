@@ -353,7 +353,27 @@ function validate(options: ValidateOptions): Validation {
 
     let amountMinor: number;
     try {
-      amountMinor = parseMoney(amountCell, currency).amountMinor;
+      const parsed = parseMoney(amountCell, currency).amountMinor;
+
+      /**
+       * Bank exports sign the other way round.
+       *
+       * Chase, and most US bank CSVs, write a debit as `-15.49` — money leaving is negative.
+       * Ledger's convention is the opposite: a subscription's amount is positive, because it is
+       * what you pay. Imported verbatim, a Chase export produces subscriptions worth minus
+       * fifteen dollars, and the dashboard's monthly commitment goes *down* for every
+       * subscription you add. Nothing errors; the totals are just quietly wrong, which is the
+       * failure mode this product least deserves.
+       *
+       * Taking the magnitude is right for both shapes: exports that write debits positive are
+       * unaffected, and a credit (a refund) is not a subscription — those rows are the
+       * `> 0` filter below.
+       */
+      if (parsed === 0) {
+        rejected.push({ line, reason: 'Amount is zero — not a subscription.', preview });
+        return;
+      }
+      amountMinor = Math.abs(parsed);
     } catch {
       rejected.push({ line, reason: `Could not read "${amountCell}" as an amount.`, preview });
       return;
