@@ -25,6 +25,18 @@ export const meRouter = router({
       locale: ctx.user.locale ?? 'en-US',
       twoFactorEnabled: ctx.user.twoFactorEnabled === true,
       onboardingCompletedAt: ctx.user.onboardingCompletedAt ?? null,
+      /**
+       * Which of the listed sessions is the one you are reading this on.
+       *
+       * The settings screen used better-auth's `useSession()` for this, and that hook is not
+       * safe to render on the server — its React dispatcher is null during SSR, so /settings
+       * threw and the error boundary showed "This screen failed to load". The fact is already
+       * on the server; sending the id costs nothing and removes the hook entirely.
+       *
+       * The id, never the token: the token is the bearer credential and lives in an httpOnly
+       * cookie precisely so that no script can read it.
+       */
+      currentSessionId: ctx.session?.session.id ?? null,
     };
   }),
 

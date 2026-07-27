@@ -11,8 +11,8 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  NODE_VERSION: '22'
-  PNPM_VERSION: '9.15.4'
+  NODE_VERSION: "22"
+  PNPM_VERSION: "9.15.4"
   # Deterministic, non-secret values so the app boots in CI. Never used outside CI.
   DATABASE_URL: postgresql://ledger:ledger@localhost:5432/ledger_test
   REDIS_URL: redis://localhost:6379
@@ -36,7 +36,7 @@ jobs:
           POSTGRES_USER: ledger
           POSTGRES_PASSWORD: ledger
           POSTGRES_DB: ledger_test
-        ports: ['5432:5432']
+        ports: ["5432:5432"]
         options: >-
           --health-cmd "pg_isready -U ledger"
           --health-interval 5s
@@ -44,7 +44,7 @@ jobs:
           --health-retries 20
       redis:
         image: redis:7
-        ports: ['6379:6379']
+        ports: ["6379:6379"]
         options: >-
           --health-cmd "redis-cli ping"
           --health-interval 5s
@@ -101,7 +101,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: coverage
-          path: '**/coverage/**'
+          path: "**/coverage/**"
           if-no-files-found: ignore
           retention-days: 7
 
@@ -118,7 +118,7 @@ jobs:
           POSTGRES_USER: ledger
           POSTGRES_PASSWORD: ledger
           POSTGRES_DB: ledger_test
-        ports: ['5432:5432']
+        ports: ["5432:5432"]
         options: >-
           --health-cmd "pg_isready -U ledger"
           --health-interval 5s
@@ -126,7 +126,7 @@ jobs:
           --health-retries 20
       redis:
         image: redis:7
-        ports: ['6379:6379']
+        ports: ["6379:6379"]
         options: >-
           --health-cmd "redis-cli ping"
           --health-interval 5s
@@ -155,6 +155,17 @@ jobs:
 
       - name: Migrate
         run: pnpm db:migrate
+
+      # The connect/review specs assert against detections whose merchant matching reads the
+      # `merchants` table. `--merchants-only` seeds the provider registry and nothing else —
+      # no demo user, no demo data; every spec creates its own user.
+      - name: Seed merchant registry
+        run: pnpm seed:demo --merchants-only
+
+      # `playwright.config.ts` starts the app with `pnpm start`, which serves the production
+      # build — this job runs on a fresh checkout, so it has to build one first.
+      - name: Build web app
+        run: pnpm --filter @ledger/web build
 
       - name: Install browsers
         run: pnpm --filter @ledger/web exec playwright install --with-deps chromium

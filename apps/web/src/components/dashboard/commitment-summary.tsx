@@ -11,10 +11,10 @@ import { Money, cn } from '@ledger/ui';
  * a row of big number-cards competing with it turns the page back into the generic fintech
  * dashboard this product is explicitly not.
  *
- * The unconvertible line is the important part of this component. `aggregateCommitments` returns
- * the ids it could not convert instead of guessing a rate, and a UI that drops them on the floor
- * turns an honest gap into a wrong total — which is the one failure mode the money layer exists
- * to prevent.
+ * The two footnote lines are the important part of this component. `aggregateCommitments`
+ * reports which rows it converted at the static fallback rate and which it could not convert at
+ * all, and a UI that drops either on the floor turns a labelled approximation into a claimed
+ * fact — which is the one failure mode the money layer exists to prevent.
  */
 
 export interface CommitmentSummaryProps {
@@ -23,6 +23,10 @@ export interface CommitmentSummaryProps {
   readonly currency: string;
   readonly count: number;
   readonly unconvertibleIds: readonly string[];
+  /** Rows converted at the static fallback rate — in the totals, but approximately. */
+  readonly approximateIds: readonly string[];
+  /** The date the fallback rate snapshot was taken, `YYYY-MM-DD`. */
+  readonly approximateRateDate: string;
   readonly locale?: string;
   readonly className?: string;
 }
@@ -33,10 +37,13 @@ export function CommitmentSummary({
   currency,
   count,
   unconvertibleIds,
+  approximateIds,
+  approximateRateDate,
   locale,
   className,
 }: CommitmentSummaryProps): React.ReactNode {
   const excluded = unconvertibleIds.length;
+  const approximate = approximateIds.length;
 
   return (
     <div className={cn('flex flex-col gap-[var(--gap)]', className)}>
@@ -65,6 +72,16 @@ export function CommitmentSummary({
           </span>
         </Figure>
       </div>
+
+      {approximate > 0 ? (
+        <p className="text-xs text-text-2">
+          {approximate === 1
+            ? '1 subscription is billed in another currency and is'
+            : `${String(approximate)} subscriptions are billed in another currency and are`}{' '}
+          converted at an indicative rate from {approximateRateDate}, so these totals are
+          approximate.
+        </p>
+      ) : null}
 
       {excluded > 0 ? (
         <p className="text-xs text-text-2">

@@ -38,6 +38,8 @@ export interface EvidencePanelProps {
   readonly id: string;
   readonly attachments: CancellationDetail['attachments'];
   readonly confirmationReference: string | null;
+  /** The playbook's provider-specific "what to keep", snapshotted when the cancellation started. */
+  readonly evidenceHint?: string | null | undefined;
   readonly timezone: string;
   readonly locale: string;
   readonly onRecordConfirmation: () => void;
@@ -47,6 +49,7 @@ export function EvidencePanel({
   id,
   attachments,
   confirmationReference,
+  evidenceHint,
   timezone,
   locale,
   onRecordConfirmation,
@@ -65,6 +68,13 @@ export function EvidencePanel({
       </PanelHeader>
 
       <PanelBody className="flex flex-col gap-[var(--gap-loose)]">
+        {evidenceHint === null || evidenceHint === undefined ? null : (
+          <p className="rounded-md border border-control/30 bg-control-dim p-[var(--pad-card)] text-[0.8125rem] text-text">
+            <span className="eyebrow mr-1.5 inline">For this provider</span>
+            {evidenceHint}
+          </p>
+        )}
+
         <ul className="flex flex-col gap-[var(--gap-tight)]">
           {KEEP.map((item) => (
             <li key={item.text} className="flex items-start gap-2 text-[0.8125rem] text-text-2">

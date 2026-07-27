@@ -6,7 +6,7 @@ import { KeyRound, Laptop, ShieldCheck, Smartphone } from 'lucide-react';
 import { Badge, Button, Panel, PanelBody, PanelHeader, Skeleton, cn, toast } from '@ledger/ui';
 import { api } from '~/lib/trpc';
 import { formatInstant } from '~/lib/format';
-import { PASSKEY_ENABLED, authClient, useSession } from '~/lib/auth-client';
+import { PASSKEY_ENABLED, authClient } from '~/lib/auth-client';
 import { LoadError } from '../dashboard/states';
 
 /**
@@ -73,8 +73,15 @@ function parseSessions(payload: unknown): readonly SessionRow[] {
 
 export function SecuritySettings(): React.ReactNode {
   const me = api.me.current.useQuery();
-  const session = useSession();
-  const currentToken = session.data?.session.token ?? null;
+  /**
+   * The current session comes from `me.current`, not from better-auth's `useSession()`.
+   *
+   * That hook is not SSR-safe here — React's dispatcher is null when it renders on the server,
+   * so this component threw and /settings returned a 500 behind the error boundary. The server
+   * already knows which session is making the request, so it sends the id and no client auth
+   * hook is needed.
+   */
+  const currentSessionId = me.data?.currentSessionId ?? null;
   const [revoking, setRevoking] = React.useState<string | null>(null);
 
   const sessions = useQuery({
@@ -182,7 +189,7 @@ export function SecuritySettings(): React.ReactNode {
         ) : (
           <PanelBody className="flex flex-col gap-1.5">
             {sessions.data.map((row) => {
-              const isCurrent = currentToken !== null && row.token === currentToken;
+              const isCurrent = currentSessionId !== null && row.id === currentSessionId;
               return (
                 <div
                   key={row.id}

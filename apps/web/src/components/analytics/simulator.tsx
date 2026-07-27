@@ -93,6 +93,7 @@ export function CancelSimulator({ locale }: { readonly locale: string }): React.
   }
 
   const unconvertible = result?.unconvertibleIds ?? [];
+  const approximate = result?.approximateIds ?? [];
 
   return (
     <Panel className="min-w-0">
@@ -155,6 +156,15 @@ export function CancelSimulator({ locale }: { readonly locale: string }): React.
               runSimulation({ cancelIds: [...selected] });
             }}
           />
+        ) : null}
+
+        {approximate.length > 0 ? (
+          <p className="text-xs text-text-3">
+            {approximate.length}{' '}
+            {approximate.length === 1 ? 'subscription is' : 'subscriptions are'} billed in another
+            currency and converted at an indicative rate from{' '}
+            {result?.approximateRateDate ?? 'an earlier date'}, so these figures are approximate.
+          </p>
         ) : null}
 
         {unconvertible.length > 0 ? (

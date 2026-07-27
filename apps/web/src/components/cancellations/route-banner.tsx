@@ -48,6 +48,12 @@ export interface RouteBannerProps {
   readonly subscriptionName: string;
   /** The provider's own website, as stored on the subscription. Suppressed for store billing. */
   readonly providerUrl: string | null;
+  /**
+   * The playbook's deep link to the actual cancel page, snapshotted when the cancellation
+   * started. Only ever rendered for non-intermediated channels — the same refusal as
+   * `providerUrl`, and for the same reason.
+   */
+  readonly cancelUrl?: string | null | undefined;
   /** The `channel` step from the snapshotted checklist, when the playbook wrote one. */
   readonly routingNote?: string | undefined;
   readonly routingWarning?: string | undefined;
@@ -58,6 +64,7 @@ export function RouteBanner({
   channel,
   subscriptionName,
   providerUrl,
+  cancelUrl,
   routingNote,
   routingWarning,
 }: RouteBannerProps): React.ReactNode {
@@ -121,14 +128,30 @@ export function RouteBanner({
                   </a>
                 </Button>
               )
-            ) : providerUrl === null ? null : (
-              <Button size="sm" variant="secondary" asChild>
-                <a href={providerUrl} target="_blank" rel="noreferrer noopener">
-                  Open {subscriptionName}
-                  <ExternalLink className="size-3.5" aria-hidden />
-                  <span className="sr-only"> (opens in a new tab)</span>
-                </a>
-              </Button>
+            ) : (
+              <>
+                {/* The playbook's deep link goes straight to the cancel flow, so it is the
+                    primary action; the provider's homepage is only worth a button when there is
+                    no better door to point at. */}
+                {cancelUrl === null || cancelUrl === undefined ? null : (
+                  <Button size="sm" variant="primary" asChild>
+                    <a href={cancelUrl} target="_blank" rel="noreferrer noopener">
+                      Open the cancel page
+                      <ExternalLink className="size-3.5" aria-hidden />
+                      <span className="sr-only"> (opens in a new tab)</span>
+                    </a>
+                  </Button>
+                )}
+                {providerUrl === null || (cancelUrl !== null && cancelUrl !== undefined) ? null : (
+                  <Button size="sm" variant="secondary" asChild>
+                    <a href={providerUrl} target="_blank" rel="noreferrer noopener">
+                      Open {subscriptionName}
+                      <ExternalLink className="size-3.5" aria-hidden />
+                      <span className="sr-only"> (opens in a new tab)</span>
+                    </a>
+                  </Button>
+                )}
+              </>
             )}
           </div>
         </div>

@@ -20,6 +20,8 @@ import {
   users,
 } from '@ledger/db';
 import { childLogger } from '@ledger/logger';
+import { getAdapterFor } from '~/server/banking/runtime';
+import { loadRevocableConnections, revokeConnections } from '~/server/banking/revoke';
 import { recordAudit } from '../../audit';
 import { router, sensitiveProcedure } from '../init';
 
@@ -201,10 +203,13 @@ export const accountRouter = router({
    *     withdraw — the local data would be gone and the access would not.
    *  2. Only then delete the user row, which cascades to everything else.
    *
-   * If a revoke fails the deletion ABORTS rather than proceeding, because a half-deleted account
-   * with live bank access is worse than an account that is still there. `force` exists for the
-   * case where an aggregator is permanently unreachable and the user would otherwise be stuck —
-   * it is an explicit choice, and it is recorded.
+   * If any revoke fails the deletion ABORTS rather than proceeding, because a half-deleted
+   * account with live bank access is worse than an account that is still there. The abort is
+   * per-institution, though: connections that *did* revoke are gone at the aggregator whatever
+   * happens next, so their local rows are deleted immediately — a retry then only re-attempts
+   * the ones that actually failed. `force` exists for the case where an aggregator is
+   * permanently unreachable and the user would otherwise be stuck — it is an explicit choice,
+   * and it is recorded.
    */
   deleteAccount: sensitiveProcedure
     .input(
@@ -229,49 +234,89 @@ export const accountRouter = router({
         .set({ deletedAt: ctx.clock.now() })
         .where(eq(users.id, ctx.user.id));
 
-      const links = await ctx.db
-        .select({
-          id: bankConnections.id,
-          provider: bankConnections.provider,
-          institutionName: bankConnections.institutionName,
-        })
-        .from(bankConnections)
-        .where(ctx.scope.where(bankConnections));
+      // The sealed token columns are read in the banking layer, not here — `authz.test.ts`
+      // bans their names in router sources, and the adapter opens the envelope internally, so
+      // the plaintext never exists on this path at all.
+      const links = await loadRevocableConnections(ctx.db, ctx.scope);
 
-      /**
-       * TODO(frank): actually call `adapter.removeConnection()` here. It needs the sealed token
-       * opened via @ledger/crypto and an adapter instance, which belongs in the worker rather
-       * than in a request handler — a revoke that takes ten seconds should not hold a mutation
-       * open. Until that job exists this reports the institutions honestly rather than claiming
-       * a revocation that did not happen, which is the failure mode the threat model calls out.
-       */
-      const unrevoked = links.map((link) => link.institutionName);
+      const report = await revokeConnections(links, getAdapterFor);
+      const revokedInstitutions = report.revoked.map((link) => link.institutionName);
+      const unrevokedInstitutions = report.failed.map(({ connection }) => connection.institutionName);
 
-      if (unrevoked.length > 0 && !input.force) {
+      if (report.revoked.length > 0) {
+        // Whatever happens next, these are gone at the aggregator — the sealed tokens in their
+        // rows open nothing anymore. Deleting the rows now means a retry after a partial failure
+        // only re-attempts the institutions that actually failed.
+        await ctx.db
+          .delete(bankConnections)
+          .where(
+            ctx.scope.where(
+              bankConnections,
+              inArray(
+                bankConnections.id,
+                report.revoked.map((link) => link.id),
+              ),
+            ),
+          );
+      }
+
+      if (report.failed.length > 0 && !input.force) {
         // Undo the closure: the user asked to delete and we could not do it safely, so leaving
         // the account marked closed would lock them out of an account that still exists.
         await ctx.db.update(users).set({ deletedAt: null }).where(eq(users.id, ctx.user.id));
 
+        // This entry survives, unlike the one below, and it is the record of the partial state:
+        // some consents are already withdrawn while the account remains.
+        await recordAudit(
+          ctx.db,
+          ctx.scope,
+          { ip: ctx.ip, userAgent: ctx.userAgent },
+          'account.delete_blocked',
+          'account',
+          null,
+          { revokedInstitutions, unrevokedInstitutions },
+        );
+
         throw new TRPCError({
           code: 'PRECONDITION_FAILED',
           message:
-            `Disconnect ${unrevoked.join(', ')} first. Deleting now would remove your data ` +
-            'here while leaving those banks connected, and nothing left would be able to ' +
-            'disconnect them.',
+            `Could not disconnect ${unrevokedInstitutions.join(', ')}. Nothing was deleted — ` +
+            'deleting now would remove your data here while leaving ' +
+            (unrevokedInstitutions.length === 1 ? 'that bank' : 'those banks') +
+            ' connected, and nothing left would be able to disconnect ' +
+            (unrevokedInstitutions.length === 1 ? 'it' : 'them') +
+            '. Try again in a few minutes, or use "Delete anyway" if it keeps failing.',
         });
       }
 
       log.warn(
-        { userId: ctx.user.id, forced: input.force, institutions: unrevoked.length },
+        {
+          userId: ctx.user.id,
+          forced: input.force,
+          revoked: revokedInstitutions.length,
+          unrevoked: unrevokedInstitutions.length,
+        },
         'deleting account',
+      );
+
+      // Written before the delete so the trail records which consents were withdrawn. The
+      // cascade below takes the audit log with it — that is the data-rights design, not an
+      // oversight — but the entry exists for the window between revoke and delete, and the
+      // blocked-path entry above is the one that persists when persistence matters.
+      await recordAudit(
+        ctx.db,
+        ctx.scope,
+        { ip: ctx.ip, userAgent: ctx.userAgent },
+        'account.deleted',
+        'account',
+        null,
+        { forced: input.force, revokedInstitutions, unrevokedInstitutions },
       );
 
       // Cascades: sessions, subscriptions, connections, transactions, detections, cancellations,
       // notifications, attachments, and the audit log itself.
       await ctx.db.delete(users).where(eq(users.id, ctx.user.id));
 
-      return { deleted: true, unrevokedInstitutions: unrevoked };
+      return { deleted: true, revokedInstitutions, unrevokedInstitutions };
     }),
 });
-
-export { inArray };

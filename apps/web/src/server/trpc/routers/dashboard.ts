@@ -11,21 +11,23 @@ import {
   interval,
   occurrencesBetween,
   parsePlainDate,
-  staticRateTable,
+  fallbackSnapshotFor,
+  staticFallbackRates,
   toInstant,
 } from '@ledger/core';
 import { bankConnections, detections, subscriptionPriceHistory, subscriptions } from '@ledger/db';
 import { protectedProcedure, router } from '../init';
 
 /**
- * TODO(frank): FX rates are currently an empty table, which means a subscription in a currency
- * other than the display currency lands in `unconvertible` and is reported to the user as
- * "N not included" rather than being silently converted at a made-up rate. That is the right
- * failure mode, but it is a stub: the real fix is a daily rate job writing into a `fx_rates`
- * table keyed by date, which is a small piece of work once there is a rate source to point at.
- * Deliberately NOT defaulting to 1.0 — a wrong total is worse than an honest gap.
+ * FX comes from the static quarterly fallback snapshot in @ledger/core, not a live feed.
+ *
+ * TODO(frank): the real fix is still a daily rate job writing into an `fx_rates` table keyed by
+ * date — a small piece of work once there is a rate source to point at. Until then the fallback
+ * converts the majors at a dated indicative rate, the payload names which rows that applied to,
+ * and the UI says "converted at an indicative rate from <date>" rather than presenting the
+ * figure as fact. Anything outside the snapshot still lands in `unconvertible` and is surfaced —
+ * never converted at 1.0, because a silently wrong total is worse than a labelled approximation.
  */
-const RATES = staticRateTable([]);
 
 export const dashboardRouter = router({
   /**
@@ -94,10 +96,11 @@ export const dashboardRouter = router({
       category: row.category,
     }));
 
+    const asOf = formatPlainDate(fromInstant(ctx.clock.now(), ctx.user.timezone ?? 'UTC'));
     const totals = aggregateCommitments(inputs, {
       displayCurrency: ctx.user.displayCurrency ?? 'USD',
-      rates: RATES,
-      asOf: formatPlainDate(fromInstant(ctx.clock.now(), ctx.user.timezone ?? 'UTC')),
+      rates: staticFallbackRates(asOf),
+      asOf,
     });
 
     return {
@@ -107,6 +110,10 @@ export const dashboardRouter = router({
       count: totals.count,
       // Surfaced, not swallowed — the UI says "3 subscriptions aren't included in this total".
       unconvertibleIds: totals.unconvertible,
+      // Converted at the static fallback rate, so the total is approximate about exactly these —
+      // the UI labels them "converted at an indicative rate from <approximateRateDate>".
+      approximateIds: totals.converted,
+      approximateRateDate: fallbackSnapshotFor(asOf).asOf,
     };
   }),
 

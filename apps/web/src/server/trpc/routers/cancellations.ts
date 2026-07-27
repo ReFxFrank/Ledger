@@ -20,6 +20,7 @@ import {
   fromInstant,
   interval,
   intervalLabel,
+  isIntermediated,
   isLedgerError,
   money,
   nextOccurrenceAfter,
@@ -34,6 +35,7 @@ import {
   OPEN_CANCELLATION_STATUSES,
   attachments,
   cancellationEvents,
+  cancellationPlaybooks,
   cancellationRequests,
   resolveTransition,
   subscriptions,
@@ -55,7 +57,13 @@ import { protectedProcedure, router } from '~/server/trpc/init';
 /** How long to keep watching for the charge that should not arrive. Charges post late. */
 const VERIFICATION_TAIL_DAYS = 12;
 
-/** See the dashboard router: FX rates are an empty table until there is a rate source. */
+/**
+ * Deliberately an empty table, unlike the dashboard and analytics routers, which now convert
+ * the majors at the static fallback rate from @ledger/core. The reclaimed counter is the one
+ * number in the product that is allowed to be green, and it counts *verified* savings — an
+ * indicative-rate figure would be a claimed saving nobody can check. A foreign-currency row is
+ * surfaced in `unconvertibleIds` instead of estimated.
+ */
 const RATES = staticRateTable([]);
 
 // ── the playbook seam ────────────────────────────────────────────────────────────────────
@@ -68,6 +76,8 @@ export interface PlaybookStep {
 }
 
 export interface ResolvedPlaybook {
+  /** 'merchant' when the registry knew this exit; 'generic' when this is the channel fallback. */
+  readonly source: 'merchant' | 'generic';
   readonly method: CancellationMethod;
   /** 1–5, brief §3.2. Generic playbooks claim 2: honest for "we do not know this provider". */
   readonly difficulty: number;
@@ -75,7 +85,33 @@ export interface ResolvedPlaybook {
   readonly noticePeriodDays: number;
   readonly evidenceHint: string;
   readonly cancelUrl: string | null;
+  readonly phone: string | null;
+  /** The dark patterns, stated plainly. Shown as warnings, never softened. */
+  readonly gotchas: readonly string[];
+  readonly retentionOfferNotes: string | null;
+  readonly letterTemplate: string | null;
+  /** Where the entry was checked and when — staleness stays visible (dataset PROVENANCE.md). */
+  readonly sourceUrl: string | null;
+  readonly lastVerifiedAt: Date | null;
 }
+
+/** The columns of a `cancellation_playbooks` row the resolver reads. Narrow, so tests can build one. */
+export type MerchantPlaybook = Pick<
+  typeof cancellationPlaybooks.$inferSelect,
+  | 'channel'
+  | 'method'
+  | 'difficulty'
+  | 'cancelUrl'
+  | 'steps'
+  | 'phone'
+  | 'noticePeriodDays'
+  | 'retentionOfferNotes'
+  | 'gotchas'
+  | 'letterTemplate'
+  | 'evidenceHint'
+  | 'sourceUrl'
+  | 'lastVerifiedAt'
+>;
 
 /**
  * Where a store-billed subscription actually lives.
@@ -116,19 +152,98 @@ const STORE_EXITS: Partial<Record<BillingChannel, { readonly store: string; read
 };
 
 /**
- * Resolves the steps for a subscription's billing channel.
+ * Resolves the playbook for a subscription's billing channel.
  *
- * TODO(frank): replace with findPlaybook() from @ledger/providers once workstream B lands. The
- * provider dataset carries the real deep link, notice period, difficulty, retention-offer notes,
- * and gotchas per (merchant, channel); this returns the channel-generic version, which is
- * correct but unspecific. The signature is the one `findPlaybook` will satisfy, so swapping the
- * body is the whole change — the callers already snapshot whatever comes back.
+ * `merchantPlaybooks` are the rows the seed synced from the @ledger/providers YAML dataset into
+ * `cancellation_playbooks` — reference data read from the tables, not from disk, so a request
+ * never pays the YAML parse and detection's merchant_id foreign keys line up for free.
+ *
+ * The order is `findPlaybook` from @ledger/providers, restated over rows:
+ *
+ *  1. The merchant's playbook for exactly this channel.
+ *  2. No exact match on an intermediated channel → the channel-generic store checklist, and
+ *     **never** the merchant's `direct` playbook. The provider's website cannot cancel an App
+ *     Store subscription; showing its cancel button to someone billed by the store is how this
+ *     product loses a user their money. `findPlaybook` returns null here for the same reason —
+ *     this function keeps that refusal and substitutes the store-generic steps.
+ *  3. Elsewhere ('paypal', 'unknown', 'steam') the merchant's `direct` playbook is still the
+ *     right advice, so it is used when it exists.
+ *  4. Nothing known about the merchant → the channel-generic checklist, unchanged.
  */
-export function resolvePlaybook(channel: BillingChannel, displayName: string): ResolvedPlaybook {
+export function resolvePlaybook(
+  channel: BillingChannel,
+  displayName: string,
+  merchantPlaybooks: readonly MerchantPlaybook[] = [],
+): ResolvedPlaybook {
+  const exact = merchantPlaybooks.find((playbook) => playbook.channel === channel);
+  if (exact !== undefined) return fromMerchantPlaybook(exact);
+
+  if (!isIntermediated(channel)) {
+    const direct = merchantPlaybooks.find((playbook) => playbook.channel === 'direct');
+    if (direct !== undefined) return fromMerchantPlaybook(direct);
+  }
+
+  return genericPlaybook(channel, displayName);
+}
+
+/** What every generic branch shares: no provider-specific knowledge to claim. */
+const GENERIC_META = {
+  source: 'generic',
+  phone: null,
+  gotchas: [],
+  retentionOfferNotes: null,
+  letterTemplate: null,
+  sourceUrl: null,
+  lastVerifiedAt: null,
+} as const;
+
+const GENERIC_EVIDENCE_HINT =
+  'Keep the confirmation email and a screenshot of the cancelled subscription.';
+
+function fromMerchantPlaybook(row: MerchantPlaybook): ResolvedPlaybook {
+  return {
+    source: 'merchant',
+    method: row.method,
+    difficulty: row.difficulty,
+    noticePeriodDays: row.noticePeriodDays,
+    cancelUrl: row.cancelUrl,
+    phone: row.phone,
+    gotchas: [...row.gotchas],
+    retentionOfferNotes: row.retentionOfferNotes,
+    letterTemplate: row.letterTemplate,
+    sourceUrl: row.sourceUrl,
+    lastVerifiedAt: row.lastVerifiedAt,
+    evidenceHint: row.evidenceHint ?? GENERIC_EVIDENCE_HINT,
+    // The dataset stores steps without ids; the checklist keys ticks by id, so they are minted
+    // here — stably, from position, because this array is snapshotted before it is ever read.
+    steps: row.steps.map((step, index) => ({
+      id: `step-${String(index + 1)}`,
+      text: step.text,
+      ...(step.detail === undefined ? {} : { detail: step.detail }),
+      ...(step.warning === undefined ? {} : { warning: step.warning }),
+    })),
+  };
+}
+
+/** The playbooks the registry holds for a merchant. Reference data, so no user scope applies. */
+async function merchantPlaybooksFor(
+  db: Database,
+  merchantId: string | null,
+): Promise<MerchantPlaybook[]> {
+  if (merchantId === null) return [];
+  return db
+    .select()
+    .from(cancellationPlaybooks)
+    .where(eq(cancellationPlaybooks.merchantId, merchantId));
+}
+
+/** The channel-generic steps — correct but unspecific, for merchants the registry does not know. */
+function genericPlaybook(channel: BillingChannel, displayName: string): ResolvedPlaybook {
   const store = STORE_EXITS[channel];
 
   if (store !== undefined) {
     return {
+      ...GENERIC_META,
       // A store-billed subscription ends in the store's settings, whatever the provider's own
       // cancel page claims.
       method: channel === 'carrier' ? 'account_settings' : 'app_store',
@@ -161,6 +276,7 @@ export function resolvePlaybook(channel: BillingChannel, displayName: string): R
 
   if (channel === 'paypal') {
     return {
+      ...GENERIC_META,
       method: 'account_settings',
       difficulty: 2,
       noticePeriodDays: 0,
@@ -184,6 +300,7 @@ export function resolvePlaybook(channel: BillingChannel, displayName: string): R
 
   if (channel === 'unknown') {
     return {
+      ...GENERIC_META,
       method: 'account_settings',
       difficulty: 3,
       noticePeriodDays: 0,
@@ -204,11 +321,12 @@ export function resolvePlaybook(channel: BillingChannel, displayName: string): R
   }
 
   return {
+    ...GENERIC_META,
     method: 'account_settings',
     difficulty: 2,
     noticePeriodDays: 0,
     cancelUrl: null,
-    evidenceHint: 'Keep the confirmation email and a screenshot of the cancelled subscription.',
+    evidenceHint: GENERIC_EVIDENCE_HINT,
     steps: [
       { id: 'account', text: `Sign in to ${displayName} and open your account or billing settings.` },
       { id: 'find', text: 'Find the subscription and start the cancellation.' },
@@ -221,6 +339,104 @@ export function resolvePlaybook(channel: BillingChannel, displayName: string): R
       { id: 'confirm', text: 'Screenshot the confirmation and keep the email.' },
     ],
   };
+}
+
+// ── the snapshot ─────────────────────────────────────────────────────────────────────────
+
+/**
+ * The playbook as it was resolved at start(), written into the `started` event's payload in the
+ * same transaction as the checklist. The steps live on the request row; everything else about
+ * the playbook — difficulty, the deep link, the gotchas, where it was verified — lives here, so
+ * a dataset edit mid-flight can neither renumber the steps nor quietly rewrite what the user was
+ * told about how hard this is. Strings and ISO dates only: this is jsonb, and a `Date` would not
+ * survive the round trip.
+ */
+export interface PlaybookSnapshot {
+  readonly source: 'merchant' | 'generic';
+  readonly difficulty: number;
+  readonly noticePeriodDays: number;
+  readonly evidenceHint: string;
+  readonly cancelUrl: string | null;
+  readonly phone: string | null;
+  readonly gotchas: readonly string[];
+  readonly retentionOfferNotes: string | null;
+  readonly letterTemplate: string | null;
+  readonly sourceUrl: string | null;
+  readonly lastVerifiedAt: string | null;
+}
+
+function snapshotPlaybook(playbook: ResolvedPlaybook): PlaybookSnapshot {
+  return {
+    source: playbook.source,
+    difficulty: playbook.difficulty,
+    noticePeriodDays: playbook.noticePeriodDays,
+    evidenceHint: playbook.evidenceHint,
+    cancelUrl: playbook.cancelUrl,
+    phone: playbook.phone,
+    gotchas: playbook.gotchas,
+    retentionOfferNotes: playbook.retentionOfferNotes,
+    letterTemplate: playbook.letterTemplate,
+    sourceUrl: playbook.sourceUrl,
+    lastVerifiedAt: playbook.lastVerifiedAt === null ? null : playbook.lastVerifiedAt.toISOString(),
+  };
+}
+
+/**
+ * Reads the snapshot back out of an event payload. Tolerant by design: requests started before
+ * the registry was wired in have no `playbook` key, and they must keep rendering — as a request
+ * with steps and no provenance, not as an error.
+ */
+function readPlaybookSnapshot(payload: unknown): PlaybookSnapshot | null {
+  if (typeof payload !== 'object' || payload === null) return null;
+  const raw = (payload as Record<string, unknown>)['playbook'];
+  if (typeof raw !== 'object' || raw === null) return null;
+  const record = raw as Record<string, unknown>;
+
+  const difficulty = record['difficulty'];
+  const noticePeriodDays = record['noticePeriodDays'];
+  const evidenceHint = record['evidenceHint'];
+  if (
+    typeof difficulty !== 'number' ||
+    typeof noticePeriodDays !== 'number' ||
+    typeof evidenceHint !== 'string'
+  ) {
+    return null;
+  }
+
+  return {
+    source: record['source'] === 'merchant' ? 'merchant' : 'generic',
+    difficulty,
+    noticePeriodDays,
+    evidenceHint,
+    cancelUrl: stringOrNull(record['cancelUrl']),
+    phone: stringOrNull(record['phone']),
+    gotchas: stringArrayOf(record['gotchas']),
+    retentionOfferNotes: stringOrNull(record['retentionOfferNotes']),
+    letterTemplate: stringOrNull(record['letterTemplate']),
+    sourceUrl: stringOrNull(record['sourceUrl']),
+    lastVerifiedAt: stringOrNull(record['lastVerifiedAt']),
+  };
+}
+
+function stringOrNull(value: unknown): string | null {
+  return typeof value === 'string' ? value : null;
+}
+
+function stringArrayOf(value: unknown): string[] {
+  if (!Array.isArray(value)) return [];
+  return value.filter((entry): entry is string => typeof entry === 'string');
+}
+
+/** The snapshot from a request's timeline — carried by the `started` event, of which there is one. */
+function startedSnapshotOf(
+  events: readonly (typeof cancellationEvents.$inferSelect)[],
+): PlaybookSnapshot | null {
+  for (const event of events) {
+    if (event.type !== 'started') continue;
+    const snapshot = readPlaybookSnapshot(event.payload);
+    if (snapshot !== null) return snapshot;
+  }
+  return null;
 }
 
 // ── deadline ─────────────────────────────────────────────────────────────────────────────
@@ -360,7 +576,9 @@ export const cancellationsRouter = router({
           .orderBy(desc(attachments.createdAt)),
       ]);
 
-      return { ...row, events, attachments: files };
+      // Lifted server-side so the client renders a typed snapshot instead of digging through
+      // untyped event payloads. Null for requests started before the registry was wired in.
+      return { ...row, events, attachments: files, playbook: startedSnapshotOf(events) };
     }),
 
   /**
@@ -406,7 +624,13 @@ export const cancellationsRouter = router({
         });
       }
 
-      const playbook = resolvePlaybook(subscription.billingChannel, subscription.displayName);
+      const playbook = resolvePlaybook(
+        subscription.billingChannel,
+        subscription.displayName,
+        await merchantPlaybooksFor(ctx.db, subscription.merchantId),
+      );
+      // The playbook's notice period, not a default: "cancel by" being two days late is the
+      // single worst number this product can show (dataset PROVENANCE.md).
       const deadline = computeDeadlineFor(subscription, playbook.noticePeriodDays, timezone, now);
 
       // Validated through the machine even though this is an insert, so `draft → in_progress`
@@ -446,8 +670,10 @@ export const cancellationsRouter = router({
             describe: opened.describe,
             channel: subscription.billingChannel,
             method: playbook.method,
+            // Kept at the top level as well as inside `playbook`: older readers look here.
             difficulty: playbook.difficulty,
             deadlineDate: deadline.deadlineDate,
+            playbook: snapshotPlaybook(playbook),
           },
         });
 
@@ -781,7 +1007,11 @@ export const cancellationsRouter = router({
         throw new TRPCError({ code: 'NOT_FOUND', message: 'That subscription does not exist.' });
       }
 
-      const playbook = resolvePlaybook(subscription.billingChannel, subscription.displayName);
+      const playbook = resolvePlaybook(
+        subscription.billingChannel,
+        subscription.displayName,
+        await merchantPlaybooksFor(ctx.db, subscription.merchantId),
+      );
       const noticePeriodDays = input.noticePeriodDays ?? playbook.noticePeriodDays;
 
       return computeDeadlineFor(
@@ -816,7 +1046,25 @@ export const cancellationsRouter = router({
         throw new TRPCError({ code: 'NOT_FOUND', message: 'That cancellation does not exist.' });
       }
 
+      // The template from the snapshot taken at start(), not a live dataset read: the letter has
+      // to match the playbook the user has been following, even if the dataset moved on.
+      const [started] = await ctx.db
+        .select()
+        .from(cancellationEvents)
+        .where(
+          ctx.scope.cancellationEvents(
+            eq(cancellationEvents.requestId, input.requestId),
+            eq(cancellationEvents.type, 'started'),
+          ),
+        )
+        .orderBy(asc(cancellationEvents.at))
+        .limit(1);
+
+      const letterTemplate =
+        started === undefined ? null : (readPlaybookSnapshot(started.payload)?.letterTemplate ?? null);
+
       const letter = renderLetter({
+        letterTemplate,
         userName: ctx.user.name,
         userEmail: ctx.user.email,
         displayName: row.subscription.displayName,
@@ -963,6 +1211,8 @@ function applyTransition(
 }
 
 interface LetterInput {
+  /** The provider-specific template from the playbook snapshot, when it carries one. */
+  readonly letterTemplate: string | null;
   readonly userName: string;
   readonly userEmail: string;
   readonly displayName: string;
@@ -971,6 +1221,26 @@ interface LetterInput {
   readonly lastChargedOn: string | null;
   readonly locale: string;
   readonly today: string;
+}
+
+/**
+ * Fills the dataset's letter template.
+ *
+ * The placeholder names are the dataset's shared vocabulary (`_TEMPLATE.yaml`): {{fullName}},
+ * {{email}}, {{date}}, {{accountReference}}, {{postalAddress}}. Only what Ledger genuinely
+ * holds is filled in. An account reference or postal address it does not have becomes a visible
+ * bracketed prompt rather than a guess — a letter that names the wrong policy number is worse
+ * than one with a blank the user can see.
+ */
+function fillTemplate(template: string, input: LetterInput): string {
+  const values: Readonly<Record<string, string>> = {
+    fullName: input.userName,
+    email: input.userEmail,
+    date: input.today,
+    accountReference: '[your account or reference number]',
+    postalAddress: '[your postal address]',
+  };
+  return template.replace(/\{\{(\w+)\}\}/g, (whole, name: string) => values[name] ?? whole);
 }
 
 /**
@@ -989,6 +1259,20 @@ function renderLetter(input: LetterInput): {
   const amount = formatMoney(input.amount, { locale: input.locale });
   const lastCharge =
     input.lastChargedOn === null ? '' : `\nMost recent payment: ${input.lastChargedOn}`;
+
+  if (input.letterTemplate !== null) {
+    return {
+      subject: `Cancellation of my ${input.displayName} subscription`,
+      // The provider-specific wording, filled with what Ledger holds. Same rules as the generic
+      // draft: first person, no statutes, no assertion of rights (docs/legal-notes.md) — the
+      // schema in @ledger/providers refuses a template that breaks them.
+      body: fillTemplate(input.letterTemplate, input),
+      howToSend:
+        'Copy this and send it yourself — Ledger does not send anything on your behalf. Fill in ' +
+        'anything left in square brackets first, and keep the reply: it is the evidence if a ' +
+        'charge appears anyway.',
+    };
+  }
 
   return {
     subject: `Cancellation of my ${input.displayName} subscription`,

@@ -8,6 +8,7 @@ import {
   type CancellationDifficulty,
   type CancellationStatus,
   DIFFICULTY_LABELS,
+  fromInstant,
   interval,
   intervalLabel,
 } from '@ledger/core';
@@ -25,7 +26,7 @@ import {
   toast,
 } from '@ledger/ui';
 import { api } from '~/lib/trpc';
-import { formatInstant } from '~/lib/format';
+import { formatDay, formatInstant } from '~/lib/format';
 import type { CancellationDetail } from '~/lib/api-types';
 import { LoadError } from '../dashboard/states';
 import { MerchantMark } from '../merchant-mark';
@@ -34,6 +35,7 @@ import { CancellationChecklist } from './checklist';
 import { DeadlinePanel } from './deadline';
 import { EvidencePanel } from './evidence';
 import { CancellationLetter, needsLetter } from './letter';
+import { PlaybookNotes } from './playbook-notes';
 import { RouteBanner } from './route-banner';
 import { CancellationDetailSkeleton } from './skeletons';
 import { VerificationPanel, verificationStateOf } from './verification';
@@ -179,7 +181,7 @@ export function CancellationDetailView({ requestId }: { readonly requestId: stri
 
   if (detail.isPending) return <CancellationDetailSkeleton />;
 
-  const { request, subscription, events, attachments } = detail.data;
+  const { request, subscription, events, attachments, playbook } = detail.data;
   const status = request.status;
   const actions = ACTIONS[status];
   const difficulty = difficultyFromEvents(events);
@@ -242,6 +244,7 @@ export function CancellationDetailView({ requestId }: { readonly requestId: stri
             channel={request.channel}
             subscriptionName={subscription.displayName}
             providerUrl={subscription.url}
+            cancelUrl={playbook?.cancelUrl ?? null}
             routingNote={routing.detail}
             routingWarning={routing.warning}
           />
@@ -327,6 +330,8 @@ export function CancellationDetailView({ requestId }: { readonly requestId: stri
 
       <div className="grid gap-[var(--gap-loose)] lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
         <div className="flex min-w-0 flex-col gap-[var(--gap-loose)]">
+          {playbook === null ? null : <PlaybookNotes playbook={playbook} />}
+
           <Panel>
             <PanelHeader eyebrow="Checklist">What you do, in order.</PanelHeader>
             <PanelBody>
@@ -339,6 +344,30 @@ export function CancellationDetailView({ requestId }: { readonly requestId: stri
                   progressStep.mutate({ requestId, stepId, done });
                 }}
               />
+              {playbook?.lastVerifiedAt == null ? null : (
+                <p className="mt-[var(--gap-tight)] text-[0.6875rem] text-text-3">
+                  {/* Staleness stays visible (dataset PROVENANCE.md): the date these steps were
+                      checked is part of the instruction, not metadata to hide. */}
+                  Checked{' '}
+                  {formatDay(fromInstant(new Date(playbook.lastVerifiedAt), 'UTC'), locale)}
+                  {playbook.sourceUrl === null ? null : (
+                    <>
+                      {' — '}
+                      <a
+                        href={playbook.sourceUrl}
+                        target="_blank"
+                        rel="noreferrer noopener"
+                        className={cn('underline underline-offset-2 hover:text-text-2', focusRing)}
+                      >
+                        source
+                        <span className="sr-only"> (opens in a new tab)</span>
+                      </a>
+                    </>
+                  )}
+                  . Providers move their account pages; if a step no longer matches, the layout
+                  has changed since we checked.
+                </p>
+              )}
             </PanelBody>
           </Panel>
 
@@ -354,6 +383,7 @@ export function CancellationDetailView({ requestId }: { readonly requestId: stri
             id={EVIDENCE_ANCHOR}
             attachments={attachments}
             confirmationReference={request.confirmationReference}
+            evidenceHint={playbook?.evidenceHint ?? null}
             locale={locale}
             timezone={timezone}
             onRecordConfirmation={() => {

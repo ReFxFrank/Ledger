@@ -45,22 +45,39 @@ export function OnboardingFlow({
   const complete = api.me.completeOnboarding.useMutation();
 
   function leave(): void {
-    // Fire-and-forget: the flag is a "do not show this again" hint, and a failed write must not
-    // strand someone on a setup screen they have finished with.
-    complete.mutate(undefined, {
-      onError: () => {
+    // The flag is a "do not show this again" hint, and a failed write must not strand someone
+    // on a setup screen they have finished with — so the navigation happens on settled, error
+    // or not.
+    //
+    // The promise, not mutate-level callbacks, deliberately. The `router.refresh()` issued when
+    // two-factor comes on swaps the layout from the bare wrapper to the AppShell, which remounts
+    // this component — and TanStack Query drops mutate-level callbacks when the observer that
+    // issued them unmounts. A click that lands while that refresh is still streaming would fire
+    // the mutation and then navigate nowhere (caught by the e2e auth spec under a parallel run).
+    // The `mutateAsync` promise is held by this closure and settles regardless of the remount.
+    complete
+      .mutateAsync()
+      .catch(() => {
         toast.error('Setup finished, but we could not save that you had seen it.');
-      },
-    });
-    router.push('/');
-    router.refresh();
+      })
+      .finally(() => {
+        /**
+         * A full navigation, deliberately. This used to be `router.push('/')` immediately
+         * followed by `router.refresh()`, and the two race: the refresh refetches the route
+         * the user is still on and can cancel the in-flight push, leaving the URL stuck on
+         * /onboarding with the dashboard payload discarded — caught by the e2e auth spec's
+         * traces. A hard load also rebuilds the shell against the fresh session, which is the
+         * work the refresh existed to do.
+         */
+        window.location.href = '/';
+      });
   }
 
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-col gap-[var(--gap-loose)] px-4 py-8 sm:py-12">
       <div className="flex items-center gap-2">
-        <span aria-hidden className="size-2 rounded-sm bg-outflow" />
-        <span className="text-sm font-medium tracking-tight text-text">Ledger</span>
+        <span aria-hidden className="bg-outflow size-2 rounded-sm" />
+        <span className="text-text text-sm font-medium tracking-tight">Ledger</span>
       </div>
 
       {/* The stepper is an ordered list, so it reads as "step 2 of 3" rather than as three

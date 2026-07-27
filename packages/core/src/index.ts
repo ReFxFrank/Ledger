@@ -9,6 +9,7 @@ export * from './errors';
 export * from './currency';
 export * from './money';
 export * from './fx';
+export * from './fx-fallback';
 export * from './plain-date';
 export * from './interval';
 export * from './commitment';

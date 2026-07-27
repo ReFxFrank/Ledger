@@ -23,7 +23,16 @@ export const authClient = createAuthClient({
   ],
 });
 
-export const { signIn, signUp, signOut, useSession, twoFactor } = authClient;
+/**
+ * `useSession` is deliberately NOT re-exported.
+ *
+ * It is not safe to render on the server: React's dispatcher is null during SSR and the hook
+ * throws `Cannot read properties of null (reading 'useRef')`, which took /settings down with a
+ * 500 behind the error boundary. Anything that needs the signed-in user should read
+ * `api.me.current` — it is server-authoritative, already cached by React Query, and carries
+ * `currentSessionId` for the one case that used to need the hook.
+ */
+export const { signIn, signUp, signOut, twoFactor } = authClient;
 
 /**
  * Whether passkeys are wired up.

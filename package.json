@@ -27,7 +27,7 @@
     "db:drift": "pnpm --filter @ledger/db db:drift",
     "seed:demo": "pnpm --filter @ledger/db seed:demo",
     "local:up": "node scripts/local-up.mjs",
-    "keys:rotate": "pnpm --filter @ledger/crypto keys:rotate",
+    "keys:rotate": "pnpm --filter @ledger/db keys:rotate",
     "providers:audit": "pnpm --filter @ledger/providers run audit",
     "providers:validate": "pnpm --filter @ledger/providers validate",
     "clean": "turbo run clean && rimraf node_modules .turbo"

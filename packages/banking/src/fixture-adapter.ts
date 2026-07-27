@@ -139,24 +139,25 @@ function mulberry32(seed: number): Rng {
   };
 }
 
-/** A stable 32-bit seed from a string, so two connections get different — but fixed — corpora. */
-function seedFrom(seed: number, salt: string): number {
-  let hash = seed >>> 0;
-  for (let index = 0; index < salt.length; index += 1) {
-    hash = Math.imul(hash ^ salt.charCodeAt(index), 0x01000193) >>> 0;
-  }
-  return hash;
-}
-
 // ── the planted series ─────────────────────────────────────────────────────────────────
 
 /** How the price of a series moves over the window. */
 type AmountPlan =
   | { readonly kind: 'flat'; readonly minor: number }
   /** A price rise partway through — the case the product exists to catch. */
-  | { readonly kind: 'rise'; readonly minor: number; readonly toMinor: number; readonly atIndex: number }
+  | {
+      readonly kind: 'rise';
+      readonly minor: number;
+      readonly toMinor: number;
+      readonly atIndex: number;
+    }
   /** A trial that converted: near-zero, then the real price. */
-  | { readonly kind: 'trial'; readonly trialMinor: number; readonly minor: number; readonly trialCount: number }
+  | {
+      readonly kind: 'trial';
+      readonly trialMinor: number;
+      readonly minor: number;
+      readonly trialCount: number;
+    }
   /** Metered billing: the cadence holds, the amount does not. */
   | { readonly kind: 'metered'; readonly minMinor: number; readonly maxMinor: number };
 
@@ -394,7 +395,11 @@ const SERIES: readonly SeriesSpec[] = [
 ];
 
 /** Descriptors that look like spend and are not recurring. The false-positive material. */
-const NOISE_DESCRIPTORS: readonly { readonly text: string; readonly min: number; readonly max: number }[] = [
+const NOISE_DESCRIPTORS: readonly {
+  readonly text: string;
+  readonly min: number;
+  readonly max: number;
+}[] = [
   { text: 'TRADER JOES #182 SEATTLE WA', min: 1800, max: 14_200 },
   { text: 'SAFEWAY #1477 SEATTLE WA', min: 900, max: 11_800 },
   { text: 'STARBUCKS STORE 08812', min: 375, max: 1850 },
@@ -407,7 +412,11 @@ const NOISE_DESCRIPTORS: readonly { readonly text: string; readonly min: number;
   { text: 'PAYPAL *ETSYSELLER', min: 1200, max: 9400 },
 ];
 
-const NOISE_DESCRIPTORS_EUR: readonly { readonly text: string; readonly min: number; readonly max: number }[] = [
+const NOISE_DESCRIPTORS_EUR: readonly {
+  readonly text: string;
+  readonly min: number;
+  readonly max: number;
+}[] = [
   { text: 'REWE SAGT DANKE 4711 BERLIN', min: 700, max: 9300 },
   { text: 'EDEKA MARKT BERLIN', min: 800, max: 8800 },
   { text: 'BVG FAHRAUSWEIS APP', min: 320, max: 4900 },
@@ -578,14 +587,32 @@ export class FixtureAdapter implements AggregatorAdapter {
 
   private assertLive(connection: AggregatorConnection): void {
     if (this.removed.has(connection.externalItemId)) {
-      throw new AggregatorError(this.provider, 'item_not_found', 'This connection has been removed.');
+      throw new AggregatorError(
+        this.provider,
+        'item_not_found',
+        'This connection has been removed.',
+      );
     }
   }
 
   private corpus(itemId: string): Corpus {
     const existing = this.corpora.get(itemId);
     if (existing !== undefined) return existing;
-    const built = buildCorpus(seedFrom(this.seed, itemId), todayIn(this.clock, 'UTC'));
+    /**
+     * The item's hash namespaces every transaction's `externalId`. `transactions.external_id`
+     * is unique **globally** — true of a real aggregator, whose ids are minted per institution
+     * item — so a fixture that emitted `fixture-txn-netflix-000` for every user meant the
+     * second user to connect the fixture bank collided with the first user's rows on insert
+     * and imported almost nothing. Found by the e2e connect spec running against a database
+     * that already carried the demo user's fixture history.
+     *
+     * The *content* seed is deliberately NOT derived from the item any more. A fixture only
+     * ever mints one item per user, so per-item corpora differentiated nothing except users —
+     * and that made the detection outcome (how many candidates /review shows) different for
+     * every account, which turns a deterministic corpus into an unassertable one. Same seed,
+     * same household, for everyone; the namespace above keeps the rows insertable side by side.
+     */
+    const built = buildCorpus(this.seed, todayIn(this.clock, 'UTC'), hashToken(itemId));
     this.corpora.set(itemId, built);
     return built;
   }
@@ -599,15 +626,26 @@ export class FixtureAdapter implements AggregatorAdapter {
  * Exported because the demo seeder and the sync tests both want the corpus without standing up
  * an adapter, and because a generator you cannot inspect is a generator nobody trusts.
  */
-export function buildCorpus(seed: number, today: PlainDate): Corpus {
+export function buildCorpus(seed: number, today: PlainDate, idNamespace = ''): Corpus {
   const rng = mulberry32(seed);
   const windowStart = addMonths(today, -FIXTURE_WINDOW_MONTHS);
 
-  const rows: AggregatorTransaction[] = [];
-  for (const spec of SERIES) rows.push(...emitSeries(rng, spec, windowStart, today));
-  rows.push(...emitNoise(rng, windowStart, today));
+  const generated: AggregatorTransaction[] = [];
+  for (const spec of SERIES) generated.push(...emitSeries(rng, spec, windowStart, today));
+  generated.push(...emitNoise(rng, windowStart, today));
   const holds = emitHolds(windowStart);
-  rows.push(...holds);
+  generated.push(...holds);
+
+  /**
+   * Every id gets the item's namespace. `transactions.external_id` is globally unique — a real
+   * aggregator's ids are minted per item, never shared across users — and without this a second
+   * user connecting the fixture bank collides with the first user's rows and imports nothing.
+   */
+  const rename = (externalId: string): string =>
+    idNamespace === ''
+      ? externalId
+      : externalId.replace(/^fixture-txn-/u, `fixture-txn-${idNamespace}-`);
+  const rows = generated.map((row) => ({ ...row, externalId: rename(row.externalId) }));
 
   // A bank feed is ordered by posting date; ties break on id so the order is total and stable.
   rows.sort(
@@ -620,7 +658,7 @@ export function buildCorpus(seed: number, today: PlainDate): Corpus {
   // fuel pre-authorization that never settles — and a sync that cannot delete leaves phantom
   // charges in someone's totals forever.
   for (const hold of holds) {
-    events.push({ added: null, removedExternalId: hold.externalId });
+    events.push({ added: null, removedExternalId: rename(hold.externalId) });
   }
 
   return { events };
@@ -688,8 +726,12 @@ function emitSeries(
       // authorization sorts *before* its re-issue in the feed. That is the order a bank produces
       // and it is the order that makes the collapse a real decision rather than an accident of
       // string comparison.
-      rows.push(transaction(`fixture-txn-${base}-auth`, spec, postedAt, amountMinor, descriptor, true));
-      rows.push(transaction(`fixture-txn-${base}-post`, spec, postedAt, amountMinor, descriptor, false));
+      rows.push(
+        transaction(`fixture-txn-${base}-auth`, spec, postedAt, amountMinor, descriptor, true),
+      );
+      rows.push(
+        transaction(`fixture-txn-${base}-post`, spec, postedAt, amountMinor, descriptor, false),
+      );
       continue;
     }
     rows.push(transaction(`fixture-txn-${base}`, spec, postedAt, amountMinor, descriptor, false));

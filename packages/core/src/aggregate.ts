@@ -38,6 +38,12 @@ export interface CommitmentTotals {
   readonly count: number;
   /** Rows that could not be converted into the display currency, so nothing is silently dropped. */
   readonly unconvertible: readonly string[];
+  /**
+   * Rows whose figures went through an FX rate rather than being natively in the display
+   * currency. When the rate table is a static fallback these are the approximate part of the
+   * total, and the UI needs the ids to say "converted at an indicative rate" about exactly them.
+   */
+  readonly converted: readonly string[];
 }
 
 export interface AggregateOptions {
@@ -88,6 +94,7 @@ export function aggregateCommitments(
   let annualSelf = zero(target);
   let count = 0;
   const unconvertible: string[] = [];
+  const converted: string[] = [];
 
   for (const row of rows) {
     if (!include(row.status)) continue;
@@ -110,6 +117,10 @@ export function aggregateCommitments(
       continue;
     }
 
+    // `charge.currency` is already normalised by `money()`, so this comparison cannot be fooled
+    // by a lowercase row the way the display-currency cast once was (see `targetCurrency`).
+    if (charge.currency !== target) converted.push(row.id);
+
     monthly = add(monthly, rowMonthly);
     annual = add(annual, rowAnnual);
     monthlySelf = add(monthlySelf, rowMonthlySelf);
@@ -117,7 +128,7 @@ export function aggregateCommitments(
     count += 1;
   }
 
-  return { monthly, annual, monthlySelf, annualSelf, count, unconvertible };
+  return { monthly, annual, monthlySelf, annualSelf, count, unconvertible, converted };
 }
 
 export interface CategoryTotal {

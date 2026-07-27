@@ -114,6 +114,8 @@ export default function DashboardPage(): React.ReactNode {
           currency={totals.data.currency}
           count={totals.data.count}
           unconvertibleIds={totals.data.unconvertibleIds}
+          approximateIds={totals.data.approximateIds}
+          approximateRateDate={totals.data.approximateRateDate}
           {...(locale === undefined ? {} : { locale })}
         />
       )}

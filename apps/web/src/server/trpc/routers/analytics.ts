@@ -19,7 +19,8 @@ import {
   occurrencesBetween,
   parsePlainDate,
   simulateCancellations,
-  staticRateTable,
+  fallbackSnapshotFor,
+  staticFallbackRates,
   toInstant,
 } from '@ledger/core';
 import {
@@ -45,9 +46,6 @@ import { protectedProcedure, router } from '~/server/trpc/init';
  * transactions. That is money that actually left, not money promised — a different question,
  * and it is summed in SQL because there is nothing to annualize.
  */
-
-/** See the dashboard router: FX rates are an empty table until there is a rate source. */
-const RATES = staticRateTable([]);
 
 interface Portfolio {
   readonly inputs: CommitmentInput[];
@@ -107,12 +105,17 @@ async function portfolioFor(ctx: PortfolioContext): Promise<Portfolio> {
     };
   });
 
+  const asOf = formatPlainDate(fromInstant(ctx.clock.now(), timezone));
+
   return {
     inputs,
     options: {
       displayCurrency: ctx.user.displayCurrency ?? 'USD',
-      rates: RATES,
-      asOf: formatPlainDate(fromInstant(ctx.clock.now(), timezone)),
+      // The static quarterly fallback, same as the dashboard totals (see the note there): the
+      // majors convert at a dated indicative rate and `converted` carries which rows did, so
+      // every figure on this page reconciles with the dashboard *including* the approximation.
+      rates: staticFallbackRates(asOf),
+      asOf,
     },
   };
 }
@@ -322,6 +325,9 @@ export const analyticsRouter = router({
         countBefore: result.before.count,
         countAfter: result.after.count,
         unconvertibleIds: result.before.unconvertible,
+        // Present in both sides' figures at the indicative fallback rate; the UI notes it.
+        approximateIds: result.before.converted,
+        approximateRateDate: fallbackSnapshotFor(portfolio.options.asOf).asOf,
       };
     }),
 });

@@ -26,3 +26,13 @@ export {
   resetKeyringCache,
   selectKekProvider,
 } from './keyring';
+
+export {
+  type ResealDecision,
+  type RotationFailure,
+  type RotationTally,
+  type SealedRecord,
+  createTally,
+  decideReseal,
+  recordDecision,
+} from './rotation';
