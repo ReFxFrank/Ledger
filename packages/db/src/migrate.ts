@@ -14,6 +14,28 @@ import { createDatabase } from './client';
 
 const MIGRATIONS_FOLDER = join(dirname(fileURLToPath(import.meta.url)), '..', 'drizzle');
 
+/**
+ * Renders a failure so it always names something actionable.
+ *
+ * The naive `error.message` produced the least useful log line this project has shipped:
+ * "Migration failed: " — nothing after the colon. A dual-stack connect refusal (the classic
+ * "DATABASE_URL says localhost inside a container") throws an AggregateError whose own message
+ * is empty, with the real ECONNREFUSED entries hidden in `.errors`. Unwrap those, and fall back
+ * to the error's name and code when the message is blank.
+ */
+function describeFailure(error: unknown): string {
+  if (error instanceof AggregateError && error.errors.length > 0) {
+    const parts = error.errors.map((inner) => describeFailure(inner));
+    return `${error.message === '' ? 'all connection attempts failed' : error.message} [${parts.join('; ')}]`;
+  }
+  if (error instanceof Error) {
+    const code = (error as NodeJS.ErrnoException).code;
+    const message = error.message === '' ? error.name : error.message;
+    return code === undefined ? message : `${message} (${code})`;
+  }
+  return String(error);
+}
+
 async function main(): Promise<void> {
   // A plain Node process starts with none of the repo's configuration. Next loads the root .env
   // for the web app; nothing was loading it here, so `pnpm db:migrate` failed with
@@ -40,7 +62,7 @@ async function main(): Promise<void> {
     await migrate(handle.db, { migrationsFolder: MIGRATIONS_FOLDER });
     console.log('Migrations applied.');
   } catch (error) {
-    console.error('Migration failed:', error instanceof Error ? error.message : String(error));
+    console.error('Migration failed:', describeFailure(error));
     process.exitCode = 1;
   } finally {
     await handle.close();

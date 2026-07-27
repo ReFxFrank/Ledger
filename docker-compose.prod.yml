@@ -36,6 +36,12 @@ services:
       context: .
       target: migrate
     env_file: .env
+    environment:
+      # The same in-network override web and worker get. Without it, migrate read the .env
+      # value — localhost — and inside a container localhost is the container itself. The
+      # resulting dual-stack connect failure is an AggregateError whose message is EMPTY, so
+      # the log line read "Migration failed: " and nothing else. Found on a real deploy.
+      DATABASE_URL: postgresql://${POSTGRES_USER:-ledger}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-ledger}
     depends_on:
       postgres:
         condition: service_healthy

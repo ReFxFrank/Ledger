@@ -1,0 +1,33 @@
+# The build stage runs `COPY . .`, so this file is the boundary between the repo and the image.
+# Two things it protects:
+#  - Secrets: without the .env exclusions, a populated .env is baked into image layers.
+#  - The build cache: any file listed here can change without invalidating the COPY layer, so
+#    editing .env no longer re-runs the entire 170-second build.
+
+.git
+.github
+
+node_modules
+**/node_modules
+
+.env
+.env.*
+!.env.example
+
+**/.next
+**/dist
+**/.turbo
+**/coverage
+**/playwright-report
+**/test-results
+**/*.tsbuildinfo
+
+.mail
+data
+docs
+*.md
+!packages/providers/data/merchants/**/*.md
+
+Dockerfile
+docker-compose*.yml
+infra/caddy
