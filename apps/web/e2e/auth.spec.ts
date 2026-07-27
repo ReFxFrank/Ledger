@@ -76,6 +76,17 @@ test('sign up → mandatory TOTP enrolment → app → sign out → sign back in
   const secret = groupedSecret.replace(/\s+/gu, '');
   expect(secret).toMatch(/^[A-Z2-7]{16,}$/);
 
+  /**
+   * Both routes onto a phone are on screen: the QR for a camera, the key for typing. The QR is
+   * rendered as inline SVG from the URI in this tab — asserting on `role="img"` rather than on an
+   * `<img>` is the point, because an `<img>` would mean the secret went to somebody's server.
+   */
+  const qr = page.getByRole('img', { name: /QR code for your authenticator app/u });
+  await expect(qr).toBeVisible();
+  // One merged path of dark modules, drawn from a matrix — not an empty decorative frame.
+  await expect(qr.locator('path')).toHaveCount(1);
+  expect((await qr.locator('path').getAttribute('d'))?.length ?? 0).toBeGreaterThan(200);
+
   await page.getByLabel(/I have saved these backup codes/u).click();
   await page.getByRole('button', { name: 'Continue' }).click();
 

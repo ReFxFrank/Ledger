@@ -1,6 +1,45 @@
 import { type Page, expect } from '@playwright/test';
 
 /**
+ * Bulk row factory, through the tRPC endpoint the editor posts to.
+ *
+ * The editor path below is the right one when *the editor* is what is under test. It is the
+ * wrong one when a spec needs twelve rows so the virtualiser has something to virtualise: that
+ * is a minute of typing to set up a check that has nothing to do with typing, and a minute is
+ * long enough that people start deleting the check.
+ *
+ * The body is superjson's wire shape (`{ json }`) because `init.ts` sets that transformer; a
+ * bare input object is accepted by zod and then silently arrives as `undefined`.
+ */
+export async function seedSubscriptions(
+  page: Page,
+  baseURL: string,
+  entries: readonly { readonly displayName: string; readonly amountMinor: number }[],
+): Promise<void> {
+  for (const entry of entries) {
+    const response = await page.request.post(`${baseURL}/api/trpc/subscriptions.create`, {
+      headers: { Origin: baseURL, 'content-type': 'application/json' },
+      data: {
+        json: {
+          displayName: entry.displayName,
+          amountMinor: entry.amountMinor,
+          currency: 'USD',
+          intervalUnit: 'month',
+          intervalCount: 1,
+          // Fixed rather than "today": the horizon window is 60 days, and an anchor that drifts
+          // with the wall clock would put a tick inside or outside it depending on the date.
+          anchorDate: '2026-01-08',
+        },
+      },
+    });
+    expect(
+      response.ok(),
+      `seeding ${entry.displayName} failed: ${String(response.status())} ${await response.text()}`,
+    ).toBe(true);
+  }
+}
+
+/**
  * Drives the subscription editor sheet end to end: open, fill, submit, wait for the toast.
  *
  * Shared by the subscriptions and cancellation specs, both of which need real rows created the

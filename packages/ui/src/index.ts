@@ -51,6 +51,17 @@ export {
   type DialogContentProps,
 } from './dialog';
 export {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandMeta,
+  CommandSeparator,
+  useCommandState,
+} from './command';
+export {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,

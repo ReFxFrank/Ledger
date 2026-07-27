@@ -21,13 +21,17 @@ const NAMESPACE = 'ledger.seed.demo.v1';
 const HEX = '0123456789abcdef';
 
 /**
- * A deterministic UUID for `name`.
+ * A deterministic UUID for `name` inside `namespace`.
  *
  * Version nibble 8 (RFC 9562 "custom") rather than 4, because these are not random and labelling
  * them as if they were would mislead anyone reading a row in psql.
+ *
+ * The namespace is a parameter so a second fixture — the load-test corpus — can derive its own
+ * ids from the same function without any chance of colliding with the demo user's. One
+ * derivation, two namespaces, rather than a second copy of this that drifts.
  */
-export function demoUuid(name: string): string {
-  const digest = createHash('sha256').update(`${NAMESPACE}:${name}`).digest();
+export function derivedUuid(namespace: string, name: string): string {
+  const digest = createHash('sha256').update(`${namespace}:${name}`).digest();
   const bytes = new Uint8Array(digest.subarray(0, 16));
 
   bytes[6] = ((bytes[6] ?? 0) & 0x0f) | 0x80;
@@ -40,6 +44,11 @@ export function demoUuid(name: string): string {
     out += (HEX[byte >> 4] ?? '0') + (HEX[byte & 0x0f] ?? '0');
   }
   return out;
+}
+
+/** A deterministic UUID in the demo namespace. */
+export function demoUuid(name: string): string {
+  return derivedUuid(NAMESPACE, name);
 }
 
 /**

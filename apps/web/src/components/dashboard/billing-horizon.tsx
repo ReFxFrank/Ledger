@@ -535,6 +535,13 @@ function MarkerShape({
       ) : (
         <>
           <motion.rect
+            /**
+             * The one test seam in this file. The reduced-motion guarantee is about geometry on
+             * the first frame, and geometry is only readable off these rects — the visually
+             * hidden table carries the amounts but not the transform that must already be
+             * settled. Selecting them by `fill` instead would tie the a11y suite to a colour.
+             */
+            data-horizon-tick=""
             x={marker.x}
             y={marker.y}
             width={marker.width}

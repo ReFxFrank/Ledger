@@ -35,6 +35,21 @@ export function middleware(request: NextRequest): NextResponse {
     // local/dev deployments, production in real ones. Both are listed because the CSP is static
     // per build, not per environment, and each origin is Plaid's own.
     `connect-src 'self' https://production.plaid.com https://sandbox.plaid.com ${isDev ? 'ws: http://localhost:*' : ''}`,
+    /**
+     * These two already cover the PWA, and were checked rather than assumed before adding it:
+     * `/sw.js` is same-origin, so `worker-src 'self'` permits `serviceWorker.register`, and
+     * `/manifest.webmanifest` is same-origin, so `manifest-src 'self'` permits the `<link
+     * rel="manifest">` fetch. Nothing was widened for the service worker.
+     *
+     * The `blob:` source predates the PWA and is not what permits it: a service worker script
+     * must be a same-origin http(s) URL, so `blob:` could not register one even if it were the
+     * only source listed.
+     *
+     * Worth knowing: this same policy lands on the `/sw.js` response, and a service worker
+     * inherits the CSP of its own script. That is fine as written. The worker never calls
+     * `importScripts` (so the nonce/`strict-dynamic` script-src is moot inside it) and only ever
+     * fetches this origin, which `connect-src 'self'` allows.
+     */
     `worker-src 'self' blob:`,
     `manifest-src 'self'`,
     `upgrade-insecure-requests`,

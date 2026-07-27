@@ -1,6 +1,7 @@
 'use client';
 
 import type { ReactNode } from 'react';
+import { CommandPalette } from '../command-palette';
 import { PageTitleProvider } from './page-title';
 import { Sidebar } from './sidebar';
 import { TopBar } from './top-bar';
@@ -20,6 +21,9 @@ export interface AppShellProps {
  *
  * `pb-16` on the content column clears the mobile bottom bar, which is fixed and would otherwise
  * cover the last row of a table on exactly the device where the last row is hardest to reach.
+ *
+ * The command palette mounts here, once, rather than on each screen: it owns the app's global
+ * key bindings, and one instance per route would mean N handlers racing for the same keystroke.
  */
 export function AppShell({ name, email, children }: AppShellProps): ReactNode {
   return (
@@ -40,6 +44,8 @@ export function AppShell({ name, email, children }: AppShellProps): ReactNode {
           </main>
         </div>
       </div>
+
+      <CommandPalette />
     </PageTitleProvider>
   );
 }

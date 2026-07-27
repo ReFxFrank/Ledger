@@ -82,6 +82,7 @@ import {
   type ViewSnapshot,
   useSubscriptionViews,
 } from '~/lib/stores/subscription-views';
+import { usePendingIntent } from '~/lib/stores/pending-intent';
 import { BulkActionBar } from './bulk-bar';
 import { OptionFilter, TextFilter } from './column-filters';
 import { SubscriptionEditor } from './editor';
@@ -332,6 +333,17 @@ export function SubscriptionsTable(): React.ReactElement {
   const scrollRef = React.useRef<HTMLDivElement>(null);
   /** Move DOM focus only when the user asked for it, or a background refetch steals the caret. */
   const wantsRowFocus = React.useRef(false);
+
+  /**
+   * "Add a subscription" from the command palette lands here: the palette cannot open a form that
+   * is this component's own state, so it leaves an intent and navigates. Read once and cleared,
+   * so a later remount — a back navigation, a refetch — does not reopen a form nobody asked for
+   * a second time.
+   */
+  const takeNewSubscription = usePendingIntent((state) => state.takeNewSubscription);
+  React.useEffect(() => {
+    if (takeNewSubscription()) setEditorFor({ id: null });
+  }, [takeNewSubscription]);
 
   // ── data ─────────────────────────────────────────────────────────────────────────────
   const listInput = React.useMemo(

@@ -34,3 +34,7 @@ data/postgres/
 
 # Local email outbox: what @ledger/notify writes when RESEND_API_KEY is absent.
 .mail/
+
+# Scratch dumps from `scripts/backup-verify.mjs`. The drill removes its own, but a --keep run
+# or a crash mid-drill leaves one, and a database dump is the last thing to commit by accident.
+.backups/

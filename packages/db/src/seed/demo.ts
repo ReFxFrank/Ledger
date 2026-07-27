@@ -639,4 +639,4 @@ if (invokedPath !== undefined && import.meta.url === pathToFileURL(invokedPath).
   await main();
 }
 
-export { DEMO_USER_ID, seedDemoUser, seedMerchantRegistry };
+export { DEMO_USER_ID, sealTotpSecret, seedDemoUser, seedMerchantRegistry };

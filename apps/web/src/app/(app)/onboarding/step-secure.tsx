@@ -5,6 +5,7 @@ import { Check, Copy, Download, ShieldCheck, Smartphone } from 'lucide-react';
 import { Button, Checkbox, Input, Label, toast } from '@ledger/ui';
 import { CodeInput, isCodeComplete } from '~/components/auth/code-input';
 import { Field, FormError } from '~/components/auth/field';
+import { TotpQr } from '~/components/auth/totp-qr';
 import { authClient } from '~/lib/auth-client';
 import { authErrorMessage, thrownErrorMessage } from '~/lib/auth-errors';
 
@@ -168,15 +169,24 @@ export function StepSecure({ onDone }: { readonly onDone: () => void }): ReactNo
           <section className="flex flex-col gap-[var(--gap)]">
             <p className="eyebrow">1 — Add the key to your authenticator</p>
             <p className="text-sm leading-relaxed text-text-2">
-              Open your authenticator app, choose to add an account by entering a key, and type
-              the one below. On a phone, the button opens the app directly.
+              Open your authenticator app and scan the code, or add an account by entering a key
+              and type the one beside it. On a phone, the button opens the app directly.
             </p>
 
-            <div className="flex flex-col gap-[var(--gap-tight)] rounded-md border border-line bg-ink-900 p-[var(--pad-card)]">
-              <p className="eyebrow">Setup key</p>
-              <p className="break-all font-mono text-sm leading-relaxed tracking-wide text-text">
-                {secret === null ? 'Key unavailable — use the button below instead.' : groupSecret(secret)}
-              </p>
+            <div className="flex flex-col gap-[var(--pad-card)] rounded-md border border-line bg-ink-900 p-[var(--pad-card)] sm:flex-row sm:items-start">
+              {/*
+                The QR is generated in the browser from the URI the server just returned. It is
+                decoration for anyone who cannot point a camera at this screen — the key beside it
+                is the real content, and it is what the screen reader is given.
+              */}
+              <TotpQr uri={totpUri} className="w-full max-w-[11rem] shrink-0 rounded-sm" />
+
+              <div className="flex min-w-0 flex-col gap-[var(--gap-tight)]">
+                <p className="eyebrow">Setup key</p>
+                <p className="break-all font-mono text-sm leading-relaxed tracking-wide text-text">
+                  {secret === null ? 'Key unavailable — use the button below instead.' : groupSecret(secret)}
+                </p>
+              </div>
             </div>
 
             <div className="flex flex-wrap gap-[var(--gap-tight)]">
@@ -200,15 +210,9 @@ export function StepSecure({ onDone }: { readonly onDone: () => void }): ReactNo
               </Button>
             </div>
 
-            {/*
-              TODO(frank): show the QR alongside the key. Rendering one needs an encoder, and
-              adding a dependency was out of scope for this pass — `qrcode` or `uqr` in
-              apps/web, then a <canvas> fed from `totpUri`, is the whole change. Until then the
-              key and the deep link cover both the desktop-with-phone and phone-only cases.
-            */}
             <p className="text-[0.6875rem] leading-snug text-text-3">
-              Setting up on a different device? Type the key by hand — it is the same secret a QR
-              code would carry.
+              Setting up on a different device? Type the key by hand — it is the same secret the
+              QR code carries.
             </p>
           </section>
 

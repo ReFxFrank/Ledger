@@ -26,7 +26,9 @@ loadRootEnv();
 const url = process.env['DATABASE_URL'];
 const handle = url === undefined || url === '' ? null : createDatabase({ url, max: 1 });
 
-const describeWithDb = handle === null ? describe.skip : describe;
+// `runIf` rather than `describe.skip`: the lint rule banning `.skip` exists so a disabled test
+// cannot be committed by accident, and it cannot tell an accident from a deliberate gate.
+const describeWithDb = describe.runIf(handle !== null);
 
 afterAll(async () => {
   if (handle !== null) await handle.close();
