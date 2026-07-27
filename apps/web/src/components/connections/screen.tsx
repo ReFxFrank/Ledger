@@ -1,7 +1,8 @@
 'use client';
 
 import * as React from 'react';
-import { AlertTriangle, Ban, Link2, RefreshCw, Trash2 } from 'lucide-react';
+import Link from 'next/link';
+import { AlertTriangle, Ban, Link2, ListChecks, RefreshCw, Trash2 } from 'lucide-react';
 import { CONNECTION_STATUS_LABELS, type ConnectionStatus } from '@ledger/core';
 import {
   Badge,
@@ -24,7 +25,8 @@ import {
 } from '@ledger/ui';
 import { api } from '~/lib/trpc';
 import { formatInstant } from '~/lib/format';
-import type { ConnectionAccount, ConnectionListItem } from '~/lib/api-types';
+import type { ConnectResult, ConnectionAccount, ConnectionListItem } from '~/lib/api-types';
+import { isReauthRequired, useSensitiveAction } from '~/components/auth/reauth-dialog';
 import { LoadError } from '../dashboard/states';
 import { MerchantMark } from '../merchant-mark';
 import { LinkCallToAction } from './link-cta';
@@ -59,6 +61,7 @@ export function ConnectionsScreen(): React.ReactNode {
   const me = api.me.current.useQuery();
   const timezone = me.data?.timezone ?? 'UTC';
   const locale = me.data?.locale ?? 'en-GB';
+  const [connected, setConnected] = React.useState<ConnectResult | null>(null);
 
   if (connections.error !== null) {
     return (
@@ -88,6 +91,8 @@ export function ConnectionsScreen(): React.ReactNode {
 
   return (
     <div className="flex flex-col gap-[var(--gap-loose)]">
+      {connected === null ? null : <ConnectSummary result={connected} />}
+
       {/*
         The whole point of this banner is that it appears before anything stops working. It names
         the bank and the number of days, because "action required" is not information.
@@ -117,6 +122,7 @@ export function ConnectionsScreen(): React.ReactNode {
               : { institutionId: connection.institutionId })}
             label="Reconnect now"
             explain={false}
+            onConnected={setConnected}
           />
         </div>
       ))}
@@ -145,6 +151,7 @@ export function ConnectionsScreen(): React.ReactNode {
               : { institutionId: connection.institutionId })}
             label="Fix it"
             explain={false}
+            onConnected={setConnected}
           />
         </div>
       ))}
@@ -152,7 +159,9 @@ export function ConnectionsScreen(): React.ReactNode {
       <Panel>
         <PanelHeader
           eyebrow="Bank connections"
-          actions={<LinkCallToAction label="Connect a bank" explain={false} />}
+          actions={
+            <LinkCallToAction label="Connect a bank" explain={false} onConnected={setConnected} />
+          }
         >
           Where transactions come from. Ledger never sees or stores your bank password — an
           aggregator holds the connection, and the token it gives us is sealed before it is
@@ -160,9 +169,13 @@ export function ConnectionsScreen(): React.ReactNode {
         </PanelHeader>
 
         {connections.data.length === 0 ? (
-          <EmptyState icon={<Link2 />} actions={<LinkCallToAction label="Connect a bank" />}>
-            No banks connected. Connecting one is the fast route; adding subscriptions by hand or
-            importing a CSV works today and feeds the same detection engine.
+          <EmptyState
+            icon={<Link2 />}
+            actions={<LinkCallToAction label="Connect a bank" onConnected={setConnected} />}
+          >
+            No banks connected. Connecting one imports up to two years of history and runs
+            detection over it; adding subscriptions by hand or importing a CSV feeds the same
+            engine.
           </EmptyState>
         ) : (
           <PanelBody className="flex flex-col gap-[var(--gap)]">
@@ -183,6 +196,62 @@ export function ConnectionsScreen(): React.ReactNode {
   );
 }
 
+/**
+ * What just happened, in numbers.
+ *
+ * A connect that only said "Connected" would be asking the user to take on trust that two years of
+ * their bank history arrived. The three figures are the evidence, and the last of them is a link
+ * rather than a statistic because a detection nobody reviews is not worth having found.
+ *
+ * Neutral, not amber: these are counts of rows, not money. `--outflow` on this panel would be the
+ * palette saying "this is what you spend" about a number that is nothing of the sort.
+ */
+function ConnectSummary({ result }: { readonly result: ConnectResult }): React.ReactNode {
+  return (
+    <section
+      role="status"
+      className="rounded-md border border-line-hot bg-ink-700 p-[var(--pad-card)]"
+    >
+      <p className="text-[0.8125rem] font-medium text-text">
+        {result.relinked ? 'Reconnected' : 'Connected'} {result.institutionName}.
+      </p>
+
+      <dl className="mt-[var(--gap-loose)] flex flex-wrap gap-x-[var(--gap-loose)] gap-y-[var(--gap-tight)]">
+        <Figure label="Accounts" value={result.accountCount} />
+        <Figure label="Transactions imported" value={result.transactionsAdded} />
+        <Figure label="Recurring charges found" value={result.detectionsFound} />
+      </dl>
+
+      <p className="mt-[var(--gap-loose)] text-xs text-text-2">
+        {result.hasMore
+          ? 'There is more history than one request will pull. Press Sync to continue where this left off — nothing is duplicated.'
+          : 'Everything the bank was willing to share is in. Nothing here is treated as a subscription until you say so.'}
+      </p>
+
+      {result.detectionsPending > 0 ? (
+        <div className="mt-[var(--gap-loose)]">
+          <Button size="sm" variant="primary" asChild>
+            <Link href="/review">
+              <ListChecks className="size-3.5" aria-hidden />
+              Review {result.detectionsPending}{' '}
+              {result.detectionsPending === 1 ? 'suggestion' : 'suggestions'}
+            </Link>
+          </Button>
+        </div>
+      ) : null}
+    </section>
+  );
+}
+
+function Figure({ label, value }: { readonly label: string; readonly value: number }): React.ReactNode {
+  return (
+    <div className="min-w-0">
+      <dt className="eyebrow">{label}</dt>
+      <dd className="font-mono text-[0.9375rem] tabular-nums text-text">{value}</dd>
+    </div>
+  );
+}
+
 function ConnectionCard({
   connection,
   locale,
@@ -196,36 +265,62 @@ function ConnectionCard({
   const [confirmingRemove, setConfirmingRemove] = React.useState(false);
   const health = connection.health;
 
-  const sync = api.connections.sync.useMutation({
-    onSuccess: async (result) => {
-      toast.success(`Synced. ${result.added} new, ${result.updated} updated.`);
-      await utils.connections.list.invalidate();
-    },
-    onError: (error) => {
-      toast.error(
-        error.data?.code === 'NOT_IMPLEMENTED'
-          ? 'Syncing is not switched on in this build.'
-          : 'Could not sync.',
-        { description: error.message },
-      );
-    },
-  });
+  const sync = api.connections.sync.useMutation();
 
-  const remove = api.connections.remove.useMutation({
-    onSuccess: async () => {
+  /**
+   * Syncing reaches an aggregator with a stored token, so it is gated the same way connecting is.
+   * `useSensitiveAction` turns that from a dead end into a password prompt and a retry.
+   */
+  const runSync = React.useCallback(async () => {
+    try {
+      const result = await sync.mutateAsync({ connectionId: connection.id, full: false });
+      toast.success(
+        result.added === 0 && result.updated === 0
+          ? 'Already up to date.'
+          : `${result.added} new, ${result.updated} updated.`,
+        {
+          description:
+            result.detectionsCreated > 0
+              ? `${result.detectionsCreated} new recurring ${result.detectionsCreated === 1 ? 'charge' : 'charges'} to review.`
+              : undefined,
+        },
+      );
+      await Promise.all([utils.connections.list.invalidate(), utils.review.list.invalidate()]);
+    } catch (error) {
+      if (isReauthRequired(error)) throw error;
+      toast.error('Could not sync.', {
+        description: error instanceof Error ? error.message : undefined,
+      });
+    }
+  }, [connection.id, sync, utils]);
+
+  const { run: startSync, dialog: syncDialog } = useSensitiveAction(
+    runSync,
+    'Pulling from your bank uses the stored connection token, so it needs a password confirmation first.',
+  );
+
+  const remove = api.connections.remove.useMutation();
+
+  // Same treatment as Sync, for the same reason: "Confirm your password first" as a toast is an
+  // instruction with nowhere to carry it out.
+  const runRemove = React.useCallback(async () => {
+    try {
+      await remove.mutateAsync({ id: connection.id });
       toast.success('Disconnected. The subscriptions we detected from it are still yours.');
       setConfirmingRemove(false);
       await utils.connections.list.invalidate();
-    },
-    onError: (error) => {
-      toast.error(
-        error.data?.code === 'FORBIDDEN'
-          ? 'Confirm your password first — disconnecting a bank is a sensitive action.'
-          : 'Could not disconnect that.',
-        { description: error.message },
-      );
-    },
-  });
+    } catch (error) {
+      if (isReauthRequired(error)) throw error;
+      toast.error('Could not disconnect that.', {
+        description: error instanceof Error ? error.message : undefined,
+      });
+    }
+  }, [connection.id, remove, utils]);
+
+  const { run: startRemove, dialog: removeDialog } = useSensitiveAction(
+    runRemove,
+    'Disconnecting deletes the accounts and every transaction that came from them, so it needs a password confirmation first.',
+  );
 
   return (
     <article className="rounded-md border border-line bg-ink-700 p-[var(--pad-card)]">
@@ -252,14 +347,7 @@ function ConnectionCard({
           <Badge tone={STATUS_TONES[health.status]}>
             {CONNECTION_STATUS_LABELS[health.status]}
           </Badge>
-          <Button
-            size="sm"
-            variant="ghost"
-            loading={sync.isPending}
-            onClick={() => {
-              sync.mutate({ connectionId: connection.id, full: false });
-            }}
-          >
+          <Button size="sm" variant="ghost" loading={sync.isPending} onClick={startSync}>
             <RefreshCw className="size-3.5" aria-hidden />
             Sync
           </Button>
@@ -316,6 +404,9 @@ function ConnectionCard({
         </div>
       )}
 
+      {syncDialog}
+      {removeDialog}
+
       <Dialog open={confirmingRemove} onOpenChange={setConfirmingRemove}>
         <DialogContent className="max-w-md">
           <DialogHeader>
@@ -341,13 +432,7 @@ function ConnectionCard({
             >
               Keep it
             </Button>
-            <Button
-              variant="danger"
-              loading={remove.isPending}
-              onClick={() => {
-                remove.mutate({ id: connection.id });
-              }}
-            >
+            <Button variant="danger" loading={remove.isPending} onClick={startRemove}>
               Disconnect
             </Button>
           </DialogFooter>

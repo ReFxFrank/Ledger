@@ -24,6 +24,7 @@ export type CancellationDetail = RouterOutputs['cancellations']['byId'];
 
 export type ConnectionListItem = RouterOutputs['connections']['list'][number];
 export type ConnectionAccount = ConnectionListItem['accounts'][number];
+export type ConnectResult = RouterOutputs['connections']['exchangeToken'];
 export type PaymentMethod = RouterOutputs['paymentMethods']['list'][number];
 
 export type CostPerUseRow = RouterOutputs['analytics']['costPerUse'][number];

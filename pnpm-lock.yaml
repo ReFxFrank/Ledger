@@ -137,6 +137,9 @@ importers:
       react-hook-form:
         specifier: ^7.54.2
         version: 7.83.0(react@19.2.8)
+      react-plaid-link:
+        specifier: ^5.0.0
+        version: 5.0.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       recharts:
         specifier: ^2.15.0
         version: 2.15.4(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -315,6 +318,9 @@ importers:
       '@ledger/logger':
         specifier: workspace:*
         version: link:../logger
+      '@ledger/providers':
+        specifier: workspace:*
+        version: link:../providers
       drizzle-orm:
         specifier: ^0.38.4
         version: 0.38.4(@types/react@19.2.17)(kysely@0.29.4)(postgres@3.4.9)(react@19.2.8)
@@ -4607,6 +4613,12 @@ packages:
   react-is@18.3.1:
     resolution: {integrity: sha512-/LLMVyas0ljjAtoYiPqYiL8VWXzUUdThrmU5+n20DZv+a+ClRoevUzw5JxU+Ieh5/c87ytoTBV9G1FiKfNJdmg==}
 
+  react-plaid-link@5.0.0:
+    resolution: {integrity: sha512-DZ/6C7hf+xhEIG9ElCqjk1lty/z+y+wQuV/A29EUx4fxiPLPe7CXN811C3MrCzI7grV45LD7NRS0Do0ma8KIBg==}
+    peerDependencies:
+      react: ^16.8.0 || ^17 || ^18 || ^19
+      react-dom: ^16.8.0 || ^17 || ^18 || ^19
+
   react-promise-suspense@0.3.4:
     resolution: {integrity: sha512-I42jl7L3Ze6kZaq+7zXWSunBa3b1on5yfvUW6Eo/3fFOj6dZ5Bqmcd264nJbTK/gn1HjjILAjSwnZbV4RpSaNQ==}
 
@@ -8860,6 +8872,12 @@ snapshots:
   react-is@16.13.1: {}
 
   react-is@18.3.1: {}
+
+  react-plaid-link@5.0.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8):
+    dependencies:
+      prop-types: 15.8.1
+      react: 19.2.8
+      react-dom: 19.2.8(react@19.2.8)
 
   react-promise-suspense@0.3.4:
     dependencies:

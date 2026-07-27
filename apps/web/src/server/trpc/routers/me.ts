@@ -98,11 +98,14 @@ export const meRouter = router({
    * would be intercepted by the two-factor plugin and rotate the session, so the user would be
    * asked for a TOTP code to perform an action they are already authenticated for.
    *
-   * Deliberately on `sessionProcedure`. Gating re-auth behind `protectedProcedure` would be
-   * circular for the one case that matters — a user who needs to re-auth in order to change
-   * their 2FA settings.
+   * On `protectedProcedure`, not `sessionProcedure`. The circularity this was once written to
+   * avoid — needing a re-auth in order to set up 2FA — does not exist: enrolment runs through
+   * better-auth's own `twoFactor.enable({ password })`, which takes the password directly and
+   * never touches this procedure. Everything that *does* consume the re-auth window is a
+   * `sensitiveProcedure`, which is `protectedProcedure` plus the window, so a caller without a
+   * second factor gained nothing here except the ability to probe a password behind a session.
    */
-  reauthenticate: sessionProcedure
+  reauthenticate: protectedProcedure
     .input(z.object({ password: z.string().min(1) }))
     .mutation(async ({ ctx, input }) => {
       const sessionId = ctx.session?.session.id;

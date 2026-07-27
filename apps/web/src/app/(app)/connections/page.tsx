@@ -13,7 +13,12 @@ export const metadata: Metadata = {
  * Two promises are made on this screen and both are kept by the code behind it: Ledger never asks
  * for a bank password, and the aggregator token it does hold is sealed by @ledger/crypto before
  * it reaches the database. Nothing on this page can show you a token, because no procedure that
- * feeds it returns one.
+ * feeds it returns one — every read lists its columns explicitly and a test in `authz.test.ts`
+ * fails if a router so much as names the sealed ones.
+ *
+ * Connecting is one request end to end: `connections.exchangeToken` seals the token, writes the
+ * connection and its accounts, pulls the history, and runs detection over it before it returns.
+ * That is why the summary it produces can quote real numbers rather than "started".
  */
 export default function ConnectionsPage(): ReactNode {
   return (
@@ -25,6 +30,8 @@ export default function ConnectionsPage(): ReactNode {
           Ledger never asks for your bank sign-in and never logs in as you. A connection is
           permission you grant your bank to share read-only transaction data, and it expires on
           your bank&rsquo;s clock — which is why the countdown is on this screen before it runs out.
+          Connecting one pulls up to two years of history and proposes what looks recurring; none
+          of it becomes a subscription until you confirm it in review.
         </p>
       </header>
 

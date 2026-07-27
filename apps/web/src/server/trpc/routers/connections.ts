@@ -3,9 +3,18 @@ import 'server-only';
 import { desc, eq, inArray } from 'drizzle-orm';
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
+import { type AggregatorErrorCode, isAggregatorError } from '@ledger/banking';
 import { type ConnectionStatus } from '@ledger/core';
 import { bankAccounts, bankConnections } from '@ledger/db';
 import { recordAudit } from '~/server/audit';
+import {
+  type BankingContext,
+  countAccounts,
+  countPendingDetections,
+  linkConnection,
+  openLinkSession,
+  runConnectionSync,
+} from '~/server/banking/runtime';
 import { protectedProcedure, router, sensitiveProcedure } from '~/server/trpc/init';
 
 /**
@@ -198,16 +207,20 @@ export const connectionsRouter = router({
 
   // ── aggregator surface ────────────────────────────────────────────────────────────────
   //
-  // The three procedures below are the whole of Ledger's contact with an aggregator, and their
-  // signatures are fixed now so the /connections screen can be built against them. The bodies
-  // land with workstream D. They throw rather than returning a plausible shape: a link session
-  // that returns a fake token would fail three screens later, at the point where it is hardest
-  // to tell a stub from a bug.
+  // The three procedures below are the whole of Ledger's contact with an aggregator. They run
+  // against `selectAdapter(env)`, so the code path is identical for Plaid and for the fixture and
+  // the only thing `AGGREGATOR=fixture` changes is which bank answers. Everything they touch —
+  // sealing, the cursor, idempotency, detection — lives in @ledger/banking; what is here is the
+  // wiring and the error translation.
 
   /**
    * Opens a link session. `sensitiveProcedure` — connecting a bank is on the §9.2 list.
    *
-   * TODO(frank): wire to @ledger/banking AggregatorAdapter once workstream D lands.
+   * The output carries `mode` because the two providers genuinely differ and pretending otherwise
+   * would mean building a fake bank picker. Plaid returns `handoff`: the token goes to its client
+   * SDK, the user signs in at their own bank, and the SDK produces a public token to post back.
+   * The fixture returns `immediate` with the public token already in hand, because there is no
+   * bank to sign into and inventing a modal would test nothing.
    */
   createLinkSession: sensitiveProcedure
     .input(
@@ -222,22 +235,29 @@ export const connectionsRouter = router({
     )
     .output(
       z.object({
+        provider: z.string(),
         linkToken: z.string(),
         expiresAt: z.date(),
-        provider: z.string(),
+        mode: z.enum(['handoff', 'immediate']),
+        publicToken: z.string().nullable(),
       }),
     )
-    .mutation(() => {
-      throw new TRPCError({
-        code: 'NOT_IMPLEMENTED',
-        message: 'Bank connections are not switched on yet.',
-      });
+    .mutation(async ({ ctx, input }) => {
+      return withAggregatorErrors(() =>
+        openLinkSession(bankingContext(ctx), {
+          clientName: 'Ledger',
+          ...(input.institutionId === undefined ? {} : { institutionId: input.institutionId }),
+        }),
+      );
     }),
 
   /**
-   * Exchanges the public token from the link flow for a stored connection.
+   * Exchanges the public token from the link flow for a stored connection, then backfills it.
    *
-   * TODO(frank): wire to @ledger/banking AggregatorAdapter once workstream D lands.
+   * The backfill runs in this request. There is no Redis in this deployment, and a mutation that
+   * queued work nothing would run is worse than none: the user would connect a bank, see an empty
+   * screen, and be right to conclude it did not work. `runConnectionSync` is written so that the
+   * queue's job body is the same call — see the note at the top of `~/server/banking/runtime`.
    */
   exchangeToken: sensitiveProcedure
     .input(
@@ -251,21 +271,81 @@ export const connectionsRouter = router({
         connectionId: z.string().uuid(),
         institutionName: z.string(),
         accountCount: z.number().int(),
+        /** True when this re-authorised a connection that already existed. */
+        relinked: z.boolean(),
+        transactionsAdded: z.number().int(),
+        /** Detections that did not exist before this connect. */
+        detectionsFound: z.number().int(),
+        /** Everything now waiting in /review, including anything found earlier. */
+        detectionsPending: z.number().int(),
+        syncedAt: z.date(),
+        /** The aggregator had more history than one request would spend. Press Sync again. */
+        hasMore: z.boolean(),
       }),
     )
-    .mutation(() => {
-      throw new TRPCError({
-        code: 'NOT_IMPLEMENTED',
-        message: 'Bank connections are not switched on yet.',
-      });
+    .mutation(async ({ ctx, input }) => {
+      const banking = bankingContext(ctx);
+
+      const linked = await withAggregatorErrors(() =>
+        linkConnection(banking, input.publicToken, input.institutionId ?? null),
+      );
+
+      if (linked.claim.kind === 'taken') {
+        // Deliberately not "that bank is already connected to another account" — that phrasing
+        // confirms the existence of somebody else's connection to anyone holding a token.
+        throw new TRPCError({
+          code: 'CONFLICT',
+          message: 'That link cannot be used here. Start the connection again from this account.',
+        });
+      }
+
+      const connectionId = linked.claim.connectionId;
+      const totals = await withAggregatorErrors(() => runConnectionSync(banking, connectionId));
+
+      const [accountCount, detectionsPending] = await Promise.all([
+        countAccounts(banking, connectionId),
+        countPendingDetections(banking),
+      ]);
+
+      await recordAudit(
+        ctx.db,
+        ctx.scope,
+        { ip: ctx.ip, userAgent: ctx.userAgent },
+        linked.claim.kind === 'relinked' ? 'connection.relinked' : 'connection.created',
+        'connection',
+        connectionId,
+        {
+          after: {
+            institutionName: linked.institutionName,
+            accountCount,
+            transactionsAdded: totals.added,
+            detectionsFound: totals.detectionsFound,
+          },
+        },
+      );
+
+      return {
+        connectionId,
+        institutionName: linked.institutionName,
+        accountCount,
+        relinked: linked.claim.kind === 'relinked',
+        transactionsAdded: totals.added,
+        detectionsFound: totals.detectionsFound,
+        detectionsPending,
+        syncedAt: totals.syncedAt,
+        hasMore: totals.hasMore,
+      };
     }),
 
   /**
-   * Pulls new transactions for one connection.
+   * Pulls new transactions for one connection and re-runs detection over the result.
    *
-   * TODO(frank): wire to @ledger/banking AggregatorAdapter once workstream D lands.
+   * `sensitiveProcedure` alongside the other two. Refreshing a feed is not itself irreversible,
+   * but this is the same call that performs the initial backfill and it is the only other way to
+   * reach an aggregator with a stored token — putting it on a weaker gate than `exchangeToken`
+   * would make the §9.2 boundary depend on which entry point somebody chose.
    */
-  sync: protectedProcedure
+  sync: sensitiveProcedure
     .input(
       z.object({
         connectionId: z.string().uuid(),
@@ -279,13 +359,93 @@ export const connectionsRouter = router({
         updated: z.number().int(),
         removed: z.number().int(),
         detectionsCreated: z.number().int(),
+        detectionsPending: z.number().int(),
+        pages: z.number().int(),
+        hasMore: z.boolean(),
         syncedAt: z.date(),
       }),
     )
-    .mutation(() => {
-      throw new TRPCError({
-        code: 'NOT_IMPLEMENTED',
-        message: 'Syncing is not switched on yet.',
-      });
+    .mutation(async ({ ctx, input }) => {
+      const banking = bankingContext(ctx);
+
+      // Ownership is proven before the aggregator is touched. `syncConnection` scopes its own
+      // load too, but it reports a missing connection as an upstream `item_not_found`, and a
+      // NOT_FOUND is both truer and what the UI knows how to render.
+      const [connection] = await ctx.db
+        .select({ id: bankConnections.id })
+        .from(bankConnections)
+        .where(ctx.scope.whereId(bankConnections, input.connectionId))
+        .limit(1);
+
+      if (connection === undefined) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'That connection does not exist.' });
+      }
+
+      const totals = await withAggregatorErrors(() =>
+        runConnectionSync(banking, connection.id, { full: input.full }),
+      );
+
+      return {
+        added: totals.added,
+        updated: totals.updated,
+        removed: totals.removed,
+        detectionsCreated: totals.detectionsFound,
+        detectionsPending: await countPendingDetections(banking),
+        pages: totals.pages,
+        hasMore: totals.hasMore,
+        syncedAt: totals.syncedAt,
+      };
     }),
 });
+
+// ── aggregator error translation ─────────────────────────────────────────────────────────
+
+/**
+ * The three fields `@ledger/banking` needs, lifted off the tRPC context.
+ *
+ * Narrowing rather than passing `ctx` whole: the sync engine has no business reaching a session,
+ * a header, or an IP, and the only way to guarantee that is to not hand it one.
+ */
+function bankingContext(ctx: BankingContext): BankingContext {
+  return { db: ctx.db, scope: ctx.scope, clock: ctx.clock };
+}
+
+/**
+ * Which tRPC code an aggregator failure deserves.
+ *
+ * The distinction the UI needs is "can the user fix this now", and it is the reason these are not
+ * all `INTERNAL_SERVER_ERROR`: a lapsed consent needs a reconnect button, a throttled aggregator
+ * needs a retry in a minute, and a missing Plaid secret needs a deployment — showing the same
+ * "something went wrong" for all three leaves the user with no next step in any of them.
+ */
+const AGGREGATOR_ERROR_CODES_TO_TRPC: Readonly<
+  Record<AggregatorErrorCode, TRPCError['code']>
+> = {
+  reauth_required: 'FORBIDDEN',
+  consent_expired: 'FORBIDDEN',
+  item_not_found: 'NOT_FOUND',
+  temporarily_unavailable: 'TIMEOUT',
+  rate_limited: 'TOO_MANY_REQUESTS',
+  invalid_webhook: 'BAD_REQUEST',
+  not_configured: 'PRECONDITION_FAILED',
+  upstream: 'BAD_GATEWAY',
+};
+
+/**
+ * Runs `work`, turning an `AggregatorError` into a tRPC error.
+ *
+ * Only the sanitised code and message cross over. An aggregator's own error object carries the
+ * request that produced it, and that request carries the access token — which is why
+ * `AggregatorError` never attaches a `cause` and why nothing here goes looking for one.
+ */
+async function withAggregatorErrors<T>(work: () => Promise<T>): Promise<T> {
+  try {
+    return await work();
+  } catch (cause) {
+    if (!isAggregatorError(cause)) throw cause;
+    throw new TRPCError({
+      code: AGGREGATOR_ERROR_CODES_TO_TRPC[cause.aggregatorCode],
+      message: cause.message,
+    });
+  }
+}
