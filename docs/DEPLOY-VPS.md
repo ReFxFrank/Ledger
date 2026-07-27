@@ -33,13 +33,21 @@ The official repository, not Ubuntu's `docker.io` package — compose v2 comes w
 
 ```bash
 curl -fsSL https://get.docker.com | sh
+
+# Let your own user talk to the daemon — the installer does not do this, and without it every
+# docker command needs sudo. The group change lands in new sessions; `exec sg` applies it now.
+sudo usermod -aG docker $USER && exec sg docker newgrp
 ```
 
-Verify: `docker compose version` prints v2.x.
+Verify: `docker compose version` prints v2.x, without sudo.
 
 ## 3. Get the code
 
+`/opt` is root-owned, so claim the directory first — cloning straight into it fails with
+`could not create work tree dir: Permission denied` on any non-root session:
+
 ```bash
+sudo mkdir -p /opt/ledger && sudo chown $USER:$USER /opt/ledger
 git clone https://github.com/ReFxFrank/Ledger.git /opt/ledger
 cd /opt/ledger
 ```
