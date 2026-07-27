@@ -7,6 +7,7 @@ import { Button, Spinner, cn } from '@ledger/ui';
 import { api } from '~/lib/trpc';
 import type { ConnectResult } from '~/lib/api-types';
 import { isReauthRequired, useSensitiveAction } from '~/components/auth/reauth-dialog';
+import { PlaidLink } from './plaid-link';
 
 /**
  * "Connect a bank" — the real flow.
@@ -16,9 +17,9 @@ import { isReauthRequired, useSensitiveAction } from '~/components/auth/reauth-d
  * its history. Which of those two steps involves a bank sign-in depends on the aggregator, and
  * this component branches on `session.mode` rather than assuming:
  *
- *  - `handoff`   — Plaid. The link token belongs to Plaid's client SDK, the user signs in inside
- *                  that SDK, and the public token comes back from it. Ledger is not in the middle
- *                  of that exchange and never sees a credential.
+ *  - `handoff`   — Plaid. The link token goes to `PlaidLink`, which mounts their client SDK; the
+ *                  user signs in inside that SDK and the public token comes back from it. Ledger
+ *                  is not in the middle of that exchange and never sees a credential.
  *  - `immediate` — the fixture. There is no bank to sign into, so the session already carries the
  *                  public token. No fake bank picker is rendered, because a modal that pretends to
  *                  be a bank would be the one part of this flow that is not true.
@@ -29,7 +30,7 @@ import { isReauthRequired, useSensitiveAction } from '~/components/auth/reauth-d
  */
 
 /** What the button is doing, in the user's terms rather than the protocol's. */
-type Phase = 'idle' | 'opening' | 'importing' | 'done' | 'handoff' | 'failed';
+type Phase = 'idle' | 'opening' | 'importing' | 'done' | 'plaid' | 'handoff' | 'failed';
 
 const PHASE_LABELS: Readonly<Record<'opening' | 'importing', string>> = {
   opening: 'Asking your bank for permission…',
@@ -61,6 +62,7 @@ export function LinkCallToAction({
   const utils = api.useUtils();
   const [phase, setPhase] = React.useState<Phase>('idle');
   const [message, setMessage] = React.useState('');
+  const [linkToken, setLinkToken] = React.useState<string | null>(null);
 
   const createSession = api.connections.createLinkSession.useMutation();
   const exchange = api.connections.exchangeToken.useMutation();
@@ -75,9 +77,21 @@ export function LinkCallToAction({
         ...(institutionId === undefined ? {} : { institutionId }),
       });
 
-      if (session.mode === 'handoff' || session.publicToken === null) {
-        // A real Plaid deployment mounts their SDK here with `session.linkToken`. Saying so beats
-        // silently doing nothing, and beats more strongly a stub that fabricates a public token.
+      if (session.mode === 'handoff') {
+        // Plaid. The token belongs to their SDK: `PlaidLink` mounts it, runs the exchange, and
+        // reports back through the callbacks below. A handoff without a usable token means the
+        // aggregator is configured but could not open a session, and the explanatory panel beats
+        // both silence and a stub that fabricates a public token.
+        if (session.linkToken !== '') {
+          setLinkToken(session.linkToken);
+          setPhase('plaid');
+        } else {
+          setPhase('handoff');
+        }
+        return;
+      }
+      if (session.publicToken === null) {
+        // An `immediate` session with no token has nothing to exchange. Same honest dead end.
         setPhase('handoff');
         return;
       }
@@ -114,10 +128,27 @@ export function LinkCallToAction({
 
   return (
     <div className="flex min-w-0 flex-col gap-[var(--gap-tight)]">
-      <Button size={size} variant={variant} loading={busy} onClick={run}>
+      {/* Also held busy while Plaid's UI is up: a second click would open a second session. */}
+      <Button size={size} variant={variant} loading={busy || phase === 'plaid'} onClick={run}>
         <Link2 className="size-3.5" aria-hidden />
         {label}
       </Button>
+
+      {phase === 'plaid' && linkToken !== null ? (
+        <PlaidLink
+          linkToken={linkToken}
+          {...(institutionId === undefined ? {} : { institutionId })}
+          onConnected={(result) => {
+            setLinkToken(null);
+            setPhase('done');
+            onConnected?.(result);
+          }}
+          onCancel={() => {
+            setLinkToken(null);
+            setPhase('idle');
+          }}
+        />
+      ) : null}
 
       {busy ? (
         <p

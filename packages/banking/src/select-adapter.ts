@@ -51,7 +51,10 @@ export function selectAdapter(
           // Reuses the same variable so that a deployment which has configured webhook signing
           // gets it on both adapters. Unset — the normal local case — the fixture accepts
           // unsigned deliveries, which is what makes `curl` a usable way to trigger a sync.
-          webhookSecret: env.PLAID_WEBHOOK_SECRET,
+          // Empty counts as unset: `.env` templates ship `PLAID_WEBHOOK_SECRET=`, and a
+          // zero-length secret is a signature requirement nobody chose. Same reading
+          // `buildClient` gives empty Plaid credentials.
+          webhookSecret: nonEmpty(env.PLAID_WEBHOOK_SECRET),
         }),
       );
 
@@ -85,6 +88,10 @@ function plaidEnvironment(value: string | undefined): 'sandbox' | 'development' 
 
 function trimSlash(url: string): string {
   return url.endsWith('/') ? url.slice(0, -1) : url;
+}
+
+function nonEmpty(value: string | undefined): string | undefined {
+  return value === '' ? undefined : value;
 }
 
 /**

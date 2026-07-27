@@ -14,6 +14,7 @@ import {
   type Clock,
   type Category,
   type RecurrenceInterval,
+  LedgerError,
   interval,
 } from '@ledger/core';
 import { type Database, type Scope, bankAccounts, bankConnections, detections, merchants } from '@ledger/db';
@@ -64,22 +65,41 @@ const log = childLogger('web.banking');
 
 // ── process-wide singletons ────────────────────────────────────────────────────────────
 
-let adapterInstance: AggregatorAdapter | null = null;
+const adapterInstances = new Map<string, AggregatorAdapter>();
 
 /**
- * The adapter, built once.
+ * The adapter for a given provider, built once per provider.
  *
  * Once rather than per request because `FixtureAdapter` freezes its 24-month corpus the first time
  * a connection touches it, and paging hands out offsets into that frozen list. A fresh adapter per
  * request would regenerate the corpus against a moving clock, and page 4 would stop being the page
  * 4 that page 3's cursor pointed at.
  *
+ * A map rather than a single memo because connections outlive the AGGREGATOR setting. The env
+ * decides what NEW links use; an existing row carries its own `provider`, and syncing it must use
+ * the adapter that minted its token. With one env-selected instance, flipping to plaid handed the
+ * fixture connection's sealed token to the Plaid client — an upstream 400 at best, and at worst a
+ * connection marked errored for a configuration change that had nothing to do with it.
+ *
  * `loadServerEnv()` is called here rather than at module scope so that importing this file — which
  * the router does, which the authz test does — never depends on a populated `.env`.
  */
+export function getAdapterFor(provider: string): AggregatorAdapter {
+  const cached = adapterInstances.get(provider);
+  if (cached !== undefined) return cached;
+
+  // selectAdapter switches on AGGREGATOR; overriding just that field reuses its construction
+  // (credentials, webhook secret, clock) without a second copy of the wiring. A plaid row with
+  // no Plaid credentials configured fails loudly here, which is the right place: the row cannot
+  // be synced, and pretending otherwise just moves the error somewhere less explicable.
+  const instance = selectAdapter({ ...loadServerEnv(), AGGREGATOR: provider });
+  adapterInstances.set(provider, instance);
+  return instance;
+}
+
+/** The adapter NEW connections are created with — the one the environment selects. */
 export function getAdapter(): AggregatorAdapter {
-  adapterInstance ??= selectAdapter(loadServerEnv());
-  return adapterInstance;
+  return getAdapterFor(loadServerEnv().AGGREGATOR);
 }
 
 let storeInstance: DrizzleSyncStore | null = null;
@@ -290,7 +310,19 @@ export async function runConnectionSync(
   connectionId: string,
   options: RunSyncOptions = {},
 ): Promise<ConnectionSyncRun> {
-  const adapter = getAdapter();
+  // By the row's own provider, never by AGGREGATOR: this connection may predate a config change,
+  // and its sealed token only opens inside the adapter that minted it.
+  const [row] = await ctx.db
+    .select({ provider: bankConnections.provider })
+    .from(bankConnections)
+    .where(ctx.scope.whereId(bankConnections, connectionId))
+    .limit(1);
+
+  if (row === undefined) {
+    throw new LedgerError('NOT_FOUND', 'That connection does not exist.');
+  }
+
+  const adapter = getAdapterFor(row.provider);
   const store = getStore(ctx.db);
   const registry = await getRegistry(ctx.db, ctx.clock);
 

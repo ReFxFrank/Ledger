@@ -94,6 +94,9 @@ export function SignUpForm(): ReactNode {
           className="flex flex-col gap-[var(--gap-loose)]"
           onSubmit={(event) => void form.handleSubmit(onSubmit)(event)}
           noValidate
+          // Same pre-hydration GET fallback as sign-in-form.tsx: without a method, a submit
+          // before hydration navigates with the password in the query string.
+          method="post"
         >
           <FormError>{formError}</FormError>
 

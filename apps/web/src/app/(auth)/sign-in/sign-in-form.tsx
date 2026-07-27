@@ -109,6 +109,15 @@ export function SignInForm({ next }: { readonly next: string }): ReactNode {
           className="flex flex-col gap-[var(--gap-loose)]"
           onSubmit={(event) => void form.handleSubmit(onSubmit)(event)}
           noValidate
+          /**
+           * A form with no method defaults to GET, and a submit that lands before React has
+           * hydrated bypasses onSubmit entirely — the browser navigates natively and the
+           * password ends up in the URL, the history, and any proxy log. Observed live under
+           * Playwright on a cold load. With method="post" the pre-hydration fallback puts the
+           * credentials in a request body against the current route instead, which Next answers
+           * with a 405 — an ugly beat, but not a credential disclosure.
+           */
+          method="post"
         >
           <FormError>{formError}</FormError>
 

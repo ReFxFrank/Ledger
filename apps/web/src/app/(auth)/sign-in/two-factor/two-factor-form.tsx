@@ -86,6 +86,9 @@ export function TwoFactorForm({ next }: { readonly next: string }): ReactNode {
 
           {mode === 'totp' ? (
             <form
+              // Pre-hydration GET fallback puts the code in the URL. One-time and short-lived,
+              // but still a credential — same fix as sign-in-form.tsx.
+              method="post"
               className="flex flex-col gap-[var(--gap-loose)]"
               onSubmit={(event) => {
                 event.preventDefault();
@@ -122,6 +125,7 @@ export function TwoFactorForm({ next }: { readonly next: string }): ReactNode {
             </form>
           ) : (
             <form
+              method="post"
               className="flex flex-col gap-[var(--gap-loose)]"
               onSubmit={(event) => {
                 event.preventDefault();

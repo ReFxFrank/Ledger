@@ -84,6 +84,9 @@ export function ReauthDialog({
           </DialogDescription>
         </DialogHeader>
         <form
+          // Rendered inside a dialog a hydrated app opened, so the pre-hydration window mostly
+          // cannot occur — but a password field with a GET fallback is not worth reasoning about.
+          method="post"
           className="flex flex-col gap-[var(--gap)]"
           onSubmit={(event) => {
             event.preventDefault();

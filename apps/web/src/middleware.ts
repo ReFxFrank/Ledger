@@ -26,7 +26,15 @@ export function middleware(request: NextRequest): NextResponse {
     `base-uri 'self'`,
     `form-action 'self'`,
     `frame-ancestors 'none'`,
-    `connect-src 'self' ${isDev ? 'ws: http://localhost:*' : ''}`,
+    // Plaid Link is an iframe served from cdn.plaid.com. `strict-dynamic` already covers the
+    // script react-plaid-link injects — scripts a trusted script creates are trusted — but frames
+    // answer to frame-src, and with no frame-src the `default-src 'self'` fallback blocks the
+    // sign-in outright. Nothing else on the product opens a frame, hence exactly these two.
+    `frame-src 'self' https://cdn.plaid.com`,
+    // The injected Link script talks XHR to the Plaid API origin matching PLAID_ENV — sandbox in
+    // local/dev deployments, production in real ones. Both are listed because the CSP is static
+    // per build, not per environment, and each origin is Plaid's own.
+    `connect-src 'self' https://production.plaid.com https://sandbox.plaid.com ${isDev ? 'ws: http://localhost:*' : ''}`,
     `worker-src 'self' blob:`,
     `manifest-src 'self'`,
     `upgrade-insecure-requests`,
@@ -60,6 +68,11 @@ export function middleware(request: NextRequest): NextResponse {
 export const config = {
   matcher: [
     // Static assets and image optimisation do not need a CSP and are not worth the middleware hop.
+    //
+    // `/api/webhooks/*` is deliberately NOT excluded: this middleware does no auth — sessions are
+    // enforced in tRPC and the app layouts — so a cookie-less POST from an aggregator passes
+    // through untouched and still picks up the security headers. The webhook route does its own
+    // authentication by verifying the delivery's signature.
     {
       source: '/((?!_next/static|_next/image|favicon.ico|icons/|manifest.webmanifest).*)',
       missing: [
