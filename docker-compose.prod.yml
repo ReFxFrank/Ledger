@@ -6,9 +6,12 @@
 
 services:
   postgres:
-    # Nothing outside the compose network needs to reach Postgres. Overriding with an empty
-    # list is the only way to drop a port the base file published.
-    ports: []
+    # Nothing outside the compose network needs to reach Postgres. `!reset` is load-bearing:
+    # compose MERGES sequence fields between files, so a plain `ports: []` override is a no-op
+    # and the dev file's host port would stay published — and Docker's published ports bypass
+    # ufw, which would put Postgres on the public internet with password auth. Requires
+    # compose v2.24+, which any current Docker Engine ships.
+    ports: !reset []
     command:
       - postgres
       - '-c'
@@ -23,10 +26,10 @@ services:
       - 'log_min_duration_statement=1000'
 
   redis:
-    ports: []
+    ports: !reset []
 
   minio:
-    ports: []
+    ports: !reset []
 
   migrate:
     build:

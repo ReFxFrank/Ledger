@@ -35,11 +35,14 @@ The official repository, not Ubuntu's `docker.io` package — compose v2 comes w
 curl -fsSL https://get.docker.com | sh
 
 # Let your own user talk to the daemon — the installer does not do this, and without it every
-# docker command needs sudo. The group change lands in new sessions; `exec sg` applies it now.
-sudo usermod -aG docker $USER && exec sg docker newgrp
+# docker command fails with "permission denied ... docker.sock". The group lands in new
+# sessions; `newgrp docker` opens a subshell where it is active immediately. (Logging out and
+# back in works too, and makes it permanent for every future session either way.)
+sudo usermod -aG docker $USER
+newgrp docker
 ```
 
-Verify: `docker compose version` prints v2.x, without sudo.
+Verify: `docker ps` runs without sudo and without a permission error.
 
 ## 3. Get the code
 
