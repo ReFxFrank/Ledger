@@ -221,6 +221,56 @@ succeeds; if Caddy's logs show both CAs refusing, a free DuckDNS subdomain (two-
 on the public suffix list, so it gets its own rate limit) is the reliable alternative. Moving to
 a real domain later is the same four `.env` lines and one `up -d`.
 
+## Sharing the server with existing sites
+
+If `sudo ss -tlnp | grep -E ':(80|443)\s'` shows an existing web server, Ledger's Caddy cannot
+bind and should not try. Use the third overlay, which parks Caddy and publishes the app on
+loopback only:
+
+```bash
+docker compose -f docker-compose.yml -f docker-compose.prod.yml -f docker-compose.behind-proxy.yml up -d --build
+curl -s http://127.0.0.1:3080/api/health   # → {"status":"ok",...}
+```
+
+Then add one vhost to the existing **nginx** (`/etc/nginx/sites-available/ledger`):
+
+```nginx
+server {
+    listen 80;
+    listen [::]:80;
+    server_name YOUR-DOMAIN-OR-IP.sslip.io;
+
+    # Evidence uploads.
+    client_max_body_size 15m;
+
+    location / {
+        proxy_pass http://127.0.0.1:3080;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        # The app decides "am I behind https" from this; wrong value = broken sign-in cookies.
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        # The first bank connect backfills years of history inside one request.
+        proxy_read_timeout 300s;
+    }
+}
+```
+
+```bash
+sudo ln -s /etc/nginx/sites-available/ledger /etc/nginx/sites-enabled/ledger
+sudo nginx -t && sudo systemctl reload nginx
+
+# TLS: certbot rewrites the vhost above with certificate lines and the https redirect.
+sudo apt-get install -y certbot python3-certbot-nginx
+sudo certbot --nginx -d YOUR-DOMAIN-OR-IP.sslip.io --redirect
+```
+
+`APP_URL`/`LEDGER_DOMAIN` in `.env` are unchanged — the app never knows which proxy fronts it,
+only that `X-Forwarded-Proto` says https. Ledger's own Caddy never runs, so nothing competes
+with the existing sites for 80/443, and the only new listener on the host is 127.0.0.1:3080.
+
 ## Troubleshooting the first launch
 
 | Symptom | Cause |

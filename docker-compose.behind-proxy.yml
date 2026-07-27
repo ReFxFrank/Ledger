@@ -1,0 +1,21 @@
+# For a host that already runs its own reverse proxy (nginx, apache, another Caddy) on 80/443.
+# Applied as a THIRD file, after the prod overlay:
+#
+#   docker compose -f docker-compose.yml -f docker-compose.prod.yml -f docker-compose.behind-proxy.yml up -d --build
+#
+# It does two things: keeps Ledger's Caddy from ever starting (it could not bind 80/443 anyway —
+# the existing proxy owns them), and publishes the web app on loopback only, where the host's
+# proxy can reach it and the internet cannot. docs/DEPLOY-VPS.md has the matching nginx vhost.
+
+services:
+  caddy:
+    # A profile that is never activated. Compose has no way to delete a service from an overlay;
+    # parking it behind a profile is the documented equivalent.
+    profiles: ['disabled']
+
+  web:
+    ports:
+      # Loopback-only is the security boundary, not a convenience: Docker-published ports bypass
+      # ufw, so `3080:3000` without the 127.0.0.1 would put the app on the public internet with
+      # its proxy headers trusted. The host proxy terminates TLS and forwards here.
+      - '127.0.0.1:3080:3000'
