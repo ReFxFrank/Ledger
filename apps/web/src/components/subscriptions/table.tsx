@@ -628,6 +628,15 @@ export function SubscriptionsTable(): React.ReactElement {
       event.preventDefault();
       if (row.getIsGrouped()) row.toggleExpanded();
       else router.push(`/subscriptions/${row.original.id}`);
+      return;
+    }
+
+    // Mirrors the review queue's E-to-edit, and exists because a user with a wrong cadence in
+    // front of them had no route to fix it that did not detour through the detail page.
+    if (event.key === 'e' || event.key === 'E') {
+      if (row.getIsGrouped()) return;
+      event.preventDefault();
+      setEditorFor({ id: row.original.id });
     }
   }
 
@@ -898,6 +907,9 @@ export function SubscriptionsTable(): React.ReactElement {
                 ids={selectedIds}
                 onClearSelection={() => {
                   setRowSelection({});
+                }}
+                onEditSingle={(editId) => {
+                  setEditorFor({ id: editId });
                 }}
               />
             ) : null}

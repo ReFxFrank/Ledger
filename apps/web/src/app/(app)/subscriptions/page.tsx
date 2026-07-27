@@ -24,7 +24,7 @@ export default function SubscriptionsPage(): ReactNode {
         </div>
         {/* The shortcuts are advertised once, here, rather than hidden behind a help icon. */}
         <p className="max-w-prose text-xs text-text-2">
-          Arrow keys move, Space selects, Enter opens.{' '}
+          Arrow keys move, Space selects, Enter opens, E edits.{' '}
           <kbd className="rounded-sm border border-line px-1 font-mono text-[0.6875rem]">/</kbd> searches.
         </p>
       </header>

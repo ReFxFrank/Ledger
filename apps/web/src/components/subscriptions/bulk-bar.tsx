@@ -9,7 +9,7 @@
  */
 
 import * as React from 'react';
-import { Archive, FolderTree, Tag, Tags, X } from 'lucide-react';
+import { Archive, FolderTree, Tag, Tags, X, Pencil } from 'lucide-react';
 import { CATEGORIES, CATEGORY_LABELS, type Category } from '@ledger/core';
 import {
   Button,
@@ -29,9 +29,20 @@ import { api } from '~/lib/trpc';
 export interface BulkActionBarProps {
   readonly ids: readonly string[];
   readonly onClearSelection: () => void;
+  /**
+   * Opens the full editor for a single subscription. Offered only when exactly one row is
+   * selected — a user with one row picked and a wrong cadence in front of them asked how to fix
+   * it, and the honest answer was a detour through the detail page. Editing is not a bulk
+   * operation, so the button disappears the moment a second row joins the selection.
+   */
+  readonly onEditSingle?: (id: string) => void;
 }
 
-export function BulkActionBar({ ids, onClearSelection }: BulkActionBarProps): React.ReactElement {
+export function BulkActionBar({
+  ids,
+  onClearSelection,
+  onEditSingle,
+}: BulkActionBarProps): React.ReactElement {
   const utils = api.useUtils();
   const [tagDraft, setTagDraft] = React.useState('');
   const [tagMode, setTagMode] = React.useState<'add' | 'remove'>('add');
@@ -90,6 +101,21 @@ export function BulkActionBar({ ids, onClearSelection }: BulkActionBarProps): Re
       <span className="font-mono text-xs text-text">
         {ids.length} selected
       </span>
+
+      {ids.length === 1 && ids[0] !== undefined && onEditSingle !== undefined ? (
+        <Button
+          size="sm"
+          variant="secondary"
+          disabled={busy}
+          onClick={() => {
+            const only = ids[0];
+            if (only !== undefined) onEditSingle(only);
+          }}
+        >
+          <Pencil className="size-3.5" aria-hidden />
+          Edit
+        </Button>
+      ) : null}
 
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
