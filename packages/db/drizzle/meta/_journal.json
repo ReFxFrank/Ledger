@@ -8,6 +8,13 @@
       "when": 1785025399497,
       "tag": "0000_brainy_prima",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1785122531561,
+      "tag": "0001_wealthy_odin",
+      "breakpoints": true
     }
   ]
 }

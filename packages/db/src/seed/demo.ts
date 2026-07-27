@@ -19,6 +19,7 @@ import { createRequire } from 'node:module';
 import { pathToFileURL } from 'node:url';
 import { eq, sql } from 'drizzle-orm';
 import { FixedClock, formatPlainDate, parsePlainDate, toInstant } from '@ledger/core';
+import { loadRootEnv } from '@ledger/env';
 import { type MerchantFile, loadMerchants } from '@ledger/providers';
 import { type Database, createDatabase } from '../client';
 import {
@@ -190,6 +191,10 @@ async function seedDemoUser(
       name: dataset.user.name,
       email: dataset.user.email,
       emailVerified: true,
+      // The demo user has a `two_factor` row, so this must agree with it. `protectedProcedure`
+      // reads this column and nothing else; leaving it false enrols a user who is already
+      // enrolled, and every protected procedure 403s in the meantime.
+      twoFactorEnabled: true,
       displayCurrency: dataset.user.displayCurrency,
       timezone: dataset.user.timezone,
       locale: dataset.user.locale,
@@ -201,6 +206,7 @@ async function seedDemoUser(
         name: sql`excluded.name`,
         email: sql`excluded.email`,
         emailVerified: sql`excluded.email_verified`,
+        twoFactorEnabled: sql`excluded.two_factor_enabled`,
         displayCurrency: sql`excluded.display_currency`,
         timezone: sql`excluded.timezone`,
         locale: sql`excluded.locale`,
@@ -572,13 +578,15 @@ function report(dataset: DemoDataset, sealed: boolean): void {
     console.log('  column encrypted with BETTER_AUTH_SECRET, so if sign-in rejects the code,');
     console.log('  enrol 2FA through the app instead.');
   }
-  console.log('  NOTE: the frozen `user` table has no `two_factor_enabled` column, which is');
-  console.log('  what protectedProcedure checks. Until that column exists the demo user will');
-  console.log('  be sent to 2FA enrolment on first sign-in.');
+  console.log('  Add the TOTP secret above to an authenticator app, or scan the otpauth URI.');
+  console.log('  2FA is mandatory — there is no way past the prompt without it.');
   console.log(`${rule}\n`);
 }
 
 async function main(): Promise<void> {
+  // Same reason as migrate.ts: a standalone Node entrypoint sees none of the repo's config.
+  loadRootEnv();
+
   const url = process.env.DATABASE_URL;
   if (url === undefined || url === '') {
     console.error('DATABASE_URL is not set. Copy .env.example to .env and fill it in.');

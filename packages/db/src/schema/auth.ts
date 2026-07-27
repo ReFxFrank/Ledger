@@ -18,6 +18,17 @@ export const users = pgTable(
     emailVerified: boolean('email_verified').notNull().default(false),
     image: text('image'),
 
+    /**
+     * Owned by better-auth's `twoFactor` plugin, and the column the whole authorization model
+     * turns on: `protectedProcedure` rejects any session where this is not `true`.
+     *
+     * It was missing from the first cut of this schema. Nothing failed loudly — the field simply
+     * read `undefined`, which is not `true`, so every protected procedure returned 403 and the
+     * app was unusable for a fully enrolled user. Declared here so the plugin can flip it and so
+     * the check has something real to read.
+     */
+    twoFactorEnabled: boolean('two_factor_enabled').notNull().default(false),
+
     // ── app-owned columns ──────────────────────────────────────────────────────────────
     /** Everything on the dashboard is totalled in this currency (brief §4.4). */
     displayCurrency: text('display_currency').notNull().default('USD'),

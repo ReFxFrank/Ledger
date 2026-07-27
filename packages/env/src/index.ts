@@ -9,6 +9,8 @@
  * that crosses that boundary, and CI greps the built bundle to prove it (scripts/check-client-bundle.mjs).
  */
 
+import { existsSync } from 'node:fs';
+import { dirname, join, resolve } from 'node:path';
 import { z } from 'zod';
 
 const booleanish = z
@@ -48,6 +50,43 @@ const base64Key32 = z
   .refine((value) => Buffer.from(value, 'base64').length === 32, {
     message: 'must decode to exactly 32 bytes — generate with `openssl rand -base64 32`',
   });
+
+/**
+ * Loads the monorepo's single root `.env` into `process.env`.
+ *
+ * Next handles this for the web app through `@next/env`, but every standalone entrypoint —
+ * `db:migrate`, `seed:demo`, `keys:rotate`, the worker — starts as a plain Node process with an
+ * empty environment and no idea the file exists. Without this they fail with "DATABASE_URL is
+ * not set" while a fully populated `.env` sits two directories up.
+ *
+ * Values already present in the real environment win, so a deployed container's configuration is
+ * never overwritten by a stray file. Uses `process.loadEnvFile`, which is built into Node 22+ and
+ * so costs no dependency.
+ */
+export function loadRootEnv(startDir: string = process.cwd()): string | null {
+  let dir = resolve(startDir);
+
+  // Walk up to the workspace root: the .env lives beside pnpm-workspace.yaml, and a script may
+  // be invoked from its own package directory or from the root.
+  for (let depth = 0; depth < 6; depth += 1) {
+    const candidate = join(dir, '.env');
+    if (existsSync(candidate)) {
+      try {
+        process.loadEnvFile(candidate);
+        return candidate;
+      } catch {
+        // A malformed .env should not be a hard crash here — the schema below produces a far
+        // better message than a parser error naming a byte offset.
+        return null;
+      }
+    }
+    const parent = dirname(dir);
+    if (parent === dir) break;
+    dir = parent;
+  }
+
+  return null;
+}
 
 export const serverEnvSchema = z.object({
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),

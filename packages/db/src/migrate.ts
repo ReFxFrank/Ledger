@@ -9,11 +9,17 @@
 import { migrate } from 'drizzle-orm/postgres-js/migrator';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { loadRootEnv } from '@ledger/env';
 import { createDatabase } from './client';
 
 const MIGRATIONS_FOLDER = join(dirname(fileURLToPath(import.meta.url)), '..', 'drizzle');
 
 async function main(): Promise<void> {
+  // A plain Node process starts with none of the repo's configuration. Next loads the root .env
+  // for the web app; nothing was loading it here, so `pnpm db:migrate` failed with
+  // "DATABASE_URL is not set" while a populated .env sat two directories up.
+  loadRootEnv(dirname(fileURLToPath(import.meta.url)));
+
   const url = process.env['DATABASE_URL'];
   if (url === undefined || url === '') {
     console.error('DATABASE_URL is not set. Copy .env.example to .env and fill it in.');

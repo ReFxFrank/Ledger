@@ -83,15 +83,28 @@ const dbUp = await reachable(db.host, db.port);
 console.log(`Checking redis at ${redis.host}:${String(redis.port)} …`);
 const redisUp = await reachable(redis.host, redis.port);
 
-if (!dbUp || !redisUp) {
-  console.error('\nNot reachable:');
-  if (!dbUp) console.error(`  postgres  ${db.host}:${String(db.port)}`);
-  if (!redisUp) console.error(`  redis     ${redis.host}:${String(redis.port)}`);
+if (!dbUp) {
+  console.error(`\nPostgres is not reachable at ${db.host}:${String(db.port)}.`);
   console.error(
-    '\nStart them with `docker compose up -d`, or point DATABASE_URL / REDIS_URL in .env at\n' +
-      'wherever they are actually running.',
+    'Start it with `docker compose up -d`, or point DATABASE_URL in .env at wherever it is\n' +
+      'actually running. Nothing in the app works without it.',
   );
   process.exit(1);
+}
+
+/**
+ * Redis is a warning, not an error.
+ *
+ * Only `apps/worker` uses it — the web app never imports it, so you can browse, add, edit, and
+ * cancel subscriptions without it. What you lose is scheduled work: notifications, bank sync,
+ * and post-cancellation charge verification.
+ */
+if (!redisUp) {
+  console.warn(
+    `\nRedis is not reachable at ${redis.host}:${String(redis.port)}. The web app runs fine ` +
+      'without it —\nthe background worker does not, so notifications, bank sync, and ' +
+      'cancellation verification\nwill not run. Continuing.',
+  );
 }
 
 const run = (command) => {
