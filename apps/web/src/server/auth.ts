@@ -60,6 +60,21 @@ function createAuth() {
       expiresIn: 60 * 60 * 24 * 30,
       updateAge: 60 * 60 * 24,
       cookieCache: { enabled: true, maxAge: 60 * 5 },
+      additionalFields: {
+        /**
+         * Declared so better-auth actually returns it on the session object.
+         *
+         * `enforceRecentReauth` in trpc/init.ts reads `session.lastReauthAt` to decide whether a
+         * sensitive action may proceed. The column existed and `me.reauthenticate` wrote to it,
+         * but better-auth only returns fields it has been told about — so the middleware read
+         * `undefined` every time and every sensitive action stayed blocked even immediately
+         * after a successful password confirmation.
+         *
+         * `input: false` because this is set server-side by the re-auth procedure; a client must
+         * never be able to assert its own re-authentication time.
+         */
+        lastReauthAt: { type: 'date', required: false, input: false },
+      },
     },
 
     advanced: {

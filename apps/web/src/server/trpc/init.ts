@@ -4,7 +4,8 @@ import { TRPCError, initTRPC } from '@trpc/server';
 import superjson from 'superjson';
 import { ZodError } from 'zod';
 import { SystemClock, type Clock, isLedgerError } from '@ledger/core';
-import { type Database, Scope, getDatabase } from '@ledger/db';
+import { eq } from 'drizzle-orm';
+import { type Database, Scope, getDatabase, sessions } from '@ledger/db';
 import { childLogger } from '@ledger/logger';
 import { type Auth, getAuth } from '../auth';
 
@@ -132,12 +133,33 @@ const enforceTwoFactor = t.middleware(({ ctx, next }) => {
  */
 const REAUTH_WINDOW_MS = 15 * 60 * 1000;
 
-const enforceRecentReauth = t.middleware(({ ctx, next }) => {
-  const session = ctx.session?.session as { lastReauthAt?: Date | string | null } | undefined;
-  const last = session?.lastReauthAt;
-  const lastMs = last === null || last === undefined ? 0 : new Date(last).getTime();
+const enforceRecentReauth = t.middleware(async ({ ctx, next }) => {
+  const sessionId = ctx.session?.session.id;
+  if (sessionId === undefined) {
+    throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Sign in to continue.' });
+  }
 
-  if (Date.now() - lastMs > REAUTH_WINDOW_MS) {
+  /**
+   * Read from the database, not from `ctx.session`.
+   *
+   * Sessions are cached in a signed cookie for five minutes, so the session object handed to
+   * this middleware can be that stale — which meant a user who had *just* confirmed their
+   * password was still refused, with no way to make progress except waiting out a TTL they
+   * could not see. The freshness of a security gate should not depend on a cache expiring.
+   *
+   * The cost is one primary-key lookup, and only on sensitive actions, which are rare by
+   * definition.
+   */
+  const [row] = await ctx.db
+    .select({ lastReauthAt: sessions.lastReauthAt })
+    .from(sessions)
+    .where(eq(sessions.id, sessionId))
+    .limit(1);
+
+  const last = row?.lastReauthAt;
+  const lastMs = last === null || last === undefined ? 0 : last.getTime();
+
+  if (ctx.clock.epochMillis() - lastMs > REAUTH_WINDOW_MS) {
     throw new TRPCError({
       code: 'FORBIDDEN',
       message: 'Confirm your password to continue.',

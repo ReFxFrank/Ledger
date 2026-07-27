@@ -33,6 +33,11 @@ import { accounts, passkeys, sessions, twoFactors, users, verifications } from '
 /** Must mirror the plugin list and additionalFields in `server/auth.ts`. */
 const AUTH_CONFIG: BetterAuthOptions = {
   plugins: [twoFactor({ issuer: 'Ledger' })],
+  session: {
+    additionalFields: {
+      lastReauthAt: { type: 'date', required: false, input: false },
+    },
+  },
   user: {
     additionalFields: {
       displayCurrency: { type: 'string', defaultValue: 'USD', input: false },
@@ -86,6 +91,25 @@ describe('drizzle schema satisfies better-auth', () => {
       });
     });
   }
+});
+
+describe('app-owned fields better-auth must know about', () => {
+  /**
+   * A column better-auth has not been told about is written but never returned, which is a
+   * uniquely nasty failure: the write succeeds, the read is silently `undefined`, and the
+   * feature is simply dead. `session.lastReauthAt` shipped that way — every sensitive action
+   * stayed blocked even straight after a correct password confirmation.
+   */
+  it('declares session.lastReauthAt so it comes back on the session object', () => {
+    expect(Object.keys(expected['session']?.fields ?? {})).toContain('lastReauthAt');
+  });
+
+  it('declares the user fields the app reads off the session', () => {
+    const fields = Object.keys(expected['user']?.fields ?? {});
+    for (const field of ['twoFactorEnabled', 'displayCurrency', 'timezone', 'onboardingCompletedAt', 'deletedAt']) {
+      expect(fields, `user.${field} would read as undefined without being declared`).toContain(field);
+    }
+  });
 });
 
 describe('tables the schema keeps deliberately', () => {

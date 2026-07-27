@@ -1,10 +1,12 @@
 import 'server-only';
 
-import { desc, eq } from 'drizzle-orm';
+import { TRPCError } from '@trpc/server';
+import { and, desc, eq } from 'drizzle-orm';
 import { z } from 'zod';
 import { allCurrencies, isCurrencyCode } from '@ledger/core';
-import { auditLog, users } from '@ledger/db';
+import { auditLog, sessions, users } from '@ledger/db';
 import { recordAudit } from '../../audit';
+import { getAuth } from '../../auth';
 import { protectedProcedure, router, sessionProcedure } from '../init';
 
 export const meRouter = router({
@@ -82,6 +84,78 @@ export const meRouter = router({
       );
 
       return updated;
+    }),
+
+  /**
+   * Re-authentication for sensitive actions (brief §9.2).
+   *
+   * `sensitiveProcedure` requires `session.last_reauth_at` inside a fifteen-minute window, and
+   * until this existed nothing in the codebase ever wrote that column — which made every
+   * sensitive action permanently unreachable, not merely gated. Connecting a bank, exporting
+   * data, and deleting an account all failed with "confirm your password" and no way to do it.
+   *
+   * Uses better-auth's `verifyPassword` rather than a fresh sign-in on purpose: signing in again
+   * would be intercepted by the two-factor plugin and rotate the session, so the user would be
+   * asked for a TOTP code to perform an action they are already authenticated for.
+   *
+   * Deliberately on `sessionProcedure`. Gating re-auth behind `protectedProcedure` would be
+   * circular for the one case that matters — a user who needs to re-auth in order to change
+   * their 2FA settings.
+   */
+  reauthenticate: sessionProcedure
+    .input(z.object({ password: z.string().min(1) }))
+    .mutation(async ({ ctx, input }) => {
+      const sessionId = ctx.session?.session.id;
+      if (sessionId === undefined) {
+        throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Sign in to continue.' });
+      }
+
+      let valid = false;
+      try {
+        const result = await getAuth().api.verifyPassword({
+          body: { password: input.password },
+          headers: ctx.headers,
+        });
+        // better-auth returns `{ status: boolean }` here, not `{ valid }`. Read from the
+        // installed types rather than from memory — that assumption has cost this codebase two
+        // production-shaped bugs already.
+        valid = result.status;
+      } catch {
+        // better-auth throws on a bad password rather than returning false. Either way this is
+        // a wrong password, not an outage — never surface the internal error to the client.
+        valid = false;
+      }
+
+      if (!valid) {
+        await recordAudit(
+          ctx.db,
+          ctx.scope,
+          { ip: ctx.ip, userAgent: ctx.userAgent },
+          'account.reauth_failed',
+          'account',
+          ctx.user.id,
+          {},
+        );
+        throw new TRPCError({ code: 'UNAUTHORIZED', message: 'That password is not correct.' });
+      }
+
+      const now = ctx.clock.now();
+      await ctx.db
+        .update(sessions)
+        .set({ lastReauthAt: now, updatedAt: now })
+        .where(and(eq(sessions.id, sessionId), eq(sessions.userId, ctx.user.id)));
+
+      await recordAudit(
+        ctx.db,
+        ctx.scope,
+        { ip: ctx.ip, userAgent: ctx.userAgent },
+        'account.reauthenticated',
+        'account',
+        ctx.user.id,
+        {},
+      );
+
+      return { confirmedAt: now, validForMinutes: 15 };
     }),
 
   completeOnboarding: protectedProcedure.mutation(async ({ ctx }) => {
