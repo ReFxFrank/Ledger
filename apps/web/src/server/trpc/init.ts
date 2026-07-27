@@ -5,7 +5,7 @@ import superjson from 'superjson';
 import { ZodError } from 'zod';
 import { SystemClock, type Clock, isLedgerError } from '@ledger/core';
 import { eq } from 'drizzle-orm';
-import { type Database, Scope, getDatabase, sessions } from '@ledger/db';
+import { type Database, Scope, getDatabase, sessions, users } from '@ledger/db';
 import { childLogger } from '@ledger/logger';
 import { type Auth, getAuth } from '../auth';
 
@@ -80,20 +80,66 @@ export const publicProcedure = t.procedure.use(timing);
  *  2. **A `Scope` is constructed.** Every procedure downstream reads user data through it, and
  *     there is no path to the database in this context that is not already bound to a user id.
  */
-const enforceSession = t.middleware(({ ctx, next }) => {
+const enforceSession = t.middleware(async ({ ctx, next }) => {
   if (ctx.session?.session === undefined) {
     throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Sign in to continue.' });
   }
 
-  const user = ctx.session.user;
+  const sessionUser = ctx.session.user;
+
+  /**
+   * Preferences come from the database, not from the session.
+   *
+   * Sessions are cached in a signed cookie for five minutes, and that snapshot includes the
+   * user's timezone, display currency and locale. Twenty-four call sites read those to decide
+   * which calendar day a renewal falls on, which bucket a transaction lands in, and what a
+   * cancellation deadline is — so for five minutes after someone changed their timezone, every
+   * one of them computed against the old one.
+   *
+   * The visible symptom was smaller and stranger: saving a timezone on /settings appeared to do
+   * nothing, because the screen re-read `me.current`, which read the stale snapshot and handed
+   * back the previous value. Same root cause as the `lastReauthAt` bug — mutable state read off
+   * a cached session.
+   *
+   * One indexed primary-key lookup per authenticated call is the price, and correctness here is
+   * worth more than it: these values decide what date the product tells someone their money
+   * leaves.
+   */
+  const [profile] = await ctx.db
+    .select({
+      displayCurrency: users.displayCurrency,
+      timezone: users.timezone,
+      locale: users.locale,
+      deletedAt: users.deletedAt,
+      onboardingCompletedAt: users.onboardingCompletedAt,
+    })
+    .from(users)
+    .where(eq(users.id, sessionUser.id))
+    .limit(1);
+
+  if (profile === undefined) {
+    // The session is valid but the row is gone — a deletion that completed mid-request.
+    throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Sign in to continue.' });
+  }
+
   /**
    * A deletion request closes the account immediately, even though the cascade runs later in a
    * job. Checked here rather than per-route so there is no window in which a request that has
-   * been made is still serving the data it was made about.
+   * been made is still serving the data it was made about. Read from the row rather than the
+   * session for the same staleness reason.
    */
-  if (user.deletedAt !== null && user.deletedAt !== undefined) {
+  if (profile.deletedAt !== null) {
     throw new TRPCError({ code: 'FORBIDDEN', message: 'This account is closed.' });
   }
+
+  const user = {
+    ...sessionUser,
+    displayCurrency: profile.displayCurrency,
+    timezone: profile.timezone,
+    locale: profile.locale,
+    onboardingCompletedAt: profile.onboardingCompletedAt,
+    deletedAt: profile.deletedAt,
+  };
 
   return next({
     ctx: {
