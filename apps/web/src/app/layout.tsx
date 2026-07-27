@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
-import { headers } from 'next/headers';
 import type { ReactNode } from 'react';
 import { Providers } from './providers';
 import './globals.css';
@@ -52,29 +51,27 @@ export const viewport: Viewport = {
   themeColor: '#070a0f',
 };
 
-export default async function RootLayout({
+/**
+ * Note there is no `headers()` read here for the CSP nonce. Next stamps its own bootstrap and
+ * chunk scripts by reading the policy off the forwarded request (middleware.ts sets it there for
+ * exactly this reason), and nothing this tree renders inline needs one — the one element that
+ * did, the dark color-scheme style, now lives in tokens.css. If an inline script ever becomes
+ * genuinely necessary, read `x-nonce` from headers() and expect React to warn about the
+ * attribute on hydration: browsers blank a nonce after applying it.
+ */
+export default function RootLayout({
   children,
 }: {
   readonly children: ReactNode;
-}): Promise<ReactNode> {
-  /**
-   * The per-request CSP nonce. Next stamps its own bootstrap and chunk-loading scripts by
-   * reading the policy off the forwarded request headers (middleware.ts sets it there for
-   * exactly this reason); `x-nonce` is what any script or style *this* tree renders must carry.
-   */
-  const nonce = (await headers()).get('x-nonce') ?? undefined;
-
+}): ReactNode {
   return (
     <html lang="en" className="dark">
-      <head>
-        {/*
-          Ahead of the stylesheet, so the browser paints scrollbars, native controls and the
-          pre-hydration canvas dark instead of flashing white on a slow connection. No colour
-          literal — `color-scheme` picks the UA's dark palette, and the page colour is the
-          token-driven `body` rule in the stylesheet.
-        */}
-        <style nonce={nonce}>{'html{color-scheme:dark}'}</style>
-      </head>
+      {/*
+        No inline <style> for the dark color-scheme: it lives in tokens.css, which is
+        render-blocking, so there is still no white flash. The inline version carried the CSP
+        nonce, and browsers blank a nonce attribute after applying it — so hydration diffed the
+        server's nonce against "" and React warned on every single page load.
+      */}
       <body className={`${geistSans.variable} ${geistMono.variable} min-h-dvh antialiased`}>
         <Providers>{children}</Providers>
       </body>

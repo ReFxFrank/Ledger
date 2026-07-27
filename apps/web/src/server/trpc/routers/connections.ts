@@ -300,7 +300,36 @@ export const connectionsRouter = router({
       }
 
       const connectionId = linked.claim.connectionId;
-      const totals = await withAggregatorErrors(() => runConnectionSync(banking, connectionId));
+      let totals = await withAggregatorErrors(() => runConnectionSync(banking, connectionId));
+
+      /**
+       * Let the initial backfill settle.
+       *
+       * Plaid prepares an Item's transaction history asynchronously after the exchange, and the
+       * first `/transactions/sync` can legitimately return nothing. The documented signal that
+       * data is ready is a webhook — which cannot reach a localhost deployment, and even in
+       * production arrives seconds after this mutation has already answered. Without this loop a
+       * fresh connect shows "12 accounts, 0 transactions imported", which reads as a broken
+       * product rather than an upstream race. Observed live on the first real connect.
+       *
+       * Bounded and quiet: only on a brand-new, still-empty connection, three attempts, a few
+       * seconds apart. A genuinely empty account stops after ~12s of patience and shows an
+       * honest zero; the fixture never takes the first retry because its data is immediate.
+       */
+      const SETTLE_ATTEMPTS = 3;
+      const SETTLE_DELAY_MS = 4000;
+      for (
+        let attempt = 0;
+        attempt < SETTLE_ATTEMPTS &&
+        linked.claim.kind !== 'relinked' &&
+        totals.added === 0 &&
+        !totals.hasMore;
+        attempt += 1
+      ) {
+        await new Promise((resolve) => setTimeout(resolve, SETTLE_DELAY_MS));
+        totals = await withAggregatorErrors(() => runConnectionSync(banking, connectionId));
+        if (totals.added > 0) break;
+      }
 
       const [accountCount, detectionsPending] = await Promise.all([
         countAccounts(banking, connectionId),

@@ -153,6 +153,14 @@
   html {
     font-variant-numeric: tabular-nums;
     -webkit-text-size-adjust: 100%;
+    /*
+     * The UA paints scrollbars, native controls and the pre-hydration canvas from this, so it
+     * lives in the stylesheet — which is render-blocking — rather than in an inline <style>.
+     * The inline version needed the CSP nonce, and browsers blank the nonce attribute in the
+     * DOM after applying it, so every hydration diffed `nonce="…"` against `nonce=""` and React
+     * warned on every page load.
+     */
+    color-scheme: dark;
   }
 
   body {
